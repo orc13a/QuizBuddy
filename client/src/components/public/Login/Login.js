@@ -1,26 +1,26 @@
-import { Button, Card, Divider, Input, InputWrapper, LoadingOverlay, Space, Title, useMantineTheme } from "@mantine/core";
+import { Button, Card, Divider, LoadingOverlay, PasswordInput, Space, TextInput, Title, useMantineTheme } from "@mantine/core";
 import Logo from "../Logo/Logo";
 import { useForm } from '@mantine/hooks';
+import { useState } from "react";
 
 export default function Login() {
     const theme = useMantineTheme();
+
+    const [loading, setLoading] = useState(false);
 
     const form = useForm({
         initialValues: {
             email: '',
             password: '',
-            termsOfService: false,
-        },
-
-        validationRules: {
-            email: (value) => /^\S+@\S+$/.test(value),
-            password: () => false,
-        },
+        }
     });
 
-    const onSubmit = (e) => {
-        e.preventDefault();
-        form.onSubmit((values) => console.log(values))
+    // validationRules: {
+    //     email: (value) => /^\S+@\S+$/.test(value),
+    // },
+
+    const onSubmit = (values) => {
+        setLoading(true);
     }
 
     const userIcon = (
@@ -39,30 +39,39 @@ export default function Login() {
         <>
             <Logo />
             <div className="center">
-                <LoadingOverlay  visible={false} />
+                <LoadingOverlay visible={loading} />
                 <Card padding="lg" style={{ width: '300px' }} shadow={theme.shadows.sm} withBorder>
-                    <form onSubmit={ onSubmit }>
-                        <Card.Section>
-                            <div style={{ textAlign: 'center', marginBottom: 20 }}>
-                                <Title order={2}>
-                                    Log ind
-                                </Title>
-                            </div>
-                        </Card.Section>
-                        <Divider />
-                        <Card.Section style={{ marginTop: 25 }}>
-                            <InputWrapper label="Brugernavn" required>
-                                <Input value={form.values.email} onChange={(event) => form.setFieldValue('email', event.currentTarget.value)} icon={userIcon} autoFocus required />
-                            </InputWrapper>
-                            <Space h="xl" />
-                            <InputWrapper label="Adgangskode" required>
-                                <Input type="password" value={form.values.password} onChange={(event) => form.setFieldValue('password', event.currentTarget.value)} icon={keyIcon} required />
-                            </InputWrapper>
-                            <Space h="xl" />
-                            <Button type="submit" style={{ float: 'right', backgroundColor: theme.colors.indigo[3] }}>
-                                Log ind
-                            </Button>
-                        </Card.Section>
+                    <div style={{ textAlign: 'center' }}>
+                        <Title order={2}>
+                            Log ind
+                        </Title>
+                    </div>
+                    <Space h="lg" />
+                    <Divider />
+                    <Space h="lg" />
+                    <form onSubmit={ form.onSubmit((values) => onSubmit(values)) }>
+                        <TextInput
+                        icon={userIcon}
+                        autoFocus
+                        radius="md"
+                        label="E-mail"
+                        error={form.errors.email && 'Please specify valid email'}
+                        value={form.values.email}
+                        onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+                        />
+                        <Space h="lg" />
+                        <PasswordInput
+                        icon={keyIcon}
+                        radius="md"
+                        label="Adgangskode"
+                        error={form.errors.password && 'forkert'}
+                        value={form.values.password}
+                        onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
+                        />
+                        <Space h="lg" />
+                        <Button loading={loading} style={{ float: 'right' }} radius="md" type="submit">
+                            Log ind
+                        </Button>
                     </form>
                 </Card>
             </div>
