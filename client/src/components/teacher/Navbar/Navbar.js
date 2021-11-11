@@ -1,8 +1,11 @@
-import { ActionIcon, Card, Col, Grid, useMantineTheme } from "@mantine/core";
+import { ActionIcon, Card, Col, Drawer, Grid, useMantineTheme } from "@mantine/core";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
     const theme = useMantineTheme();
+
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
     const burgerIcon = (
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
@@ -11,7 +14,18 @@ export default function Navbar() {
     );
 
     return (
-        <>
+        <>  
+            <Drawer
+            opened={drawerOpen}
+            onClose={() => setDrawerOpen(false)}
+            position="right"
+            title="Register"
+            padding="md"
+            size="md"
+            overlayOpacity={0.15}
+            >
+                Hej
+            </Drawer>
             <Card padding="lg" style={{ paddingRight: 25 }} align="stretch" radius="md">
                 <Grid columns={10}>
                     <Col span={5}>
@@ -24,7 +38,7 @@ export default function Navbar() {
                     <Col span={5}>
                         <div style={{ display: 'table', width: '100%', height: '100%' }}>
                             <div style={{ textAlign: 'right', display: 'table-cell', verticalAlign: 'middle' }}>
-                                <ActionIcon style={{ float: 'right' }} radius="md" size="lg">
+                                <ActionIcon onClick={ () => setDrawerOpen(true) } style={{ float: 'right' }} radius="md" size="lg">
                                     { burgerIcon }
                                 </ActionIcon>
                             </div>
