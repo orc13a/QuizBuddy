@@ -1,9 +1,11 @@
 import { ActionIcon, Avatar, Button, Card, Space, Col, Drawer, Grid, useMantineTheme, Divider } from "@mantine/core";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 export default function Navbar() {
     const theme = useMantineTheme();
+    const navigate = useNavigate();
 
     const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -14,55 +16,41 @@ export default function Navbar() {
     );
 
     return (
-        <>  
+        <>
             <Drawer
-            opened={drawerOpen}
-            onClose={() => setDrawerOpen(false)}
-            position="right"
-            title=""
-            padding="md"
-            size="md"
-            overlayOpacity={0.15}
+                opened={drawerOpen}
+                onClose={() => setDrawerOpen(false)}
+                position="right"
+                title=""
+                padding="md"
+                size="md"
+                overlayOpacity={0.15}
             >
-                <Button color="indigo" variant="light" fullWidth radius="md" size="md">
-                    Overblik
-                </Button>
-                <Space h="md" />
-                <div>
-                    <Divider variant="solid" />
-                    <Space h="md" />
-                    <Button color="red" variant="light" fullWidth radius="md" size="md">
-                        Log ud
-                    </Button>
-                </div>
+                
             </Drawer>
             <div style={{ padding: 10, position: 'sticky', marginBottom: '50px' }}>
                 <Card padding="sm" style={{ paddingRight: 25 }} align="stretch" radius="md">
-                    <Grid columns={12}>
-                        <Col span={10}>
+                    <Grid columns={10}>
+                        <Col span={6}>
                             <span className="logoTitleTeacher" style={{ marginLeft: 15 }}>
                                 <Link style={{ color: theme.colors.indigo[3], textDecoration: 'none' }} to="/teacher">
                                     QuizBuddy
                                 </Link>
                             </span>
                         </Col>
-                        <Col span={1}>
-                            <div style={{ display: 'table', width: '100%', height: '100%' }}>
-                                <div style={{ textAlign: 'right', display: 'table-cell', verticalAlign: 'middle' }}>
-                                    <Link to="/teacher/profile">
-                                        <Avatar style={{ float: 'right', cursor: 'pointer' }} radius="md" color="indigo">
+                        <Col span={4}>
+                            <div style={{ textAlign: 'right', display: 'table', width: '100%', height: '100%' }}>
+                                <div style={{ display: 'table-cell', verticalAlign: 'middle' }}>
+                                    <div style={{ display: 'inline-block', position: 'relative', top: 2 }}>
+                                        <Avatar onClick={ () => navigate('/teacher/profile') } style={{ cursor: 'pointer' }} radius="md" color="indigo">
                                             OC
                                         </Avatar>
-                                    </Link>
-                                </div>
-                            </div>
-                        </Col>
-                        <Col span={1}>
-                            <div style={{ display: 'table', width: '100%', height: '100%' }}>
-                                <div style={{ textAlign: 'right', display: 'table-cell', verticalAlign: 'middle' }}>
-                                    <ActionIcon onClick={ () => setDrawerOpen(true) } style={{ float: 'right' }} radius="md" size="lg">
-                                        { burgerIcon }
-                                    </ActionIcon>
+                                    </div>
+                                    <div style={{ display: 'inline-block', position: 'relative', bottom: 3, marginLeft: 25 }}>
+                                        <ActionIcon onClick={() => setDrawerOpen(true)} radius="md" size="lg">
+                                            {burgerIcon}
+                                        </ActionIcon>
+                                    </div>
                                 </div>
                             </div>
                         </Col>
