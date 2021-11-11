@@ -19,8 +19,12 @@ export default function Frontpage() {
                     </Col>
                     <Col span={5}>
                         <div style={{ display: 'table', width: '100%', height: '100%' }}>
-                            <div style={{ display: 'table-cell', verticalAlign: 'middle' }}>
-                                <Button onClick={ () => navigate('/login') } radius="md" size="md" style={{ float: 'right', backgroundColor: theme.colors.indigo[3] }}>
+                            <div style={{textAlign: 'right', display: 'table-cell', verticalAlign: 'middle' }}>
+                                <Button onClick={ () => navigate('/signup') } color="indigo" variant="light" radius="md" size="md" >
+                                    Opret
+                                </Button>
+                                <span style={{ margin: '0px 10px 0px 10px' }} />
+                                <Button onClick={ () => navigate('/login') } color="indigo" radius="md" size="md">
                                     Log ind
                                 </Button>
                             </div>
