@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap');
 
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
 .logoTitle {
     font-family: 'Fugaz One', cursive;
     font-size: 40px;
