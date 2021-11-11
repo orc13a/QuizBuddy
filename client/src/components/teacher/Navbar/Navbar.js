@@ -26,7 +26,11 @@ export default function Navbar() {
                 size="md"
                 overlayOpacity={0.15}
             >
-                
+                <div style={{ display: 'table', float: 'none' }}>
+                    <div style={{ display: 'table-cell', float: 'none' }}>
+                        hej
+                    </div>
+                </div>
             </Drawer>
             <div style={{ padding: 10, position: 'sticky', marginBottom: '50px' }}>
                 <Card padding="sm" style={{ paddingRight: 25 }} align="stretch" radius="md">
