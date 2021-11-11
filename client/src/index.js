@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import { BrowserRouter } from "react-router-dom";
-import { AppShell, MantineProvider } from '@mantine/core';
+import { MantineProvider } from '@mantine/core';
+
 ReactDOM.render(
     <React.StrictMode>
         <MantineProvider theme={{ colorScheme: 'light' }}>

@@ -1,4 +1,4 @@
-import { ActionIcon, Card, Col, Drawer, Grid, useMantineTheme } from "@mantine/core";
+import { ActionIcon, Avatar, Button, Card, Space, Col, Drawer, Grid, useMantineTheme, Divider } from "@mantine/core";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -19,33 +19,56 @@ export default function Navbar() {
             opened={drawerOpen}
             onClose={() => setDrawerOpen(false)}
             position="right"
-            title="Register"
+            title=""
             padding="md"
             size="md"
             overlayOpacity={0.15}
             >
-                Hej
+                <Button color="indigo" variant="light" fullWidth radius="md" size="md">
+                    Overblik
+                </Button>
+                <Space h="md" />
+                <div>
+                    <Divider variant="solid" />
+                    <Space h="md" />
+                    <Button color="red" variant="light" fullWidth radius="md" size="md">
+                        Log ud
+                    </Button>
+                </div>
             </Drawer>
-            <Card padding="lg" style={{ paddingRight: 25 }} align="stretch" radius="md">
-                <Grid columns={10}>
-                    <Col span={5}>
-                        <span className="logoTitle">
-                            <Link style={{ color: theme.colors.indigo[3], textDecoration: 'none' }} to="/">
-                                QuizBuddy
-                            </Link>
-                        </span>
-                    </Col>
-                    <Col span={5}>
-                        <div style={{ display: 'table', width: '100%', height: '100%' }}>
-                            <div style={{ textAlign: 'right', display: 'table-cell', verticalAlign: 'middle' }}>
-                                <ActionIcon onClick={ () => setDrawerOpen(true) } style={{ float: 'right' }} radius="md" size="lg">
-                                    { burgerIcon }
-                                </ActionIcon>
+            <div style={{ padding: 10, position: 'sticky', marginBottom: '50px' }}>
+                <Card padding="sm" style={{ paddingRight: 25 }} align="stretch" radius="md">
+                    <Grid columns={12}>
+                        <Col span={10}>
+                            <span className="logoTitleTeacher" style={{ marginLeft: 15 }}>
+                                <Link style={{ color: theme.colors.indigo[3], textDecoration: 'none' }} to="/teacher">
+                                    QuizBuddy
+                                </Link>
+                            </span>
+                        </Col>
+                        <Col span={1}>
+                            <div style={{ display: 'table', width: '100%', height: '100%' }}>
+                                <div style={{ textAlign: 'right', display: 'table-cell', verticalAlign: 'middle' }}>
+                                    <Link to="/teacher/profile">
+                                        <Avatar style={{ float: 'right', cursor: 'pointer' }} radius="md" color="indigo">
+                                            OC
+                                        </Avatar>
+                                    </Link>
+                                </div>
                             </div>
-                        </div>
-                    </Col>
-                </Grid>
-            </Card>
+                        </Col>
+                        <Col span={1}>
+                            <div style={{ display: 'table', width: '100%', height: '100%' }}>
+                                <div style={{ textAlign: 'right', display: 'table-cell', verticalAlign: 'middle' }}>
+                                    <ActionIcon onClick={ () => setDrawerOpen(true) } style={{ float: 'right' }} radius="md" size="lg">
+                                        { burgerIcon }
+                                    </ActionIcon>
+                                </div>
+                            </div>
+                        </Col>
+                    </Grid>
+                </Card>
+            </div>
         </>
     );
 }

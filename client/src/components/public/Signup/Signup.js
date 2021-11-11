@@ -65,8 +65,8 @@ export default function Signup() {
             passwordRepeat: '',
         },
         validationRules: {
-            firstname: (value) => value.length != 0,
-            lastname: (value) => value.length != 0,
+            firstname: (value) => value.length !== 0,
+            lastname: (value) => value.length !== 0,
             email: (value) => /^\S+@\S+$/.test(value),
             password: () => checkStrength(),
             passwordRepeat: () => checkPwd(),
