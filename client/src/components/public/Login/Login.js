@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Loader, LoadingOverlay, PasswordInput, Space, TextInput, Title, useMantineTheme } from "@mantine/core";
+import { Alert, Button, Card, Divider, Loader, LoadingOverlay, PasswordInput, Space, TextInput, Title, useMantineTheme } from "@mantine/core";
 import Logo from "../Logo/Logo";
 import { useForm } from '@mantine/hooks';
 import { useState } from "react";
@@ -35,6 +35,12 @@ export default function Login() {
         </svg>
     );
 
+    const crossIcon = (
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16">
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+        </svg>
+    );
+
     return (
         <>
             <Logo />
@@ -48,11 +54,17 @@ export default function Login() {
                     </div>
                     <Space h="lg" />
                     <Divider />
+                    <div>
+                    <Space h="lg" />
+                    <Alert icon={crossIcon} radius="md" color="red">
+                        Error besked
+                    </Alert>
+                    </div>
                     <Space h="lg" />
                     <form onSubmit={ form.onSubmit((values) => onSubmit(values)) }>
                         <TextInput
                         icon={atIcon}
-                        color="indigo"
+                        size="md"
                         autoFocus
                         radius="md"
                         label="E-mail"
@@ -64,13 +76,14 @@ export default function Login() {
                         <PasswordInput
                         icon={keyIcon}
                         radius="md"
+                        size="md"
                         label="Adgangskode"
                         error={form.errors.password && 'forkert'}
                         value={form.values.password}
                         onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
                         />
                         <Space h="lg" />
-                        <Button style={{ float: 'right' }} color="indigo" radius="md" type="submit">
+                        <Button size="md" style={{ float: 'right' }} color="indigo" radius="md" type="submit">
                             Log ind
                         </Button>
                     </form>

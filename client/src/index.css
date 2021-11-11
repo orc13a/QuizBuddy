@@ -22,3 +22,12 @@
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 }
+
+.centerH-i {
+    display: table;
+    margin: 0 auto;
+}
+
+.centerH-o {
+    width:100%
+}
