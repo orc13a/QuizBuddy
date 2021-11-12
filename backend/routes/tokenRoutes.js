@@ -18,7 +18,7 @@ import teacherSchema from '../models/teacher.model.js';
 
 // Giv user new access token
 // r_t = refresh_token
-api.post('/teacher', async (req, res) => {
+api.post('/teacher', (req, res) => {
     const token = req.cookies['qbid'];
 
     if (!token) {
@@ -31,16 +31,16 @@ api.post('/teacher', async (req, res) => {
                     res.status(401).json({ message: 'fejl2', type: 'error', accessToken: '' });
                 }
 
-                const teacher = await teacherSchema.findOne({ email: decoded.user.email });
-
-                if (!teacher) {
-                    res.status(404).json({ message: 'fejl3', type: 'error', accessToken: '' });
-                } else if (user.tokenVersion !== decoded.tokenVersion) {
-                    res.status(401).json({ message: 'fejl4', type: 'error', accessToken: '' });
-                } else {
-                    sendRefreshToken(res, createTeacherRefreshToken(user));
-                    res.status(200).json({ message: 'ok', type: 'success', accessToken: createTeacherAccessToken(user) });
-                }
+                teacherSchema.findOne({ email: decoded.user.email }, (err, docs) => {
+                    if (err) {
+                        res.status(404).json({ message: 'fejl3', type: 'error', accessToken: '' });
+                    } else if (user.tokenVersion !== decoded.tokenVersion) {
+                        res.status(401).json({ message: 'fejl4', type: 'error', accessToken: '' });
+                    } else {
+                        sendRefreshToken(res, createTeacherRefreshToken(user));
+                        res.status(200).json({ message: 'ok', type: 'success', accessToken: createTeacherAccessToken(user) });
+                    } 
+                });
             });
         } catch (error) {
             console.log(error);

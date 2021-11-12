@@ -6,7 +6,7 @@ const TeacherSchema = mongoose.Schema({
     lastname: String,
     email: String,
     password: String,
-    tokenVersion, Number,
+    tokenVersion: Number,
     teams: [],
     createdAt: {
         type: Date,

@@ -22,7 +22,11 @@ server.get('/', (req, res) => {
     res.status(200).json({ message: 'QuizBuddy API' });
 });
 
+import rkRouter from './routes/tokenRoutes.js';
+import teacherRouter from './routes/tokenRoutes.js';
 
+server.use('/r_t', rkRouter); // tokens
+server.use('/teachers', teacherRouter);
 
 server.get('*', (req, res) => {
     res.status(404).json({ message: '404', type: 'error' });
