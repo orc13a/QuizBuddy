@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 
-export default function Navbar() {
+export default function Navbar({ children }) {
     const theme = useMantineTheme();
     const navigate = useNavigate();
 
@@ -15,6 +15,26 @@ export default function Navbar() {
         </svg>
     );
 
+    const goTo = (e) => {
+        console.log(e.target);
+    }
+
+    const getActive = () => {
+        const url = window.location.href;
+        const urlSplit = url.split('/');
+        const page = urlSplit[urlSplit.length - 1];
+        const btn = document.getElementById(`${page}NavBtn`);
+        btn.classList.add('navBtnActive');
+        btn.classList.remove('navBtn');
+    }
+
+    const openDrawer = () => {
+        setDrawerOpen(true);
+        setTimeout(() => {
+            getActive();
+        }, 30);
+    }
+
     return (
         <>
             <Drawer
@@ -22,36 +42,45 @@ export default function Navbar() {
                 onClose={() => setDrawerOpen(false)}
                 position="right"
                 title=""
-                padding="md"
+                padding={0}
                 size="md"
                 overlayOpacity={0.15}
                 noFocusTrap
+                zIndex={2000}
             >
-                <div>
-                    <Card radius="md">
-                        <Button fullWidth radius="md" size="md" color="indigo" variant="light">
-                            Overblik
+                <div style={{ height: '85%', overflowY: 'scroll' }}>
+                    <Link to="/teacher" className="navBtnLink">
+                        <Button id="forsideNavBtn" className="navBtn" onClick={ goTo } fullWidth radius={0} size="md" color="indigo" variant="light">
+                            Forside
                         </Button>
-                        <Space h="lg" />
-                        <Button fullWidth radius="md" size="md" color="indigo" variant="white">
-                            Overblik
+                    </Link>
+                    <Space h="md" />
+                    <Link to="/teacher/hold" className="navBtnLink">
+                        <Button id="holdNavBtn" className="navBtn" onClick={ goTo } fullWidth radius={0} size="md" color="indigo" variant="light">
+                            Mine hold
                         </Button>
-                    </Card>
+                    </Link>
+                    <Space h="md" />
+                    <Link to="/teacher/opgave/tilføj" className="navBtnLink">
+                        <Button id="tilføjNavBtn" className="navBtn" onClick={ goTo } fullWidth radius={0} size="md" color="indigo" variant="light">
+                            Opret opgave
+                        </Button>
+                    </Link>
                 </div>
-                <div style={{ width: '288px', position: 'absolute' }}>
-                    <Card withBorder radius="md">
+                <div style={{ width: '320px', position: 'absolute', bottom: 0, paddingBottom: 16 }}>
+                    <Card radius="md">
                         <Button fullWidth radius="md" size="md" color="red" variant="light">
                             Log ud
                         </Button>
                     </Card>
                 </div>
             </Drawer>
-            <div style={{ padding: 10, position: 'sticky', marginBottom: '50px' }}>
+            <div style={{ padding: 10, position: 'sticky', top: 8 }}>
                 <Card padding="sm" style={{ paddingRight: 25 }} align="stretch" radius="md">
                     <Grid columns={10}>
                         <Col span={6}>
                             <span className="logoTitleTeacher" style={{ marginLeft: 15 }}>
-                                <Link style={{ color: theme.colors.indigo[3], textDecoration: 'none' }} to="/teacher">
+                                <Link style={{ color: theme.colors.indigo[3], textDecoration: 'none' }} to="/teacher/profil">
                                     QuizBuddy
                                 </Link>
                             </span>
@@ -60,12 +89,12 @@ export default function Navbar() {
                             <div style={{ textAlign: 'right', display: 'table', width: '100%', height: '100%' }}>
                                 <div style={{ display: 'table-cell', verticalAlign: 'middle' }}>
                                     <div style={{ display: 'inline-block', position: 'relative', top: 2 }}>
-                                        <Avatar onClick={() => navigate('/teacher/profile')} style={{ cursor: 'pointer' }} radius="md" color="indigo">
+                                        <Avatar onClick={() => navigate('/teacher/profil')} style={{ cursor: 'pointer' }} radius="md" color="indigo">
                                             OC
                                         </Avatar>
                                     </div>
                                     <div style={{ display: 'inline-block', position: 'relative', bottom: 3, marginLeft: 25 }}>
-                                        <ActionIcon onClick={() => setDrawerOpen(true)} radius="md" size="lg">
+                                        <ActionIcon onClick={openDrawer} radius="md" size="lg">
                                             {burgerIcon}
                                         </ActionIcon>
                                     </div>
@@ -74,6 +103,9 @@ export default function Navbar() {
                         </Col>
                     </Grid>
                 </Card>
+            </div>
+            <div style={{ padding: 25 }}>
+                { children }
             </div>
         </>
     );

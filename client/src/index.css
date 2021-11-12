@@ -26,6 +26,23 @@ body {
     left: 29px;
 }
 
+.mantine-Drawer-header {
+    padding: 16px;
+}
+
+.navBtnLink {
+    text-decoration: none !important;
+}
+
+.navBtn {
+    border: 0px solid black;
+    background-color: transparent;
+}
+
+.navBtnActive {
+    border: 0px solid black !important;
+}
+
 .center {
     position: fixed;
     top: 50%;

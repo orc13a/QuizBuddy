@@ -27,11 +27,11 @@ function App() {
         >
             <Routes>
                 {/* Public */}
-                <Route path="/" element={<Frontpage />} />
+                <Route index path="/" element={<Frontpage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 {/* Teacher */}
-                <Route path="/teacher/" element={<TeacherHome />} />
+                <Route path="/teacher/forside" element={<TeacherHome />} />
                 {/* Student */}
             </Routes>
         </AppShell>
