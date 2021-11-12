@@ -1,4 +1,4 @@
-import { ActionIcon, Avatar, Button, Card, Space, Col, Drawer, Grid, useMantineTheme, Divider } from "@mantine/core";
+import { ActionIcon, Avatar, Button, Card, Space, Col, Drawer, Grid, useMantineTheme } from "@mantine/core";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
@@ -25,11 +25,25 @@ export default function Navbar() {
                 padding="md"
                 size="md"
                 overlayOpacity={0.15}
+                noFocusTrap
             >
-                <div style={{ display: 'table', float: 'none' }}>
-                    <div style={{ display: 'table-cell', float: 'none' }}>
-                        hej
-                    </div>
+                <div>
+                    <Card radius="md">
+                        <Button fullWidth radius="md" size="md" color="indigo" variant="light">
+                            Overblik
+                        </Button>
+                        <Space h="lg" />
+                        <Button fullWidth radius="md" size="md" color="indigo" variant="white">
+                            Overblik
+                        </Button>
+                    </Card>
+                </div>
+                <div style={{ width: '288px', position: 'absolute' }}>
+                    <Card withBorder radius="md">
+                        <Button fullWidth radius="md" size="md" color="red" variant="light">
+                            Log ud
+                        </Button>
+                    </Card>
                 </div>
             </Drawer>
             <div style={{ padding: 10, position: 'sticky', marginBottom: '50px' }}>
@@ -46,7 +60,7 @@ export default function Navbar() {
                             <div style={{ textAlign: 'right', display: 'table', width: '100%', height: '100%' }}>
                                 <div style={{ display: 'table-cell', verticalAlign: 'middle' }}>
                                     <div style={{ display: 'inline-block', position: 'relative', top: 2 }}>
-                                        <Avatar onClick={ () => navigate('/teacher/profile') } style={{ cursor: 'pointer' }} radius="md" color="indigo">
+                                        <Avatar onClick={() => navigate('/teacher/profile')} style={{ cursor: 'pointer' }} radius="md" color="indigo">
                                             OC
                                         </Avatar>
                                     </div>
