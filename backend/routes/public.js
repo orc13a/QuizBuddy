@@ -33,7 +33,8 @@ api.post('/signup', async (req, res) => {
             firstname: userSignup.firstname,
             lastname: userSignup.email,
             email: userSignup.email,
-            password: ''
+            password: '',
+            tokenVersion: 1
         }
 
         bcrypt.hash(userSignup.password, saltRounds, async (err, hashedPwd) => {
@@ -75,7 +76,7 @@ api.post('/login', async (req, res) => {
                     sendRefreshToken(res, rToken);
                     res.status(200).json({ profileType: user.profileType, qbid: aToken });
                 }
-            } else { // User found && password matche error
+            } else {
                 res.status(406).json({message: 'Forkert brugernavn eller adgagnskode', type: 'error'});
             }
         });

@@ -31,7 +31,9 @@ api.post('/teacher', (req, res) => {
                     res.status(401).json({ message: 'fejl2', type: 'error', accessToken: '' });
                 }
 
-                teacherSchema.findOne({ email: decoded.user.email }, (err, docs) => {
+                userSchema.findOne({ email: decoded.user.email }, (err, docs) => {
+                    const user = docs;
+
                     if (err) {
                         res.status(404).json({ message: 'fejl3', type: 'error', accessToken: '' });
                     } else if (user.tokenVersion !== decoded.tokenVersion) {

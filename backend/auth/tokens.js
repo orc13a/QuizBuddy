@@ -12,7 +12,8 @@ export const createAcessToken = (user_) => {
         user: {
             email: user_.email,
             firstName: user_.firstName,
-            lastName: user_.lastName
+            lastName: user_.lastName,
+            profileType: user_.profileType
         }
     }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
 
@@ -24,7 +25,8 @@ export const createRefreshToken = (user_) => {
         user: {
             email: user_.email,
             firstName: user_.firstName,
-            lastName: user_.lastName
+            lastName: user_.lastName,
+            profileType: user_.profileType
         },
         tokenVersion: user_.tokenVersion
     }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
@@ -37,7 +39,8 @@ export const createTeacherAccessToken = (user_) => {
         user: {
             email: user_.email,
             firstName: user_.firstName,
-            lastName: user_.lastName
+            lastName: user_.lastName,
+            profileType: user_.profileType
         }
     }, process.env.TEACHER_ACCESS_TOKEN_SECRET, { expiresIn: "30m" });
 
@@ -49,7 +52,8 @@ export const createTeacherRefreshToken = (user_) => {
         user: {
             email: user_.email,
             firstName: user_.firstName,
-            lastName: user_.lastName
+            lastName: user_.lastName,
+            profileType: user_.profileType
         },
         tokenVersion: user_.tokenVersion
     }, process.env.TEACHER_REFRESH_TOKEN_SECRET, { expiresIn: "7d" });

@@ -1,6 +1,7 @@
 import { AppShell, useMantineTheme } from "@mantine/core";
 import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import TeacherRoute from "./components/routes/TeacherRoute";
 import Frontpage from './components/public/Frontpage/Frontpage';
 import Login from "./components/public/Login/Login";
 import Signup from "./components/public/Signup/Signup";
@@ -32,8 +33,12 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 {/* Teacher */}
-                <Route path="/teacher/forside" element={<TeacherHome />} />
-                <Route path="/teacher/hold" element={<TeacherTeams />} />
+                <Route path="/teacher/forside" element={
+                    <TeacherRoute>
+                        <TeacherHome />
+                    </TeacherRoute>
+                } />
+                {/* <TeacherRoute path="/teacher/hold" element={<TeacherTeams />} /> */}
                 {/* Student */}
             </Routes>
         </AppShell>

@@ -17,7 +17,7 @@ import { NotificationsProvider } from '@mantine/notifications';
 ReactDOM.render(
     <React.StrictMode>
         <MantineProvider theme={{ colorScheme: 'light' }}>
-            <NotificationsProvider position="bottom-left">
+            <NotificationsProvider limit={1} position="bottom-left">
                 <BrowserRouter>
                     <App />
                 </BrowserRouter>
