@@ -10,11 +10,6 @@ import { sendRefreshToken } from '../auth/sendRefreshToken.js';
 // GET requests
 // ----------------------------------------
 
-api.get('/', (req, res) => {
-    res.send('hello');
-    res.end();
-})
-
 // api.get('/details', routeIsAuth, (req, res) => {
 //     const token = getAccessToken(req);
 
@@ -69,11 +64,6 @@ api.post('/login', (req, res) => {
     //         });
     //     }
     // });
-});
-
-api.post('/signup', (req, res) => {
-    console.log(req.body);
-    res.end();
 });
 
 // api.post('/logout', routeIsAuth, (req, res) => {

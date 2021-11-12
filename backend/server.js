@@ -23,10 +23,12 @@ server.get('/', (req, res) => {
 });
 
 import rkRouter from './routes/tokenRoutes.js';
-import teacherRouter from './routes/tokenRoutes.js';
+import teacherRouter from './routes/teachers.js';
+import publicRouter from './routes/public.js';
 
 server.use('/r_t', rkRouter); // tokens
 server.use('/teachers', teacherRouter);
+server.use('/public', publicRouter);
 
 server.get('*', (req, res) => {
     res.status(404).json({ message: '404', type: 'error' });
