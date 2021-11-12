@@ -1,0 +1,25 @@
+import jwt from 'jsonwebtoken';
+
+export const teacherRouteIsAuth = (req, res, next) => {
+    const auth = req.headers['authorization'];
+    
+    // bearer
+    if (!auth) {
+        res.status(401).json({ message: 'Du skal være logget ind', type: 'error', errorMessage: 'authorization not found' });
+    } else {
+        const token = auth.split(' ')[1];
+        
+        try {
+            jwt.verify(token, process.env.TEACHER_ACCESS_TOKEN_SECRET, (err, decoded) => {
+                if (err) {
+                    console.log(err);
+                    res.status(401).json({ message: 'Du skal være logget ind', type: 'error', errorMessage: 'Token error' });
+                }
+                next();
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(401).json({ message: 'Du skal være logget ind', type: 'error', errorMessage: 'Try error' });
+        }
+    }
+}

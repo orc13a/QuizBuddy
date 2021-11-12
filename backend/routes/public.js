@@ -5,6 +5,8 @@ const saltRounds = 13;
 import jwt from 'jsonwebtoken';
 
 import userSchema from '../models/user.model.js';
+import { createTeacherAccessToken, createTeacherRefreshToken } from '../auth/tokens.js';
+import { sendRefreshToken } from '../auth/sendRefreshToken.js';
 
 // ----------------------------------------
 // GET requests
@@ -49,6 +51,40 @@ api.post('/signup', async (req, res) => {
             }
         });
     }
+});
+
+api.post('/login', async (req, res) => {
+    const body = req.body;
+    const user = await userSchema.findOne({ email: body.email });
+
+    if (user === null) {
+        res.status(406).json({ message: 'Ingen bruger fundet', type: 'error' });
+    } else {
+        bcrypt.compare(body.password, user.password, (err, result) => {
+            if (err) {
+                res.status(400).json({message: 'Der skete en fejl, prøv igen', type: 'error'});
+            }
+
+            if (result === true) {
+                if (user.profileType === 'student') {
+                
+                } else if (user.profileType === 'teacher') {
+                    const aToken = createTeacherAccessToken(user);
+                    const rToken = createTeacherRefreshToken(user);
+
+                    sendRefreshToken(res, rToken);
+                    res.status(200).json({ profileType: user.profileType, qbid: aToken });
+                }
+            } else { // User found && password matche error
+                res.status(406).json({message: 'Forkert brugernavn eller adgagnskode', type: 'error'});
+            }
+        });
+    }
+});
+
+api.post('/logout', (req, res) => {
+    sendRefreshToken(res, '');
+    res.status(200).json({ message: 'Du er blevet logget ud', type: 'success' });
 });
 
 // ----------------------------------------
