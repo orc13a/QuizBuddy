@@ -2,12 +2,16 @@ import { ActionIcon, Avatar, Button, Card, Space, Col, Drawer, Grid, useMantineT
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
+import { logout } from "../../../api";
+import { useNotifications } from "@mantine/notifications";
 
 export default function Navbar({ children }) {
     const theme = useMantineTheme();
     const navigate = useNavigate();
+    const notifications = useNotifications();
 
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [logoutLoading, setLogoutLoading] = useState(false);
 
     const burgerIcon = (
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
@@ -33,6 +37,21 @@ export default function Navbar({ children }) {
         setTimeout(() => {
             getActive();
         }, 30);
+    }
+
+    const logoutClick = () => {
+        setLogoutLoading(true);
+        logout().then((res) => {
+            notifications.showNotification({
+                title: 'Vi ses',
+                message: 'Du er blevet logget ud.',
+                color: 'teal'
+            })
+            navigate('/login', { replace: true });
+        }).catch((err) => {
+            console.error(err);
+            setLogoutLoading(false);
+        });
     }
 
     return (
@@ -69,7 +88,7 @@ export default function Navbar({ children }) {
                 </div>
                 <div style={{ width: '320px', position: 'absolute', bottom: 0, paddingBottom: 16 }}>
                     <Card radius="md">
-                        <Button fullWidth radius="md" size="md" color="red" variant="light">
+                        <Button onClick={ logoutClick } fullWidth radius="md" size="md" color="red" variant="light">
                             Log ud
                         </Button>
                     </Card>

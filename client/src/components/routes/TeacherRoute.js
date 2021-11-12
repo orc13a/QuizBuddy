@@ -19,7 +19,7 @@ export default function TeacherRoute({ children }) {
         }).catch((err) => {
             setTokenState('error');
             setLoading(false);
-            console.error(err.response);
+            console.error(err);
         });
     });
 

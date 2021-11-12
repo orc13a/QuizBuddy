@@ -24,6 +24,7 @@ api.interceptors.request.use((req) => {
 // Public
 export const signup = (data) => api.post('public/signup', data);
 export const login = (data) => api.post('public/login', data);
+export const logout = () => api.post('public/logout', '');
 
 // Teacher
 export const teacherRF = () => api.post('r_t/teacher', '');
