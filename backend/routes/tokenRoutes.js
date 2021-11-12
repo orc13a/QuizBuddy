@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { sendRefreshToken } from '../auth/sendRefreshToken.js';
 import { createTeacherAccessToken, createTeacherRefreshToken } from '../auth/tokens.js';
 
-import teacherSchema from '../models/teacher.model.js';
+import userSchema from '../models/user.model.js';
 
 // ----------------------------------------
 // GET requests
@@ -36,6 +36,8 @@ api.post('/teacher', (req, res) => {
                         res.status(404).json({ message: 'fejl3', type: 'error', accessToken: '' });
                     } else if (user.tokenVersion !== decoded.tokenVersion) {
                         res.status(401).json({ message: 'fejl4', type: 'error', accessToken: '' });
+                    } else if (decoded.user.profileType !== 'teacher') {
+                        res.status(401).json({ message: 'fejl5', type: 'error', accessToken: '' });
                     } else {
                         sendRefreshToken(res, createTeacherRefreshToken(user));
                         res.status(200).json({ message: 'ok', type: 'success', accessToken: createTeacherAccessToken(user) });
@@ -44,7 +46,7 @@ api.post('/teacher', (req, res) => {
             });
         } catch (error) {
             console.log(error);
-            res.status(400).json({ message: 'fejl5', type: 'error', accessToken: '' });
+            res.status(400).json({ message: 'fejl6', type: 'error', accessToken: '' });
         }
     }
 });

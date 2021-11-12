@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
-const TeacherSchema = mongoose.Schema({
-    id: String,
+const UserSchema = mongoose.Schema({
+    profileType: String,
     firstname: String,
     lastname: String,
     email: String,
@@ -14,4 +14,4 @@ const TeacherSchema = mongoose.Schema({
     },
 });
 
-export default mongoose.model('teachers', TeacherSchema);
+export default mongoose.model('users', UserSchema);

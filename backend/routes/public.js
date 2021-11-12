@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 const saltRounds = 13;
 import jwt from 'jsonwebtoken';
 
-import teacherSchema from '../models/teacher.model.js';
+import userSchema from '../models/user.model.js';
 
 // ----------------------------------------
 // GET requests
@@ -18,9 +18,8 @@ import teacherSchema from '../models/teacher.model.js';
 
 api.post('/signup', async (req, res) => {
     const userSignup = req.body;
-    const userType = userSignup.profileType;
 
-    const findUser = await teacherSchema.findOne({ email: userSignup.email });
+    const findUser = await userSchema.findOne({ email: userSignup.email });
 
     if (findUser !== null) {
         res.status(406).json({ message: 'E-mail allerede i brug', type: 'error' });
@@ -28,9 +27,10 @@ api.post('/signup', async (req, res) => {
         res.status(400).json({ message: 'Adgangskoderne er ikke ens', type: 'error' });
     } else {
         const newUser = {
-            firstname: 'Oliver',
-            lastname: 'Christensen',
-            email: 'orc13a@live.dk',
+            profileType: userSignup.profileType,
+            firstname: userSignup.firstname,
+            lastname: userSignup.email,
+            email: userSignup.email,
             password: ''
         }
 
@@ -41,15 +41,11 @@ api.post('/signup', async (req, res) => {
 
             newUser.password = hashedPwd;
 
-            if (userType === 'student') {
-                res.end();
-            } else if (userType === 'teacher') {
-                try {
-                    await new teacherSchema(newUser).save();
-                    res.status(200).json({ message: 'Profil oprettet', type: 'success' });
-                } catch (error) {
-                    res.status(400).json({ message: 'Der skete en fejl, prøv igen', type: 'error' });
-                }
+            try {
+                await new userSchema(newUser).save();
+                res.status(200).json({ message: 'Profil oprettet', type: 'success' });
+            } catch (error) {
+                res.status(400).json({ message: 'Der skete en fejl, prøv igen', type: 'error' });
             }
         });
     }

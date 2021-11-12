@@ -4,6 +4,7 @@ import { useForm } from '@mantine/hooks';
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { signup } from "../../../api";
+import { useNotifications } from "@mantine/notifications";
 
 const requirements = [
     { re: /[0-9]/, label: 'Skal indholde et tal' },
@@ -51,6 +52,7 @@ function getStrength(password) {
 export default function Signup() {
     const theme = useMantineTheme();
     const navigate = useNavigate();
+    const notifications = useNotifications();
 
     const [loading, setLoading] = useState(false);
     const [popoverOpened, setPopoverOpened] = useState(false);
@@ -100,15 +102,22 @@ export default function Signup() {
 
     const onSubmit = (values) => {
         window.scrollTo(0, 0);
-        // setLoading(true);
+        setLoading(true);
         values.profileType = userType;
 
         signup(values).then((res) => {
+            notifications.showNotification({
+                title: 'Profil oprettet',
+                message: 'Du kan nu logge ind med din profil',
+                color: 'teal'
+            });
+
             navigate(`/login`, { replace: true });
         }).catch((err) => {
             const data = err.response.data;
             setErrorMsg(data.message);
             setFormError(true);
+            setLoading(false);
         });
     }
 
