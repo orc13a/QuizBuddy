@@ -5,6 +5,7 @@ import Frontpage from './components/public/Frontpage/Frontpage';
 import Login from "./components/public/Login/Login";
 import Signup from "./components/public/Signup/Signup";
 import TeacherHome from "./components/teacher/Home/Home";
+import TeacherTeams from "./components/teacher/Teams/Teams";
 
 function App() {
     const t = useMantineTheme();
@@ -32,6 +33,7 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 {/* Teacher */}
                 <Route path="/teacher/forside" element={<TeacherHome />} />
+                <Route path="/teacher/hold" element={<TeacherTeams />} />
                 {/* Student */}
             </Routes>
         </AppShell>

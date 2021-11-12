@@ -49,7 +49,7 @@ export default function Navbar({ children }) {
                 zIndex={2000}
             >
                 <div style={{ height: '85%', overflowY: 'scroll' }}>
-                    <Link to="/teacher" className="navBtnLink">
+                    <Link to="/teacher/forside" className="navBtnLink">
                         <Button id="forsideNavBtn" className="navBtn" onClick={ goTo } fullWidth radius={0} size="md" color="indigo" variant="light">
                             Forside
                         </Button>
