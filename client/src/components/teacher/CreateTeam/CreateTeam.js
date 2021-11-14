@@ -77,7 +77,7 @@ export default function TeacherCreateTeam() {
                             radius="md"
                             required
                             label="Hold navn"
-                            error={form.errors.teamName && 'Angiv hold navn'}
+                            error={ formError && form.errors.teamName && 'Angiv hold navn'}
                             value={form.values.teamName}
                             onChange={(event) => form.setFieldValue('teamName', event.currentTarget.value)}
                             />

@@ -19,10 +19,6 @@ export default function Navbar({ children }) {
         </svg>
     );
 
-    const goTo = (e) => {
-        console.log(e.target);
-    }
-
     const getActive = () => {
         const url = window.location.href;
         const urlSplit = url.split('/');
@@ -69,26 +65,26 @@ export default function Navbar({ children }) {
             >
                 <div style={{ height: '85%', overflowY: 'scroll' }}>
                     <Link to="/teacher/forside" className="navBtnLink">
-                        <Button id="forsideNavBtn" className="navBtn" onClick={ goTo } fullWidth radius={0} size="md" color="indigo" variant="light">
+                        <Button id="forsideNavBtn" className="navBtn" fullWidth radius={0} size="md" color="indigo" variant="light">
                             Forside
                         </Button>
                     </Link>
                     <Space h="md" />
                     <Link to="/teacher/hold" className="navBtnLink">
-                        <Button id="holdNavBtn" className="navBtn" onClick={ goTo } fullWidth radius={0} size="md" color="indigo" variant="light">
+                        <Button id="holdNavBtn" className="navBtn" fullWidth radius={0} size="md" color="indigo" variant="light">
                             Mine hold
                         </Button>
                     </Link>
                     <Space h="md" />
                     <Link to="/teacher/opgave" className="navBtnLink">
-                        <Button id="opgaveNavBtn" className="navBtn" onClick={ goTo } fullWidth radius={0} size="md" color="indigo" variant="light">
+                        <Button id="opgaveNavBtn" className="navBtn" fullWidth radius={0} size="md" color="indigo" variant="light">
                             Mine opgaver
                         </Button>
                     </Link>
                 </div>
                 <div style={{ width: '320px', position: 'absolute', bottom: 0, paddingBottom: 0 }}>
                     <Card radius="md">
-                        <Button onClick={ logoutClick } fullWidth radius="md" size="md" color="red" variant="light">
+                        <Button loading={ logoutLoading } onClick={ logoutClick } fullWidth radius="md" size="md" color="red" variant="light">
                             Log ud
                         </Button>
                     </Card>
@@ -109,7 +105,7 @@ export default function Navbar({ children }) {
                                 <div style={{ display: 'table-cell', verticalAlign: 'middle' }}>
                                     <div style={{ display: 'inline-block', position: 'relative', top: 2 }}>
                                         <Avatar onClick={() => navigate('/teacher/profil')} style={{ cursor: 'pointer' }} radius="md" color="indigo">
-                                            OC
+                                            { localStorage.getItem('qbavatar') }
                                         </Avatar>
                                     </div>
                                     <div style={{ display: 'inline-block', position: 'relative', bottom: 3, marginLeft: 25 }}>

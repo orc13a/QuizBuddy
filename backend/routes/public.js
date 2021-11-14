@@ -7,6 +7,7 @@ import getUuid from 'uuid-by-string';
 import userSchema from '../models/user.model.js';
 import { createTeacherAccessToken, createTeacherRefreshToken } from '../auth/tokens.js';
 import { sendRefreshToken } from '../auth/sendRefreshToken.js';
+import { getUserAvatar } from '../functions/getUserAvatar.js';
 
 // ----------------------------------------
 // GET requests
@@ -74,8 +75,10 @@ api.post('/login', async (req, res) => {
                     const aToken = createTeacherAccessToken(user);
                     const rToken = createTeacherRefreshToken(user);
 
+                    const userAvatar = getUserAvatar(user.firstname, user.lastname);
+
                     sendRefreshToken(res, rToken);
-                    res.status(200).json({ profileType: user.profileType, qbid: aToken });
+                    res.status(200).json({ userAvatar: userAvatar, profileType: user.profileType, qbid: aToken });
                 }
             } else {
                 res.status(406).json({message: 'Forkert brugernavn eller adgagnskode', type: 'error'});

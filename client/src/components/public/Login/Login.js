@@ -30,6 +30,7 @@ export default function Login() {
         login(values).then((res) => {
             const data = res.data;
             setAccessToken(data.qbid);
+            localStorage.setItem('qbavatar', data.userAvatar);
             navigate(`/${data.profileType}/forside`, { replace: true });
         }).catch((err) => {
             const data = err.response.data;
