@@ -26,7 +26,7 @@ export default function Navbar({ children }) {
     const getActive = () => {
         const url = window.location.href;
         const urlSplit = url.split('/');
-        const page = urlSplit[urlSplit.length - 1];
+        const page = urlSplit[4]; // urlSplit.length - 1
         const btn = document.getElementById(`${page}NavBtn`);
         btn.classList.add('navBtnActive');
         btn.classList.remove('navBtn');
@@ -80,13 +80,13 @@ export default function Navbar({ children }) {
                         </Button>
                     </Link>
                     <Space h="md" />
-                    <Link to="/teacher/opgave/tilføj" className="navBtnLink">
-                        <Button id="tilføjNavBtn" className="navBtn" onClick={ goTo } fullWidth radius={0} size="md" color="indigo" variant="light">
-                            Opret opgave
+                    <Link to="/teacher/opgave" className="navBtnLink">
+                        <Button id="opgaveNavBtn" className="navBtn" onClick={ goTo } fullWidth radius={0} size="md" color="indigo" variant="light">
+                            Mine opgaver
                         </Button>
                     </Link>
                 </div>
-                <div style={{ width: '320px', position: 'absolute', bottom: 0, paddingBottom: 16 }}>
+                <div style={{ width: '320px', position: 'absolute', bottom: 0, paddingBottom: 0 }}>
                     <Card radius="md">
                         <Button onClick={ logoutClick } fullWidth radius="md" size="md" color="red" variant="light">
                             Log ud

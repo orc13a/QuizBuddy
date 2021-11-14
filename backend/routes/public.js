@@ -2,7 +2,7 @@ import express from 'express';
 const api = express.Router();
 import bcrypt from 'bcrypt';
 const saltRounds = 13;
-import jwt from 'jsonwebtoken';
+import getUuid from 'uuid-by-string';
 
 import userSchema from '../models/user.model.js';
 import { createTeacherAccessToken, createTeacherRefreshToken } from '../auth/tokens.js';
@@ -29,9 +29,10 @@ api.post('/signup', async (req, res) => {
         res.status(400).json({ message: 'Adgangskoderne er ikke ens', type: 'error' });
     } else {
         const newUser = {
+            userId: getUuid(userSignup.email),
             profileType: userSignup.profileType,
             firstname: userSignup.firstname,
-            lastname: userSignup.email,
+            lastname: userSignup.lastname,
             email: userSignup.email,
             password: '',
             tokenVersion: 1

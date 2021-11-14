@@ -31,7 +31,7 @@ api.post('/teacher', (req, res) => {
                     res.status(401).json({ message: 'fejl2', type: 'error', accessToken: '' });
                 }
 
-                userSchema.findOne({ email: decoded.user.email }, (err, docs) => {
+                userSchema.findOne({ userId: decoded.user.userId }, (err, docs) => {
                     const user = docs;
 
                     if (err) {

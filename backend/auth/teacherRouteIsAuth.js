@@ -12,13 +12,11 @@ export const teacherRouteIsAuth = (req, res, next) => {
         try {
             jwt.verify(token, process.env.TEACHER_ACCESS_TOKEN_SECRET, (err, decoded) => {
                 if (err) {
-                    console.log(err);
                     res.status(401).json({ message: 'Du skal være logget ind', type: 'error', errorMessage: 'Token error' });
                 }
                 next();
             });
         } catch (error) {
-            console.log(error);
             res.status(401).json({ message: 'Du skal være logget ind', type: 'error', errorMessage: 'Try error' });
         }
     }
