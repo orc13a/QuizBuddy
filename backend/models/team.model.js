@@ -2,8 +2,9 @@ import mongoose from "mongoose";
 
 const TeamSchema = mongoose.Schema({
     teamId: String,
-    creator: {},
+    creatorId: String,
     shareCode: String,
+    teamName: String,
     members: [],
     assignments: [],
     createdAt: {

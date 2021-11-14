@@ -8,23 +8,28 @@ export const getAccessToken = (request) => {
     return token;
 } 
 
-export const getUser = async (request) => {
+export const getTeacher = async (request) => {
     const token = getAccessToken(request);
+    
+    try {
+        const tokenUser = await jwt.verify(token, process.env.TEACHER_ACCESS_TOKEN_SECRET).user;
+        const user = await userSchema.findOne({ userId: tokenUser.userId }).exec();
+        return user;
+    } catch (error) {
+        res.status(403).json({ message: 'Der skete en fejl', type: 'error' });
+    }
+}
 
-    jwt.verify(token, process.env.TEACHER_ACCESS_TOKEN_SECRET, (err, decode) => {
-        if (err) {
-            res.status(403).json({ message: 'Der skete en fejl', type: 'error' });
-        } else {
-            const tokenUser = decode['user'];
-            userSchema.findOne({ userId: tokenUser.userId }, function (err, result) {
-                if (err) {
-                    res.status(403).json({ message: 'Der skete en fejl', type: 'error' });
-                } else {
-                    return result;
-                }
-            });
-        }
-    });
+export const getStudent = async (request) => {
+    const token = getAccessToken(request);
+    
+    try {
+        const tokenUser = await jwt.verify(token, process.env.STUDENT_ACCESS_TOKEN_SECRET).user;
+        const user = await userSchema.findOne({ userId: tokenUser.userId }).exec();
+        return user;
+    } catch (error) {
+        res.status(403).json({ message: 'Der skete en fejl', type: 'error' });
+    }
 }
 
 export const createAcessToken = (user_) => {

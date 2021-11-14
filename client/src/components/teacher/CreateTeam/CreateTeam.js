@@ -4,10 +4,12 @@ import { useNavigate } from "react-router";
 import { useState } from "react";
 import Navbar from "../Navbar/Navbar";
 import { teacherCreateTeam } from "../../../api";
+import { useNotifications } from "@mantine/notifications";
 
 export default function TeacherCreateTeam() {
     const theme = useMantineTheme();
     const navigate = useNavigate();
+    const notifications = useNotifications();
 
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
@@ -24,10 +26,17 @@ export default function TeacherCreateTeam() {
 
     const onSubmit = (values) => {
         setLoading(true);
-        teacherCreateTeam().then((res) => {
-
+        teacherCreateTeam(values).then((res) => {
+            notifications.showNotification({
+                title: 'Hold oprettet',
+                message: res.data.message,
+                color: 'teal'
+            });
+            navigate('/teacher/hold', { replace: true });
         }).catch((err) => {
             console.error(err);
+            setErrorMsg(err.response.data.message);
+            setFormError(true);
             setLoading(false);
         });
     }
