@@ -48,7 +48,7 @@ export default function TeacherTeam() {
                     message: `Dit hold '${team.teamName}' er blevet slettet`,
                     color: 'teal'
                 });
-                navigate('/teaher/hold', { replace: true });
+                navigate('/teacher/hold', { replace: true });
             }).catch((err) => {
                 console.error(err);
                 setDeletingTeam(false);

@@ -57,7 +57,7 @@ export default function TeacherTeams() {
                     </Grid>
                 ) : (
                     <Grid gutter="xl">
-                        { teams === null ? (
+                        { teams === null || Object.keys(teams).length === 0 ? (
                             <Text>Du har ingen hold</Text>
                         ) : (
                             teams.map((team) => (

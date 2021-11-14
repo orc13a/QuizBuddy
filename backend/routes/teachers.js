@@ -68,7 +68,7 @@ api.post('/teams/delete/:teamId', teacherRouteIsAuth, async (req, res) => {
     const teamId = req.params['teamId'];
 
     try {
-        const teams = await teamSchema.findOneAndRemove({ creatorId: teacher.userId, teamId: teamId });
+        await teamSchema.findOneAndRemove({ creatorId: teacher.userId, teamId: teamId });
         res.status(200).json({ message: 'Hold slettet', type: 'success' });
     } catch (error) {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
