@@ -1,11 +1,15 @@
 import { Accordion, Button, Card, Divider, Input, InputWrapper, Loader, Menu, MenuLabel, Modal, Space, Text, Title } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { teacherGetTeam } from "../../../api";
+import { teacherDeleteTeam, teacherGetTeam } from "../../../api";
+import { useNotifications } from '@mantine/notifications';
+import { useNavigate } from "react-router";
 import Navbar from "../Navbar/Navbar";
 
 export default function TeacherTeam() {
     const { teamId } = useParams();
+    const navigate = useNavigate();
+    const notifications = useNotifications();
 
     const [fetching, setFetching] = useState(true);
     const [showDeleteTeamModal, setShowDeleteTeamModal] = useState(false);
@@ -37,6 +41,24 @@ export default function TeacherTeam() {
 
     const deleteTeam = () => {
         setDeletingTeam(true);
+        if (team !== null) {
+            teacherDeleteTeam(team.teamId).then((res) => {
+                notifications.showNotification({
+                    title: 'Hold slettet',
+                    message: `Dit hold '${team.teamName}' er blevet slettet`,
+                    color: 'teal'
+                });
+                navigate('/teaher/hold', { replace: true });
+            }).catch((err) => {
+                console.error(err);
+                setDeletingTeam(false);
+                notifications.showNotification({
+                    title: 'Ops...',
+                    message: 'Der opstod en fejl, prøv igen',
+                    color: 'red'
+                });
+            });
+        }
     } 
 
     const removeUser = (
@@ -55,80 +77,86 @@ export default function TeacherTeam() {
                     </div>
                 ) : (
                     <>
-                        <Modal
-                        opened={showDeleteTeamModal}
-                        hideCloseButton={deletingTeam}
-                        closeOnClickOutside={!deletingTeam}
-                        onClose={ () => setShowDeleteTeamModal(false) }
-                        title={<Title order={3}>Slet dit hold '{team.teamName}'</Title>}
-                        >
-                            <Text>
-                                Er du sikker på at du vil slette dit hold '{team.teamName}'?<br />
-                                Denne handling kan ikke fortrydes.
-                            </Text>
-                            <Space h="md" />
-                            <Text>
-                                Skriv '{team.teamName}' forneden i feltet for at slette holdet. 
-                            </Text>
-                            <Input disabled={deletingTeam} id={team.teamName} onInput={ checkDeleteInput } radius="md" size="md" />
-                            <Space h="md" />
-                            <Button onClick={ () => setShowDeleteTeamModal(false)} disabled={deletingTeam}>
-                                Fortryd
-                            </Button>
-                            <Button onClick={ deleteTeam } loading={deletingTeam} disabled={!okDelete} color="red" variant="light" style={{ float: 'right' }}>
-                                Slet
-                            </Button>
-                        </Modal>
-                        <div className="centerH-o" style={{ paddingTop: 50, paddingBottom: 100 }}>
-                            <div className="centerH-i">
-                                <Card style={{ width: 300 }} withBorder radius="md">
-                                    <div style={{ textAlign: 'center' }}>
-                                        <Title order={2}>
-                                            { team.teamName }
-                                        </Title>
-                                    </div>
-                                    <Space h="lg" />
-                                    <Divider />
-                                    <Space h="lg" />
-                                    <InputWrapper description="Del denne kode med de elever som skal være med på dette hold" size="md" label="Hold kode">
-                                        <Input variant="filled" value={ team.shareCode } readOnly radius="md" size="md" />
-                                    </InputWrapper>
-                                    <Space h="lg" />
-                                    <Accordion>
-                                        <Accordion.Item label="Elever">
-                                            { team.members.length === 0 ? (
-                                                <div style={{ textAlign: 'center', fontStyle: 'italic' }}>
-                                                    <Text size="sm">
-                                                        Ingen elever i dette hold
-                                                    </Text>
-                                                </div>
-                                            ) : (
-                                                <>
-                                                    { team.members.map((student) => (
-                                                        <Card withBorder radius="md">
-                                                            <div style={{ display: 'inline-block', width: '90%' }}>
-                                                                { student.firstname } { student.lastname  }
-                                                            </div>
-                                                            <div style={{ display: 'inline-block', width: '10%' }}>
-                                                                <Menu radius="md">
-                                                                    <MenuLabel>Elev menu</MenuLabel>
-                                                                    <Menu.Item color="red" icon={removeUser}>Fjern elev</Menu.Item>
-                                                                </Menu>
-                                                            </div>
-                                                        </Card>
-                                                    )) }
-                                                </>
-                                            ) }
-                                        </Accordion.Item>
-                                    </Accordion>
-                                    <Space h="lg" />
-                                    <Space h="sm" />
-                                    <Button onClick={ () => setShowDeleteTeamModal(true)} variant="light" color="red">
-                                        Slet hold
+                        { team === null ? (
+                            navigate('/teacher/hold', { replace: true })
+                        ) : (
+                            <>
+                                <Modal
+                                opened={showDeleteTeamModal}
+                                hideCloseButton={deletingTeam}
+                                closeOnClickOutside={!deletingTeam}
+                                onClose={ () => setShowDeleteTeamModal(false) }
+                                title={<Title order={3}>Slet dit hold '{team.teamName}'</Title>}
+                                >
+                                    <Text>
+                                        Er du sikker på at du vil slette dit hold '{team.teamName}'?<br />
+                                        Denne handling kan ikke fortrydes.
+                                    </Text>
+                                    <Space h="md" />
+                                    <Text>
+                                        Skriv '{team.teamName}' forneden i feltet for at slette holdet. 
+                                    </Text>
+                                    <Input disabled={deletingTeam} id={team.teamName} onInput={ checkDeleteInput } radius="md" size="md" />
+                                    <Space h="md" />
+                                    <Button onClick={ () => setShowDeleteTeamModal(false)} disabled={deletingTeam}>
+                                        Fortryd
                                     </Button>
-                                </Card>
-                            </div>
-                        </div>
+                                    <Button onClick={ deleteTeam } loading={deletingTeam} disabled={!okDelete} color="red" variant="light" style={{ float: 'right' }}>
+                                        Slet
+                                    </Button>
+                                </Modal>
+                                <div className="centerH-o" style={{ paddingTop: 50, paddingBottom: 100 }}>
+                                    <div className="centerH-i">
+                                        <Card style={{ width: 300 }} withBorder radius="md">
+                                            <div style={{ textAlign: 'center' }}>
+                                                <Title order={2}>
+                                                    { team.teamName }
+                                                </Title>
+                                            </div>
+                                            <Space h="lg" />
+                                            <Divider />
+                                            <Space h="lg" />
+                                            <InputWrapper description="Del denne kode med de elever som skal være med på dette hold" size="md" label="Hold kode">
+                                                <Input variant="filled" value={ team.shareCode } readOnly radius="md" size="md" />
+                                            </InputWrapper>
+                                            <Space h="lg" />
+                                            <Accordion>
+                                                <Accordion.Item label="Elever">
+                                                    { team.members.length === 0 ? (
+                                                        <div style={{ textAlign: 'center', fontStyle: 'italic' }}>
+                                                            <Text size="sm">
+                                                                Ingen elever i dette hold
+                                                            </Text>
+                                                        </div>
+                                                    ) : (
+                                                        <>
+                                                            { team.members.map((student) => (
+                                                                <Card withBorder radius="md">
+                                                                    <div style={{ display: 'inline-block', width: '90%' }}>
+                                                                        { student.firstname } { student.lastname  }
+                                                                    </div>
+                                                                    <div style={{ display: 'inline-block', width: '10%' }}>
+                                                                        <Menu radius="md">
+                                                                            <MenuLabel>Elev menu</MenuLabel>
+                                                                            <Menu.Item color="red" icon={removeUser}>Fjern elev</Menu.Item>
+                                                                        </Menu>
+                                                                    </div>
+                                                                </Card>
+                                                            )) }
+                                                        </>
+                                                    ) }
+                                                </Accordion.Item>
+                                            </Accordion>
+                                            <Space h="lg" />
+                                            <Space h="sm" />
+                                            <Button onClick={ () => setShowDeleteTeamModal(true)} variant="light" color="red">
+                                                Slet hold
+                                            </Button>
+                                        </Card>
+                                    </div>
+                                </div>
+                            </>
+                        ) }
                     </>
                 ) }
             </Navbar>
