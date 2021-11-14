@@ -29,4 +29,5 @@ export const logout = () => api.post('public/logout', '');
 // Teacher
 export const teacherRF = () => api.post('r_t/teacher', '');
 export const teacherCreateTeam = (data) => api.post('teachers/teams/create', data);
-export const teacherGetTeams = () => api.get('teachers/teams/get');
+export const teacherGetTeams = () => api.get('teachers/teams/get/all');
+export const teacherGetTeam = (teamId) => api.get(`teachers/teams/get/${teamId}`);

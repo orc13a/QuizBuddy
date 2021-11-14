@@ -9,11 +9,23 @@ import teamSchema from '../models/team.model.js';
 // GET requests
 // ----------------------------------------
 
-api.get('/teams/get', teacherRouteIsAuth, async (req, res) => {
+api.get('/teams/get/all', teacherRouteIsAuth, async (req, res) => {
     const teacher = await getTeacher(req);
     try {
         const teams = await teamSchema.find({ creatorId: teacher.userId });
         res.status(200).json(teams);
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+});
+
+api.get('/teams/get/:teamId', teacherRouteIsAuth, async (req, res) => {
+    const teacher = await getTeacher(req);
+    const teamId = req.params['teamId'];
+
+    try {
+        const team = await teamSchema.findOne({ creatorId: teacher.userId, teamId: teamId });
+        res.status(200).json(team);
     } catch (error) {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
     }
