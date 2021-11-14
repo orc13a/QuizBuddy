@@ -5,7 +5,7 @@ const saltRounds = 13;
 import getUuid from 'uuid-by-string';
 
 import userSchema from '../models/user.model.js';
-import { createTeacherAccessToken, createTeacherRefreshToken } from '../auth/tokens.js';
+import { createStudentAccessToken, createStudentRefreshToken, createTeacherAccessToken, createTeacherRefreshToken } from '../auth/tokens.js';
 import { sendRefreshToken } from '../auth/sendRefreshToken.js';
 import { getUserAvatar } from '../functions/getUserAvatar.js';
 
@@ -70,7 +70,13 @@ api.post('/login', async (req, res) => {
 
             if (result === true) {
                 if (user.profileType === 'student') {
-                
+                    const aToken = createStudentAccessToken(user);
+                    const rToken = createStudentRefreshToken(user);
+
+                    const userAvatar = getUserAvatar(user.firstname, user.lastname);
+
+                    sendRefreshToken(res, rToken);
+                    res.status(200).json({ userAvatar: userAvatar, profileType: user.profileType, qbid: aToken });
                 } else if (user.profileType === 'teacher') {
                     const aToken = createTeacherAccessToken(user);
                     const rToken = createTeacherRefreshToken(user);

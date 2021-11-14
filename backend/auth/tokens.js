@@ -59,6 +59,37 @@ export const createRefreshToken = (user_) => {
     return token;
 }
 
+// #### Teacher ####
+
+export const createStudentAccessToken = (user_) => {
+    const token = jwt.sign({
+        user: {
+            userId: user_.userId,
+            firstname: user_.firstname,
+            lastname: user_.lastname,
+            profileType: user_.profileType
+        }
+    }, process.env.STUDENT_ACCESS_TOKEN_SECRET, { expiresIn: "2h" });
+
+    return token;
+}
+
+export const createStudentRefreshToken = (user_) => {
+    const token = jwt.sign({
+        user: {
+            userId: user_.userId,
+            firstname: user_.firstname,
+            lastname: user_.lastname,
+            profileType: user_.profileType
+        },
+        tokenVersion: user_.tokenVersion
+    }, process.env.STUDENT_REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
+
+    return token;
+}
+
+// #### Teacher ####
+
 export const createTeacherAccessToken = (user_) => {
     const token = jwt.sign({
         user: {
@@ -81,7 +112,7 @@ export const createTeacherRefreshToken = (user_) => {
             profileType: user_.profileType
         },
         tokenVersion: user_.tokenVersion
-    }, process.env.TEACHER_REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
+    }, process.env.STUDENT_REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
 
     return token;
 }
