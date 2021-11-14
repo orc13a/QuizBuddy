@@ -9,7 +9,15 @@ import teamSchema from '../models/team.model.js';
 // GET requests
 // ----------------------------------------
 
-
+api.get('/teams/get', teacherRouteIsAuth, async (req, res) => {
+    const teacher = await getTeacher(req);
+    try {
+        const teams = await teamSchema.find({ creatorId: teacher.userId });
+        res.status(200).json(teams);
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+});
 
 // ----------------------------------------
 // POST requests
@@ -39,7 +47,7 @@ api.post('/teams/create', teacherRouteIsAuth, async (req, res) => {
             res.status(200).json({ message: `Hold '${body.teamName}' er blevet oprettet`, type: 'success' });
         }
     } catch (error) {
-        res.status(406).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
     }
 });
 

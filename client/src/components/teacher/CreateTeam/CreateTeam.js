@@ -71,7 +71,6 @@ export default function TeacherCreateTeam() {
                         <Space h="lg" />
                         <form onSubmit={ form.onSubmit((values) => onSubmit(values)) }>
                             <TextInput
-                            
                             size="md"
                             autoFocus
                             radius="md"

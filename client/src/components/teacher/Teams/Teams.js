@@ -1,8 +1,24 @@
-import { ActionIcon, Affix, Card, Col, Grid, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Affix, Card, Col, Grid, Text, Tooltip, Skeleton } from "@mantine/core";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { teacherGetTeams } from "../../../api";
 import Navbar from "../Navbar/Navbar";
 
 export default function TeacherTeams() {
+    const [fetching, setFetching] = useState(true);
+    const [teams, setTeams] = useState(null);
+
+    useEffect(() => {
+        teacherGetTeams().then((res) => {
+            const data = res.data;
+            setTeams(data);
+            setFetching(false);
+        }).catch((err) => {
+            console.log(err);
+            setFetching(false);
+        });
+    });
+
     const addIcon = (
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-plus" viewBox="0 0 16 16">
             <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
@@ -27,38 +43,35 @@ export default function TeacherTeams() {
                         </Link>
                     </Tooltip>
                 </Affix>
-                <Grid gutter="xl">
-                    <Col span={12} sm={3} md={4} lg={3}>
-                        <Card className="teamCard" withBorder>
-                            <Text weight={500}>Hold 1</Text>
-                        </Card>
-                    </Col>
-                    <Col span={12} sm={3} md={4} lg={3}>
-                        <Card className="teamCard" withBorder>
-                            <Text weight={500}>Hold 2</Text>
-                        </Card>
-                    </Col>
-                    <Col span={12} sm={3} md={4} lg={3}>
-                        <Card className="teamCard" withBorder>
-                            <Text weight={500}>Hold 3</Text>
-                        </Card>
-                    </Col>
-                    <Col span={12} sm={3} md={4} lg={3}>
-                        <Card className="teamCard" withBorder>
-                            <Text weight={500}>Hold 4</Text>
-                        </Card>
-                    </Col>
-                    <Col span={12} sm={3} md={4} lg={3}>
-                        <Card className="teamCard" withBorder>
-                            <Text weight={500}>Hold 5</Text>
-                        </Card>
-                    </Col>
-                    <Col span={12} sm={3} md={4} lg={3}>
-                        <Card className="teamCard" withBorder>
-                            <Text weight={500}>Hold 6</Text>
-                        </Card>
-                    </Col>
-                </Grid>
+                { fetching ? (
+                    <Grid gutter="xl">
+                        <Col span={12} sm={3} md={4} lg={3}>
+                            <Skeleton radius="md" height={58.8} />
+                        </Col>
+                        <Col span={12} sm={3} md={4} lg={3}>
+                            <Skeleton radius="md" height={58.8} />
+                        </Col>
+                        <Col span={12} sm={3} md={4} lg={3}>
+                            <Skeleton radius="md" height={58.8} />
+                        </Col>
+                    </Grid>
+                ) : (
+                    <Grid gutter="xl">
+                        { teams === null ? (
+                            <Text>Du har ingen hold</Text>
+                        ) : (
+                            teams.map((team) => (
+                                <Col span={12} sm={3} md={4} lg={3} key={ team.teamId }>
+                                    <Link to={`/teacher/hold/${team.teamId}`} style={{ textDecoration: 'none' }}>
+                                        <Card className="teamCard" withBorder>
+                                            <Text weight={500}>{ team.teamName }</Text>
+                                        </Card>
+                                    </Link>
+                                </Col>
+                            ))
+                        ) }
+                    </Grid>
+                ) }
             </Navbar>
         </>
     );
