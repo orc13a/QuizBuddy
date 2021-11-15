@@ -84,6 +84,16 @@ api.post('/teams/delete/:teamId', teacherRouteIsAuth, async (req, res) => {
     const teamId = req.params['teamId'];
 
     try {
+        const team = await teamSchema.findOne({ teamId: teamId });
+        const members = team.members;
+        members.forEach(async (member) => {
+            await userSchema.updateOne({ userId: member.userId }, { $pull: { "teams": { teamId: teamId } } });
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+
+    try {
         await userSchema.findOneAndUpdate({ userId: teacher.userId }, { $pull: { "teams": { teamId: teamId } } }).exec();
         await teamSchema.findOneAndRemove({ creatorId: teacher.userId, teamId: teamId });
         res.status(200).json({ message: 'Hold slettet', type: 'success' });
