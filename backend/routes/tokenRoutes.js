@@ -2,7 +2,7 @@ import express from 'express';
 const api = express.Router();
 import jwt from 'jsonwebtoken';
 import { sendRefreshToken } from '../auth/sendRefreshToken.js';
-import { createTeacherAccessToken, createTeacherRefreshToken } from '../auth/tokens.js';
+import { createStudentAccessToken, createStudentRefreshToken, createTeacherAccessToken, createTeacherRefreshToken } from '../auth/tokens.js';
 
 import userSchema from '../models/user.model.js';
 
@@ -76,8 +76,8 @@ api.post('/student', (req, res) => {
                     } else if (decoded.user.profileType !== 'student') {
                         res.status(401).json({ message: 'fejl5', type: 'error', accessToken: '' });
                     } else {
-                        sendRefreshToken(res, createTeacherRefreshToken(user));
-                        res.status(200).json({ message: 'ok', type: 'success', accessToken: createTeacherAccessToken(user) });
+                        sendRefreshToken(res, createStudentRefreshToken(user));
+                        res.status(200).json({ message: 'ok', type: 'success', accessToken: createStudentAccessToken(user) });
                     } 
                 });
             });

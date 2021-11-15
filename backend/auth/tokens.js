@@ -112,7 +112,7 @@ export const createTeacherRefreshToken = (user_) => {
             profileType: user_.profileType
         },
         tokenVersion: user_.tokenVersion
-    }, process.env.STUDENT_REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
+    }, process.env.TEACHER_REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
 
     return token;
 }
