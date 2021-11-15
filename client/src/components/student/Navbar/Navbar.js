@@ -95,7 +95,7 @@ export default function Navbar({ children }) {
                     <Grid columns={10}>
                         <Col span={6}>
                             <span className="logoTitleTeacher" style={{ marginLeft: 15 }}>
-                                <Link style={{ color: theme.colors.indigo[3], textDecoration: 'none' }} to="/student/profil">
+                                <Link style={{ color: theme.colors.indigo[3], textDecoration: 'none' }} to="/student/forside">
                                     QuizBuddy
                                 </Link>
                             </span>
