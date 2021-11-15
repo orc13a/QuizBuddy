@@ -22,13 +22,15 @@ server.get('/', (req, res) => {
     res.status(200).json({ message: 'QuizBuddy API' });
 });
 
+import publicRouter from './routes/public.js';
 import rkRouter from './routes/tokenRoutes.js';
 import teacherRouter from './routes/teachers.js';
-import publicRouter from './routes/public.js';
+import studentRouter from './routes/students.js';
 
+server.use('/public', publicRouter);
 server.use('/r_t', rkRouter); // tokens
 server.use('/teachers', teacherRouter);
-server.use('/public', publicRouter);
+server.use('/students', studentRouter);
 
 server.get('*', (req, res) => {
     res.status(404).json({ message: '404', type: 'error' });

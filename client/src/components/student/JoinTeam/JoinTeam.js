@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { useState } from "react";
 import Navbar from "../Navbar/Navbar";
 import { useNotifications } from "@mantine/notifications";
+import { studentConnectFindTeam, studentConnectTeam } from "../../../api";
 
 export default function StudentJoinTeam() {
     const theme = useMantineTheme();
@@ -20,6 +21,7 @@ export default function StudentJoinTeam() {
     const form = useForm({
         initialValues: {
             teamShareCode: '',
+            teamCreatorId: '',
         },
         validationRules: {
             teamShareCode: (value) => value.length > 1 && value.replace(/[^-]/g, "").length >= 4,
@@ -28,6 +30,38 @@ export default function StudentJoinTeam() {
 
     const onFindSubmit = (values) => {
         setLoading(true);
+        studentConnectFindTeam(values).then((res) => {
+            const data = res.data;
+            setFoundTeam(data);
+            form.setFieldValue('teamCreatorId', data.creatorId);
+            setFoundTeamCheck(true);
+            setLoading(false);
+        }).catch((err) => {
+            console.error(err);
+            notifications.showNotification({
+                title: 'Ops...',
+                message: err.response.data.message,
+                color: 'red'
+            });
+            setLoading(false);
+        })
+    }
+
+    const onConnectSubmit = (values) => {
+        setConnectLoading(true);
+        studentConnectTeam(values).then((res) => {
+            const data = res.data;
+            
+            setConnectLoading(false);
+        }).catch((err) => {
+            console.error(err);
+            notifications.showNotification({
+                title: 'Ops...',
+                message: err.response.data.message,
+                color: 'red'
+            });
+            setConnectLoading(false);
+        });
         // teacherCreateTeam(values).then((res) => {
         //     notifications.showNotification({
         //         title: 'Hold oprettet',
@@ -41,10 +75,6 @@ export default function StudentJoinTeam() {
         //     setFormError(true);
         //     setLoading(false);
         // });
-    }
-
-    const onConnectSubmit = () => {
-        setConnectLoading(true);
     }
 
     const errorIcon = (
@@ -126,7 +156,7 @@ export default function StudentJoinTeam() {
                             <Space h="lg" />
                             <form onSubmit={ form.onSubmit((values) => onConnectSubmit(values)) }>
                                 <Text>
-                                    Vil du tilslutte dig holdet:<br /><b>hold navn</b>?
+                                    Vil du tilslutte dig holdet:<br /><b>{ foundTeam !== null ? foundTeam.teamName : null }</b>?
                                 </Text>
                                 <Space h="lg" />
                                 <Space h="sm" />
