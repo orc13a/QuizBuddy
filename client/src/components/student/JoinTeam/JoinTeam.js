@@ -51,8 +51,13 @@ export default function StudentJoinTeam() {
         setConnectLoading(true);
         studentConnectTeam(values).then((res) => {
             const data = res.data;
-            
+            notifications.showNotification({
+                title: 'Tilsluttet hold',
+                message: data.message,
+                color: 'teal'
+            });
             setConnectLoading(false);
+            navigate('/student/hold', { replace: true });
         }).catch((err) => {
             console.error(err);
             notifications.showNotification({

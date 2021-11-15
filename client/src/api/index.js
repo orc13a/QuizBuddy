@@ -28,7 +28,7 @@ export const logout = () => api.post('public/logout', '');
 
 // Teacher
 export const teacherRF = () => api.post('r_t/teacher', '');
-export const getTeacher = () => api.get('teachers/teacher', '');
+export const getTeacher = () => api.get('teachers/teacher');
 export const teacherCreateTeam = (data) => api.post('teachers/teams/create', data);
 export const teacherGetTeams = () => api.get('teachers/teams/get/all');
 export const teacherGetTeam = (teamId) => api.get(`teachers/teams/get/${teamId}`);
@@ -36,5 +36,6 @@ export const teacherDeleteTeam = (teamId) => api.post(`teachers/teams/delete/${t
 
 // Student 
 export const studentRF = () => api.post('r_t/student', '');
+export const getStudent = () => api.get('students/student');
 export const studentConnectFindTeam = (data) => api.post('/students/teams/find', data);
 export const studentConnectTeam = (data) => api.post('/students/teams/join', data);
