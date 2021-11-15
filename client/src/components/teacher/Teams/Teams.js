@@ -1,7 +1,7 @@
 import { ActionIcon, Affix, Card, Col, Grid, Text, Tooltip, Skeleton } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getTeacher, teacherGetTeams } from "../../../api";
+import { getTeacher } from "../../../api";
 import Navbar from "../Navbar/Navbar";
 
 export default function TeacherTeams() {

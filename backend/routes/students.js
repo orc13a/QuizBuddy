@@ -53,10 +53,12 @@ api.post('/teams/join', studentRouteIsAuth, async (req, res) => {
                 teamName: team.teamName
             };
             const teamMemberObj = {
-                firstName: 
+                userId: student.userId,
+                firstname: student.firstname,
+                lastname: student.lastname,
             };
             await userSchema.findOneAndUpdate({ userId: student.userId }, {$push: { teams: teamJoinedObj }});
-            await teamSchema.findOneAndUpdate({ teamId: team.teamId }, {$push: {members: }})
+            await teamSchema.findOneAndUpdate({ teamId: team.teamId }, {$push: {members: teamMemberObj }})
             res.status(200).json({ message: `Du er nu tilsluttet holdet '${team.teamName}'`, type: 'success' });
         }
     } catch (error) {

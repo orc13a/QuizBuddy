@@ -13,7 +13,7 @@ export default function StudentJoinTeam() {
 
     const [loading, setLoading] = useState(false);
     const [connectLoading, setConnectLoading] = useState(false);
-    const [errorMsg, setErrorMsg] = useState('');
+    const [errorMsg, ] = useState('');
     const [formError, setFormError] = useState(false);
     const [foundTeamCheck, setFoundTeamCheck] = useState(false);
     const [foundTeam, setFoundTeam] = useState(null);
