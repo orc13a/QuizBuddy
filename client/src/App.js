@@ -13,6 +13,7 @@ import TeacherTeam from "./components/teacher/Team/Team";
 import StudentHome from './components/student/Home/Home';
 import StudentTeams from "./components/student/Teams/Teams";
 import StudentJoinTeam from "./components/student/JoinTeam/JoinTeam";
+import StudentTeam from "./components/student/Team/Team";
 
 function App() {
     const t = useMantineTheme();
@@ -73,6 +74,11 @@ function App() {
                 <Route path="/student/hold/tilslut" element={
                     <StudentRoute>
                         <StudentJoinTeam />
+                    </StudentRoute>
+                } />
+                <Route path="/student/hold/:teamId" element={
+                    <StudentRoute>
+                        <StudentTeam />
                     </StudentRoute>
                 } />
             </Routes>

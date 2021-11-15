@@ -18,6 +18,18 @@ api.get('/student', studentRouteIsAuth, async (req, res) => {
     }
 });
 
+api.get('/teams/get/:teamId', studentRouteIsAuth, async (req, res) => {
+    const student = await getStudent(req);
+    const teamId = req.params['teamId'];
+
+    try {
+        const team = await teamSchema.findOne({ teamId: teamId });
+        res.status(200).json(team);
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+});
+
 // ----------------------------------------
 // POST requests
 // ----------------------------------------
@@ -61,6 +73,19 @@ api.post('/teams/join', studentRouteIsAuth, async (req, res) => {
             await teamSchema.findOneAndUpdate({ teamId: team.teamId }, {$push: {members: teamMemberObj }})
             res.status(200).json({ message: `Du er nu tilsluttet holdet '${team.teamName}'`, type: 'success' });
         }
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+});
+
+api.post('/teams/leave/:teamId', studentRouteIsAuth, async (req, res) => {
+    const student = await getStudent(req);
+    const teamId = req.params['teamId'];
+
+    try {
+        await teamSchema.findOneAndUpdate({ teamId: teamId }, { $pull: { "members": { userId: student.userId } } }).exec();
+        await userSchema.findOneAndUpdate({ userId: student.userId }, { $pull: { "teams": { teamId: teamId } } }).exec();
+        res.status(200).json({ message: `Du har forladt holdet`, type: 'success' });
     } catch (error) {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
     }
