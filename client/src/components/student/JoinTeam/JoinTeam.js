@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Divider, Loader, LoadingOverlay, Space, TextInput, Title, useMantineTheme } from "@mantine/core";
+import { Alert, Button, Card, Divider, Loader, LoadingOverlay, Space, Text, TextInput, Title, useMantineTheme } from "@mantine/core";
 import { useForm } from '@mantine/hooks';
 import { useNavigate } from "react-router";
 import { useState } from "react";
@@ -11,19 +11,22 @@ export default function StudentJoinTeam() {
     const notifications = useNotifications();
 
     const [loading, setLoading] = useState(false);
+    const [connectLoading, setConnectLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
     const [formError, setFormError] = useState(false);
+    const [foundTeamCheck, setFoundTeamCheck] = useState(false);
+    const [foundTeam, setFoundTeam] = useState(null);
 
     const form = useForm({
         initialValues: {
             teamShareCode: '',
         },
         validationRules: {
-            teamShareCode: (value) => value.length > 1,
+            teamShareCode: (value) => value.length > 1 && value.replace(/[^-]/g, "").length >= 4,
         },
     });
 
-    const onSubmit = (values) => {
+    const onFindSubmit = (values) => {
         setLoading(true);
         // teacherCreateTeam(values).then((res) => {
         //     notifications.showNotification({
@@ -38,6 +41,10 @@ export default function StudentJoinTeam() {
         //     setFormError(true);
         //     setLoading(false);
         // });
+    }
+
+    const onConnectSubmit = () => {
+        setConnectLoading(true);
     }
 
     const errorIcon = (
@@ -56,46 +63,82 @@ export default function StudentJoinTeam() {
         <>
             <Navbar>
                 <div className="center">
-                    <LoadingOverlay loader={ <Loader variant="dots" size="xl" color={theme.colors.indigo[3]} /> } visible={loading} />
-                    <Card padding="lg" style={{ width: '300px' }} shadow={theme.shadows.sm} withBorder>
-                        <div style={{ textAlign: 'center' }}>
-                            <Title order={2}>
-                                Tilslut hold
-                            </Title>
-                        </div>
-                        <Space h="lg" />
-                        <Divider />
-                        <div hidden={!formError}>
-                            <Space h="lg" />
-                            <Alert icon={errorIcon} color="red" title="Ops..." withCloseButton onClose={() => setFormError(false)}>
-                                { errorMsg }
-                            </Alert>
+                    <div hidden={foundTeamCheck}>
+                        <LoadingOverlay loader={ <Loader variant="dots" size="xl" color={theme.colors.indigo[3]} /> } visible={loading} />
+                        <Card padding="lg" style={{ width: '300px' }} shadow={theme.shadows.sm} withBorder>
+                            <div style={{ textAlign: 'center' }}>
+                                <Title order={2}>
+                                    Find hold
+                                </Title>
+                            </div>
                             <Space h="lg" />
                             <Divider />
-                        </div>
-                        <Space h="lg" />
-                        <form onSubmit={ form.onSubmit((values) => onSubmit(values)) }>
-                            <TextInput
-                            icon={keyIcon}
-                            size="md"
-                            autoFocus
-                            radius="md"
-                            required
-                            label="Hold kode"
-                            error={ form.errors.teamShareCode && 'Angiv hold kode'}
-                            value={form.values.teamShareCode}
-                            onChange={(event) => form.setFieldValue('teamShareCode', event.currentTarget.value)}
-                            />
+                            <div hidden={!formError}>
+                                <Space h="lg" />
+                                <Alert icon={errorIcon} color="red" title="Ops..." withCloseButton onClose={() => setFormError(false)}>
+                                    { errorMsg }
+                                </Alert>
+                                <Space h="lg" />
+                                <Divider />
+                            </div>
                             <Space h="lg" />
-                            <Space h="sm" />
-                            <Button onClick={ () => navigate('/student/hold', { replace: true }) } size="md" style={{ float: 'left' }} variant="light" color="indigo" radius="md">
-                                Fortryd
-                            </Button>
-                            <Button size="md" style={{ float: 'right' }} color="indigo" radius="md" type="submit">
-                                Tilslut
-                            </Button>
-                        </form>
-                    </Card>
+                            <form onSubmit={ form.onSubmit((values) => onFindSubmit(values)) }>
+                                <TextInput
+                                icon={keyIcon}
+                                size="md"
+                                autoFocus
+                                radius="md"
+                                required
+                                label="Hold kode"
+                                error={ form.errors.teamShareCode && 'Angiv hold kode'}
+                                value={form.values.teamShareCode}
+                                onChange={(event) => form.setFieldValue('teamShareCode', event.currentTarget.value)}
+                                />
+                                <Space h="lg" />
+                                <Space h="sm" />
+                                <Button onClick={ () => navigate('/student/hold', { replace: true }) } size="md" style={{ float: 'left' }} variant="light" color="indigo" radius="md">
+                                    Fortryd
+                                </Button>
+                                <Button size="md" style={{ float: 'right' }} color="indigo" radius="md" type="submit">
+                                    Find
+                                </Button>
+                            </form>
+                        </Card>
+                    </div>
+                    <div hidden={!foundTeamCheck}>
+                        <LoadingOverlay loader={ <Loader variant="dots" size="xl" color={theme.colors.indigo[3]} /> } visible={connectLoading} />
+                        <Card padding="lg" style={{ width: '300px' }} shadow={theme.shadows.sm} withBorder>
+                            <div style={{ textAlign: 'center' }}>
+                                <Title order={2}>
+                                    Tilslut hold
+                                </Title>
+                            </div>
+                            <Space h="lg" />
+                            <Divider />
+                            <div hidden={!formError}>
+                                <Space h="lg" />
+                                <Alert icon={errorIcon} color="red" title="Ops..." withCloseButton onClose={() => setFormError(false)}>
+                                    { errorMsg }
+                                </Alert>
+                                <Space h="lg" />
+                                <Divider />
+                            </div>
+                            <Space h="lg" />
+                            <form onSubmit={ form.onSubmit((values) => onConnectSubmit(values)) }>
+                                <Text>
+                                    Vil du tilslutte dig holdet:<br /><b>hold navn</b>?
+                                </Text>
+                                <Space h="lg" />
+                                <Space h="sm" />
+                                <Button onClick={ () => navigate('/student/hold', { replace: true }) } size="md" style={{ float: 'left' }} variant="light" color="indigo" radius="md">
+                                    Fortryd
+                                </Button>
+                                <Button size="md" style={{ float: 'right' }} color="indigo" radius="md" type="submit">
+                                    Tilslut
+                                </Button>
+                            </form>
+                        </Card>
+                    </div>
                 </div>
             </Navbar>
         </>
