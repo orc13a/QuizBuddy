@@ -16,12 +16,12 @@ export default function TeacherHome() {
                 <Affix position={{ bottom: 25, right: 25 }}>
                     <Tooltip
                     zIndex={999}
-                    label="Tilføj opgave"
+                    label="Opret opgave"
                     color="indigo"
                     position="left"
                     withArrow
                     >
-                        <Link to="/teacher/opgave/tiløj">
+                        <Link to="/teacher/opgave/opret">
                             <ActionIcon color="indigo" size="lg" radius="md" variant="filled">
                                 { addIcon }
                             </ActionIcon>

@@ -72,7 +72,7 @@ api.post('/teams/create', teacherRouteIsAuth, async (req, res) => {
             }
             await teamSchema(newTeam).save();
             await userSchema.findOneAndUpdate({ userId: teacher.userId }, {$push: { teams: teacherTeamObj }});
-            res.status(200).json({ message: `Hold '${body.teamName}' er blevet oprettet`, type: 'success' });
+            res.status(200).json({ message: `Hold '${body.teamName}' er blevet oprettet`, type: 'success', createdTeamId: newTeam.teamId });
         }
     } catch (error) {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });

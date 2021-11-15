@@ -76,9 +76,9 @@ export default function Navbar({ children }) {
                         </Button>
                     </Link>
                     <Space h="md" />
-                    <Link to="/teacher/opgave" className="navBtnLink">
+                    <Link to="/teacher/opgave/opret" className="navBtnLink">
                         <Button id="opgaveNavBtn" className="navBtn" fullWidth radius={0} size="md" color="indigo" variant="light">
-                            Mine opgaver
+                            Opret opgave
                         </Button>
                     </Link>
                 </div>

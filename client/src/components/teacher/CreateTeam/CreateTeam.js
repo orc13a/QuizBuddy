@@ -32,7 +32,7 @@ export default function TeacherCreateTeam() {
                 message: res.data.message,
                 color: 'teal'
             });
-            navigate('/teacher/hold', { replace: true });
+            navigate(`/teacher/hold/${res.data.createdTeamId}`, { replace: true });
         }).catch((err) => {
             console.error(err);
             setErrorMsg(err.response.data.message);
