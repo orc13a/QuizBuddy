@@ -4,6 +4,7 @@ import { teacherRouteIsAuth } from '../auth/teacherRouteIsAuth.js';
 import { getTeacher } from '../auth/tokens.js';
 import getUuid from 'uuid-by-string';
 import teamSchema from '../models/team.model.js';
+import userSchema from '../models/user.model.js';
 
 // ----------------------------------------
 // GET requests
@@ -55,7 +56,13 @@ api.post('/teams/create', teacherRouteIsAuth, async (req, res) => {
                 shareCode: newTeamShareCode,
                 teamName: body.teamName
             }
+            const teacherTeamObj = {
+                teamId: newTeam.teamId,
+                creatorId: teacher.userId,
+                teamName: body.teamName
+            }
             await teamSchema(newTeam).save();
+            await userSchema.findOneAndUpdate({ userId: teacher.userId }, {$push: { teams: teacherTeamObj }});
             res.status(200).json({ message: `Hold '${body.teamName}' er blevet oprettet`, type: 'success' });
         }
     } catch (error) {
@@ -68,6 +75,7 @@ api.post('/teams/delete/:teamId', teacherRouteIsAuth, async (req, res) => {
     const teamId = req.params['teamId'];
 
     try {
+        await userSchema.findOneAndUpdate({ userId: teacher.userId }, { $pull: { "teams": { teamId: teamId } } }).exec();
         await teamSchema.findOneAndRemove({ creatorId: teacher.userId, teamId: teamId });
         res.status(200).json({ message: 'Hold slettet', type: 'success' });
     } catch (error) {
