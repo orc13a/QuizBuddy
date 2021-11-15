@@ -1,6 +1,7 @@
 import { ActionIcon, Affix, Card, Col, Grid, Text, Tooltip, Skeleton } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getTeacher } from "../../../api";
 import Navbar from "../Navbar/Navbar";
 
 export default function StudentTeams() {
@@ -8,6 +9,14 @@ export default function StudentTeams() {
     const [teams, setTeams] = useState(null);
 
     useEffect(() => {
+        getTeacher().then((res) => {
+            const data = res.data;
+            setTeams(data.teams);
+            setFetching(false);
+        }).catch((err) => {
+            console.log(err);
+            setFetching(false);
+        });
         // teacherGetTeams().then((res) => {
         //     const data = res.data;
         //     setTeams(data);

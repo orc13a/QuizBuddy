@@ -10,6 +10,15 @@ import userSchema from '../models/user.model.js';
 // GET requests
 // ----------------------------------------
 
+api.get('/teacher/', teacherRouteIsAuth, async (req, res) => {
+    try {
+        const teacher = await getTeacher(req);
+        res.status(200).json(teacher);
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+});
+
 api.get('/teams/get/all', teacherRouteIsAuth, async (req, res) => {
     const teacher = await getTeacher(req);
     try {
