@@ -43,3 +43,6 @@ export const studentGetTeam = (teamId) => api.get(`students/teams/get/${teamId}`
 export const studentLeaveTeam = (teamId) => api.post(`students/teams/leave/${teamId}`);
 export const studentConnectFindTeam = (data) => api.post('/students/teams/find', data);
 export const studentConnectTeam = (data) => api.post('/students/teams/join', data);
+
+// Assignments
+export const createAssignment = (data) => api.post('assignments/create', data);

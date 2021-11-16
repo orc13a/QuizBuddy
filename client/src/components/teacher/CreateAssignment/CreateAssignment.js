@@ -1,13 +1,15 @@
 import { useMantineTheme, Button, Card, Divider, Loader, LoadingOverlay, Select, Space, Title, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
+import { useNotifications } from "@mantine/notifications";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { teacherGetTeams, teacherGetTeamsSelect } from "../../../api";
+import { createAssignment, teacherGetTeams, teacherGetTeamsSelect } from "../../../api";
 import Navbar from "../Navbar/Navbar";
 
 export default function TeacherCreateAssignment() {
     const theme = useMantineTheme();
     const navigate = useNavigate();
+    const notifications = useNotifications();
 
     const [fetching, setFetching] = useState(true);
     const [loading, setLoading] = useState(false);
@@ -49,7 +51,18 @@ export default function TeacherCreateAssignment() {
     });
 
     const onSubmit = (values) => {
-        console.log(values);
+        setLoading(true);
+        createAssignment(values).then((res) => {
+            notifications.showNotification({
+                title: 'Opgave oprettet',
+                message: res.data.message,
+                color: 'teal'
+            })
+            navigate(`/opave/${res.data.assignmentId}`, { replace: true });
+        }).catch((err) => {
+            console.error(err);
+            setLoading(false);
+        });
     }
 
     return (
@@ -91,6 +104,7 @@ export default function TeacherCreateAssignment() {
                                         />
                                         <Space h="lg" />
                                         <TextInput
+                                        required
                                         label="Opgave titel"
                                         size="md"
                                         radius="md"

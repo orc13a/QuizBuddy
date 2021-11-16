@@ -26,11 +26,13 @@ import publicRouter from './routes/public.js';
 import rkRouter from './routes/tokenRoutes.js';
 import teacherRouter from './routes/teachers.js';
 import studentRouter from './routes/students.js';
+import assignmentRouter from './routes/assignments.js';
 
 server.use('/public', publicRouter);
 server.use('/r_t', rkRouter); // tokens
 server.use('/teachers', teacherRouter);
 server.use('/students', studentRouter);
+server.use('/assignments', assignmentRouter);
 
 server.get('*', (req, res) => {
     res.status(404).json({ message: '404', type: 'error' });
