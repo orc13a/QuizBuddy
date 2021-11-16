@@ -93,17 +93,7 @@ export default function TeacherTeam() {
                 message: err.response.data.message,
                 autoClose: 4000,
             });
-        })
-
-        // setTimeout(() => {
-        //     notifications.updateNotification(notifi, {
-        //         notifi,
-        //         color: 'teal',
-        //         title: `${student.firstname} er blevet fjernet`,
-        //         message: '',
-        //         autoClose: 3000,
-        //     });
-        // }, 3000);
+        });
     }
 
     const removeUser = (

@@ -58,7 +58,7 @@ export default function TeacherCreateAssignment() {
                 message: res.data.message,
                 color: 'teal'
             })
-            navigate(`/opave/${res.data.assignmentId}`, { replace: true });
+            navigate(`/teacher/opgave/${res.data.assignmentId}`, { replace: true });
         }).catch((err) => {
             console.error(err);
             setLoading(false);
