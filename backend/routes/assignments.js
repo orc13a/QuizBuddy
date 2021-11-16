@@ -11,7 +11,17 @@ import assignmentSchema from '../models/assignment.model.js';
 // GET requests
 // ----------------------------------------
 
+api.get('/get/:assignmentId', teacherRouteIsAuth, async (req, res) => {
+    const teacher = await getTeacher(req);
+    const assignmentId = req.params['assignmentId'];
 
+    try {
+        const assignment = await assignmentSchema.findOne({ creatorId: teacher.userId, assignmentId: assignmentId }).exec();
+        res.status(200).json(assignment);
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+});
 
 // ----------------------------------------
 // POST requests
@@ -38,7 +48,20 @@ api.post('/create', teacherRouteIsAuth, async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
     }
-})
+});
+
+api.post('/delete', teacherRouteIsAuth, async (req, res) => {
+    const teacher = await getTeacher(req);
+    const body = req.body;
+    
+    try {
+        await teamSchema.findOneAndUpdate({ creatorId: teacher.userId, teamId: body.teamId }, { $pull: { "assignments": { assignmentId: body.studentId } } }).exec();
+        await assignmentSchema.findOneAndRemove({ creatorId: teacher.userId, assignmentId: '' });
+        res.status(200).json({ message: 'Opgave slettet', type: 'success' });
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+});
 
 // ----------------------------------------
 // PUT requests

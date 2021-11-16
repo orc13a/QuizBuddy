@@ -75,7 +75,7 @@ export default function StudentTeam() {
                                         Denne handling kan ikke fortrydes.
                                     </Text>
                                     <Space h="md" />
-                                    <Button onClick={ () => setShowDeleteTeamModal(false)} disabled={deletingTeam}>
+                                    <Button onClick={ () => setShowDeleteTeamModal(false)} disabled={deletingTeam} color="indigo">
                                         Fortryd
                                     </Button>
                                     <Button onClick={ deleteTeam } loading={deletingTeam} color="red" variant="light" style={{ float: 'right' }}>
