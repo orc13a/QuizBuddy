@@ -1,8 +1,8 @@
-import { useMantineTheme, Button, Card, Divider, Loader, LoadingOverlay, Select, Space, Title } from "@mantine/core";
+import { useMantineTheme, Button, Card, Divider, Loader, LoadingOverlay, Select, Space, Title, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { teacherGetTeams } from "../../../api";
+import { teacherGetTeams, teacherGetTeamsSelect } from "../../../api";
 import Navbar from "../Navbar/Navbar";
 
 export default function TeacherCreateAssignment() {
@@ -17,36 +17,39 @@ export default function TeacherCreateAssignment() {
     useEffect(() => {
         teacherGetTeams().then((res) => {
             const data = res.data;
-            setTeams(data);
-            createSelectList();
+            setTeams(data); 
             setFetching(false);
+        }).then(() => {
+            teacherGetTeamsSelect().then((res) => {
+                setSelectTeams(res.data);
+                setFetching(false);
+            }).catch((err) => {
+                console.error(err);
+                if (err.response !== undefined) {
+                    navigate('/teacher/forside', { replace: true });
+                }
+            });
         }).catch((err) => {
             console.error(err);
-            navigate('/teacher/forside', { replace: true });
-        });
+            if (err.response !== undefined) {
+                navigate('/teacher/forside', { replace: true });
+            }
+        })
     });
 
     const form = useForm({
         initialValues: {
-            teamName: '',
+            selectedTeamId: '',
+            assignmentName: '',
         },
         validationRules: {
-            teamName: (value) => value.length > 1,
+            selectedTeamId: (value) => value.length !== 0,
+            assignmentName: (value) => value.length > 1,
         },
     });
 
-    const onSubmit = () => {
-
-    }
-
-    const createSelectList = () => {
-        if (teams !== null ) {
-            if (selectTeams.length !== teams.length) {
-                teams.forEach(team => {
-                    setSelectTeams(selectTeams => [...selectTeams, { value: team.teamId, label: team.teamName }])
-                });
-            }
-        }
+    const onSubmit = (values) => {
+        console.log(values);
     }
 
     return (
@@ -57,33 +60,58 @@ export default function TeacherCreateAssignment() {
                         <Loader variant="dots" size="xl" color={theme.colors.indigo[3]} />
                     </div>
                 ) : (
-                    <div className="centerH-o" style={{ paddingTop: 50, paddingBottom: 100 }}>
-                        <div className="centerH-i">
-                            <Card style={{ width: 300 }} withBorder radius="md">
-                            <LoadingOverlay loader={ <Loader variant="dots" size="xl" color={theme.colors.indigo[3]} /> } visible={loading} />
-                                <div style={{ textAlign: 'center' }}>
-                                    <Title order={2}>
-                                        Opret opgave
-                                    </Title>
-                                </div>
-                                <Space h="lg" />
-                                <Divider />
-                                <Space h="lg" />
-                                <form onSubmit={ form.onSubmit((values) => onSubmit(values)) }>
-                                    <Select
-                                    label="Your favorite framework/library"
-                                    placeholder="Pick one"
-                                    data={selectTeams}
-                                    />
+                    <>
+                        {/* <div className="centerH-o" style={{ paddingTop: 50, paddingBottom: 100 }}> */}
+                            {/* <div className="centerH-i"> */}
+                            <div className="center">
+                                <Card style={{ width: 300 }} withBorder radius="md">
+                                <LoadingOverlay loader={ <Loader variant="dots" size="xl" color={theme.colors.indigo[3]} /> } visible={loading} />
+                                    <div style={{ textAlign: 'center' }}>
+                                        <Title order={2}>
+                                            Opret opgave
+                                        </Title>
+                                    </div>
                                     <Space h="lg" />
-                                    <Space h="sm" />
-                                    <Button radius="md" size="md" color="indigo" type="submit" style={{ float: 'right' }}>
-                                        Opret
-                                    </Button>
-                                </form>
-                            </Card>
-                        </div>
-                    </div>
+                                    <Divider />
+                                    <Space h="lg" />
+                                    <form onSubmit={ form.onSubmit((values) => onSubmit(values)) }>
+                                        <Select
+                                        searchable
+                                        radius="md"
+                                        size="md"
+                                        label="Vælg hold"
+                                        placeholder="Søg efter hold"
+                                        required
+                                        data={selectTeams}
+                                        description='Vælg de hold som opgaven skal gives til. Du kan søge efter hold.'
+                                        limit={3}
+                                        error={ form.errors.selectedTeamId && 'Vælg hold'}
+                                        value={form.values.selectedTeamId}
+                                        onChange={(value) => form.setFieldValue('selectedTeamId', value)}
+                                        />
+                                        <Space h="lg" />
+                                        <TextInput
+                                        label="Opgave titel"
+                                        size="md"
+                                        radius="md"
+                                        error={ form.errors.assignmentName && 'Angiv titel'}
+                                        value={form.values.assignmentName}
+                                        onChange={(event) => form.setFieldValue('assignmentName', event.currentTarget.value)}
+                                        />
+                                        <Space h="lg" />
+                                        <Space h="sm" />
+                                        <Button onClick={ () => navigate('/teacher/forside', { replace: true }) } radius="md" size="md" color="red" variant="light" type="submit" style={{ float: 'left' }}>
+                                            Kassér
+                                        </Button>
+                                        <Button radius="md" size="md" color="indigo" type="submit" style={{ float: 'right' }}>
+                                            Opret
+                                        </Button>
+                                    </form>
+                                </Card>
+                            </div>
+                            {/* </div> */}
+                        {/* </div> */}
+                    </>
                 ) }
             </Navbar>
         </>
