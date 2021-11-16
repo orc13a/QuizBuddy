@@ -24,8 +24,10 @@ export default function Navbar({ children }) {
         const urlSplit = url.split('/');
         const page = urlSplit[4]; // urlSplit.length - 1
         const btn = document.getElementById(`${page}NavBtn`);
-        btn.classList.add('navBtnActive');
-        btn.classList.remove('navBtn');
+        if (btn !== null) {
+            btn.classList.add('navBtnActive');
+            btn.classList.remove('navBtn');
+        }
     }
 
     const openDrawer = () => {

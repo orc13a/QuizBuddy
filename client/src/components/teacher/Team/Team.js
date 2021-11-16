@@ -143,7 +143,7 @@ export default function TeacherTeam() {
                                     </Text>
                                     <Input disabled={deletingTeam} id={team.teamName} onInput={ checkDeleteInput } radius="md" size="md" />
                                     <Space h="md" />
-                                    <Button onClick={ () => setShowDeleteTeamModal(false)} disabled={deletingTeam}>
+                                    <Button color="indigo" onClick={ () => setShowDeleteTeamModal(false)} disabled={deletingTeam}>
                                         Fortryd
                                     </Button>
                                     <Button onClick={ deleteTeam } loading={deletingTeam} disabled={!okDelete} color="red" variant="light" style={{ float: 'right' }}>

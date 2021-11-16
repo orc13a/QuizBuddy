@@ -15,6 +15,8 @@ import StudentTeams from "./components/student/Teams/Teams";
 import StudentJoinTeam from "./components/student/JoinTeam/JoinTeam";
 import StudentTeam from "./components/student/Team/Team";
 import TeacherCreateAssignment from "./components/teacher/CreateAssignment/CreateAssignment";
+import TeacherProfile from "./components/teacher/Profile/Profile";
+import StudentProfile from "./components/student/Profile/Profile";
 
 function App() {
     const t = useMantineTheme();
@@ -46,6 +48,11 @@ function App() {
                         <TeacherHome />
                     </TeacherRoute>
                 } />
+                <Route path="/teacher/profil" element={
+                    <TeacherRoute>
+                        <TeacherProfile />
+                    </TeacherRoute>
+                } />
                 <Route path="/teacher/hold" element={
                     <TeacherRoute>
                         <TeacherTeams />
@@ -70,6 +77,11 @@ function App() {
                 <Route path="/student/forside" element={
                     <StudentRoute>
                         <StudentHome />
+                    </StudentRoute>
+                } />
+                <Route path="/student/profil" element={
+                    <StudentRoute>
+                        <StudentProfile />
                     </StudentRoute>
                 } />
                 <Route path="/student/hold" element={
