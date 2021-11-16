@@ -102,6 +102,19 @@ api.post('/teams/delete/:teamId', teacherRouteIsAuth, async (req, res) => {
     }
 });
 
+api.post('/teams/remove/student', teacherRouteIsAuth, async (req, res) => {
+    const teacher = await getTeacher(req);
+    const body = req.body;
+    
+    try {
+        await userSchema.findOneAndUpdate({ userId: body.studentId }, { $pull: { "teams": { teamId: body.teamId } } }).exec();
+        await teamSchema.findOneAndUpdate({ creatorId: teacher.userId, teamId: body.teamId }, { $pull: { "members": { userId: body.studentId } } }).exec();
+        res.status(200).json({ message: 'Elev fjernet', type: 'success' });
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+});
+
 // ----------------------------------------
 // PUT requests
 // ----------------------------------------

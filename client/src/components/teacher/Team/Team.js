@@ -1,7 +1,7 @@
 import { Accordion, Button, Card, Divider, Input, InputWrapper, Loader, Menu, MenuLabel, Modal, Space, Text, Title } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { teacherDeleteTeam, teacherGetTeam } from "../../../api";
+import { teacherDeleteTeam, teacherGetTeam, teacherRemoveStudentTeam } from "../../../api";
 import { useNotifications } from '@mantine/notifications';
 import { useNavigate } from "react-router";
 import Navbar from "../Navbar/Navbar";
@@ -59,7 +59,52 @@ export default function TeacherTeam() {
                 });
             });
         }
-    } 
+    }
+
+    const removeStudent = (student) => {
+        const bodyObj = {
+            studentId: student.userId,
+            teamId: team.teamId
+        }
+
+        const notifi = notifications.showNotification({
+            loading: true,
+            color: 'indigo',
+            title: `Fjerner ${student.firstname}`,
+            message: 'Vent venligst',
+            autoClose: false,
+            disallowClose: true,
+        });
+
+        teacherRemoveStudentTeam(bodyObj).then((res) => {
+            notifications.updateNotification(notifi, {
+                notifi,
+                color: 'teal',
+                title: `${student.firstname} er blevet fjernet`,
+                message: '',
+                autoClose: 3000,
+            });
+        }).catch((err) => {
+            console.error(err);
+            notifications.updateNotification(notifi, {
+                notifi,
+                color: 'red',
+                title: `Ops...`,
+                message: err.response.data.message,
+                autoClose: 4000,
+            });
+        })
+
+        // setTimeout(() => {
+        //     notifications.updateNotification(notifi, {
+        //         notifi,
+        //         color: 'teal',
+        //         title: `${student.firstname} er blevet fjernet`,
+        //         message: '',
+        //         autoClose: 3000,
+        //     });
+        // }, 3000);
+    }
 
     const removeUser = (
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-dash-fill" viewBox="0 0 16 16">
@@ -129,19 +174,23 @@ export default function TeacherTeam() {
                                                             </Text>
                                                         </div>
                                                     ) : (
-                                                        <>
+                                                        <>  
+                                                            <Space h="md" />
                                                             { team.members.map((student) => (
-                                                                <Card withBorder radius="md">
-                                                                    <div style={{ display: 'inline-block', width: '90%' }}>
-                                                                        { student.firstname } { student.lastname  }
-                                                                    </div>
-                                                                    <div style={{ display: 'inline-block', width: '10%' }}>
-                                                                        <Menu radius="md">
-                                                                            <MenuLabel>Elev menu</MenuLabel>
-                                                                            <Menu.Item color="red" icon={removeUser}>Fjern elev</Menu.Item>
-                                                                        </Menu>
-                                                                    </div>
-                                                                </Card>
+                                                                <>
+                                                                    <Card withBorder radius="md">
+                                                                        <div style={{ display: 'inline-block', width: '90%' }}>
+                                                                            { student.firstname } { student.lastname  }
+                                                                        </div>
+                                                                        <div style={{ display: 'inline-block', width: '10%' }}>
+                                                                            <Menu radius="md">
+                                                                                <MenuLabel>Elev menu</MenuLabel>
+                                                                                <Menu.Item onClick={ () => removeStudent(student) } color="red" icon={removeUser}>Fjern elev</Menu.Item>
+                                                                            </Menu>
+                                                                        </div>
+                                                                    </Card>
+                                                                    <Space h="md" />
+                                                                </>
                                                             )) }
                                                         </>
                                                     ) }

@@ -33,6 +33,7 @@ export const teacherCreateTeam = (data) => api.post('teachers/teams/create', dat
 export const teacherGetTeams = () => api.get('teachers/teams/get/all');
 export const teacherGetTeam = (teamId) => api.get(`teachers/teams/get/${teamId}`);
 export const teacherDeleteTeam = (teamId) => api.post(`teachers/teams/delete/${teamId}`, '');
+export const teacherRemoveStudentTeam = (data) => api.post(`teachers/teams/remove/student`, data);
 
 // Student 
 export const studentRF = () => api.post('r_t/student', '');
