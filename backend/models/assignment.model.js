@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const AssignmentSchema = mongoose.Schema({
     assignmentId: String,
     creatorId: String,
+    teamId: String,
     name: String,
     questions: [],
     createdAt: {

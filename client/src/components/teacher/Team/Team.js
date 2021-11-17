@@ -198,7 +198,7 @@ export default function TeacherTeam() {
                                             <Space h="lg" />
                                             <Accordion>
                                                 <Accordion.Item label="Opgaver">
-                                                    { team.members.length === 0 ? (
+                                                    { team.assignments.length === 0 ? (
                                                         <div style={{ textAlign: 'center', fontStyle: 'italic' }}>
                                                             <Text size="sm">
                                                                 Ingen opgaver i dette hold

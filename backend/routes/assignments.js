@@ -36,6 +36,7 @@ api.post('/create', teacherRouteIsAuth, async (req, res) => {
         const newAssignmentObj = {
             assignmentId: newAssignmentId,
             creatorId: teacher.userId,
+            teamId: body.selectedTeamId,
             name: body.assignmentName
         };
         const teamAssigmentObj = {
@@ -55,8 +56,8 @@ api.post('/delete', teacherRouteIsAuth, async (req, res) => {
     const body = req.body;
     
     try {
-        await teamSchema.findOneAndUpdate({ creatorId: teacher.userId, teamId: body.teamId }, { $pull: { "assignments": { assignmentId: body.studentId } } }).exec();
-        await assignmentSchema.findOneAndRemove({ creatorId: teacher.userId, assignmentId: '' });
+        await teamSchema.findOneAndUpdate({ creatorId: teacher.userId, teamId: body.teamId }, { $pull: { "assignments": { assignmentId: body.assignmentId } } }).exec();
+        await assignmentSchema.findOneAndRemove({ creatorId: teacher.userId, assignmentId: body.assignmentId });
         res.status(200).json({ message: 'Opgave slettet', type: 'success' });
     } catch (error) {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });

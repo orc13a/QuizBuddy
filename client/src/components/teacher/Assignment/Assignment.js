@@ -19,6 +19,14 @@ export default function TeacherAssignment() {
 
     useEffect(() => {
         getAssignment(assignmentId).then((res) => {
+            if (res.data === null) {
+                notifications.showNotification({
+                    title: 'Ops...',
+                    message: 'Opgave findes ikke',
+                    color: 'red'
+                });
+                navigate('/teacher/hold', { replace: true });
+            }
             setAssignment(res.data);
             setFetching(false);
         }).catch((err) => {
@@ -31,7 +39,7 @@ export default function TeacherAssignment() {
 
     const deleteAssignmentClick = () => {
         setDeleteAssignmentLoading(true);
-        deleteAssignment({ assignmentId }).then((res) => {
+        deleteAssignment({ assignmentId, teamId: assignment.teamId }).then((res) => {
             notifications.showNotification({
                 title: 'Slettet',
                 message: res.data.message,
