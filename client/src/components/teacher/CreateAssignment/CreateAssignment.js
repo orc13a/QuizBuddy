@@ -54,8 +54,8 @@ export default function TeacherCreateAssignment() {
         setLoading(true);
         createAssignment(values).then((res) => {
             notifications.showNotification({
-                title: 'Opgave oprettet',
-                message: res.data.message,
+                title: res.data.message,
+                message: 'Vent venligst...',
                 color: 'teal'
             })
             navigate(`/teacher/opgave/${res.data.assignmentId}`, { replace: true });
@@ -114,7 +114,7 @@ export default function TeacherCreateAssignment() {
                                         />
                                         <Space h="lg" />
                                         <Space h="sm" />
-                                        <Button onClick={ () => navigate('/teacher/forside', { replace: true }) } radius="md" size="md" color="red" variant="light" type="submit" style={{ float: 'left' }}>
+                                        <Button onClick={ () => navigate('/teacher/forside', { replace: true }) } radius="md" size="md" color="red" variant="light" style={{ float: 'left' }}>
                                             Kassér
                                         </Button>
                                         <Button radius="md" size="md" color="indigo" type="submit" style={{ float: 'right' }}>
