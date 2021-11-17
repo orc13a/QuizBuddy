@@ -1,4 +1,4 @@
-import { Accordion, Button, Card, Divider, Input, InputWrapper, Loader, Menu, MenuLabel, Modal, Space, Text, Title } from "@mantine/core";
+import { Button, Card, Divider, Loader, Modal, Space, Text, Title } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useNotifications } from '@mantine/notifications';
@@ -14,7 +14,7 @@ export default function StudentTeam() {
     const [fetching, setFetching] = useState(true);
     const [showDeleteTeamModal, setShowDeleteTeamModal] = useState(false);
     const [team, setTeam] = useState(null);
-    const [okDelete, setOkDelete] = useState(false);
+    // const [okDelete, setOkDelete] = useState(false);
     const [deletingTeam, setDeletingTeam] = useState(false);
     
     useEffect(() => {

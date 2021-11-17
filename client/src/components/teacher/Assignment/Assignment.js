@@ -1,4 +1,4 @@
-import { useMantineTheme, Accordion, Button, Card, Divider, Loader, LoadingOverlay, Space, Title, Text, Modal } from '@mantine/core';
+import { Accordion, Button, Card, Divider, Loader, Space, Title, Text, Modal } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
@@ -7,7 +7,7 @@ import Navbar from '../Navbar/Navbar';
 
 export default function TeacherAssignment() {
     const { assignmentId } = useParams();
-    const theme = useMantineTheme();
+    // const theme = useMantineTheme();
     const navigate = useNavigate();
     const notifications = useNotifications();
 
@@ -39,6 +39,7 @@ export default function TeacherAssignment() {
 
     const deleteAssignmentClick = () => {
         setDeleteAssignmentLoading(true);
+        setDeletingAssignment(true);
         deleteAssignment({ assignmentId, teamId: assignment.teamId }).then((res) => {
             notifications.showNotification({
                 title: 'Slettet',
@@ -54,6 +55,7 @@ export default function TeacherAssignment() {
                 color: 'red'
             });
             setDeleteAssignmentLoading(false);
+            setDeletingAssignment(false);
         });
     }
 

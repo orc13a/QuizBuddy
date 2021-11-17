@@ -13,7 +13,7 @@ export default function TeacherCreateAssignment() {
 
     const [fetching, setFetching] = useState(true);
     const [loading, setLoading] = useState(false);
-    const [teams, setTeams] = useState(null);
+    const [, setTeams] = useState(null);
     const [selectTeams, setSelectTeams] = useState([]);
 
     useEffect(() => {

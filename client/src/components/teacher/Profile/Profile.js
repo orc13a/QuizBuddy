@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, Col, Divider, Grid, Loader, Space, Text, Title } from "@mantine/core";
+import { Avatar, Button, Card, Col, Divider, Grid, Loader, Space, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { getTeacher } from "../../../api";
 import Navbar from "../Navbar/Navbar";

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 export default function CardInfo({ createdAt }) {
     const [createdDate, setCreatedDate] = useState('');
 
-    const days = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'];
+    //const days = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'];
 
     useEffect(() => {
         let date = '';
@@ -15,7 +15,7 @@ export default function CardInfo({ createdAt }) {
         date += d.getFullYear();
 
         setCreatedDate(date);
-    });
+    }, [createdAt]);
 
     return (
         <>
