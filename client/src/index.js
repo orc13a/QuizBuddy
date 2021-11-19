@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -13,16 +13,23 @@ import { NotificationsProvider } from '@mantine/notifications';
 //         return 'light';
 //     }
 // }
+// theme={{ colorScheme: 'light' }}
+
+// const [colorScheme, setColorScheme] = useState('light');
+// const toggleColorScheme = (value) => setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
+// theme={{ colorScheme }}
 
 ReactDOM.render(
     <React.StrictMode>
-        <MantineProvider theme={{ colorScheme: 'light' }}>
-            <NotificationsProvider limit={4} position="bottom-left">
-                <BrowserRouter>
-                    <App />
-                </BrowserRouter>
-            </NotificationsProvider>
-        </MantineProvider>
+        {/* <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}> */}
+            <MantineProvider theme={{ colorScheme: 'light' }}>
+                <NotificationsProvider limit={4} position="bottom-left">
+                    <BrowserRouter>
+                        <App />
+                    </BrowserRouter>
+                </NotificationsProvider>
+            </MantineProvider>
+        {/* </ColorSchemeProvider> */}
     </React.StrictMode>,
     document.getElementById('root')
 );
