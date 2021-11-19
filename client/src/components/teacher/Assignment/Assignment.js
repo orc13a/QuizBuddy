@@ -123,7 +123,7 @@ export default function TeacherAssignment() {
                                                                     { question.title }
                                                                 </div>
                                                                 <div style={{ display: 'inline-block', width: '10%' }}>
-                                                                    <ActionIcon>
+                                                                    <ActionIcon radius="md">
                                                                         { jumpToicon }
                                                                     </ActionIcon>
                                                                 </div>

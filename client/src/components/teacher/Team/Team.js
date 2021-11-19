@@ -130,7 +130,7 @@ export default function TeacherTeam() {
                                 hideCloseButton={deletingTeam}
                                 closeOnClickOutside={!deletingTeam}
                                 onClose={ () => setShowDeleteTeamModal(false) }
-                                title={<Title order={3}>Slet dit hold '{team.teamName}'</Title>}
+                                title={<Title order={3}>Slet spørgsmål hold '{team.teamName}'</Title>}
                                 >
                                     <Text>
                                         Er du sikker på at du vil slette dit hold '{team.teamName}'?<br />
@@ -142,10 +142,10 @@ export default function TeacherTeam() {
                                     </Text>
                                     <Input disabled={deletingTeam} id={team.teamName} onInput={ checkDeleteInput } radius="md" size="md" />
                                     <Space h="md" />
-                                    <Button color="indigo" onClick={ () => setShowDeleteTeamModal(false)} disabled={deletingTeam}>
+                                    <Button size="md" radius="md" color="indigo" onClick={ () => setShowDeleteTeamModal(false)} disabled={deletingTeam}>
                                         Fortryd
                                     </Button>
-                                    <Button onClick={ deleteTeam } loading={deletingTeam} disabled={!okDelete} color="red" variant="light" style={{ float: 'right' }}>
+                                    <Button size="md" radius="md" onClick={ deleteTeam } loading={deletingTeam} disabled={!okDelete} color="red" variant="light" style={{ float: 'right' }}>
                                         Slet
                                     </Button>
                                 </Modal>
@@ -215,7 +215,7 @@ export default function TeacherTeam() {
                                                                                 { assignment.name }
                                                                             </div>
                                                                             <div style={{ display: 'inline-block', width: '10%' }}>
-                                                                                <ActionIcon>
+                                                                                <ActionIcon radius="md">
                                                                                     { jumpToicon }
                                                                                 </ActionIcon>
                                                                             </div>

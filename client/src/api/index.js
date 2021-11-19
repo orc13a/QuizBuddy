@@ -50,3 +50,4 @@ export const createAssignment = (data) => api.post('assignments/create', data);
 export const deleteAssignment = (data) => api.post('assignments/delete', data);
 export const createQuestion = (data) => api.post('assignments/question/create', data);
 export const getQuestion = (data) => api.get(`assignments/get/${data.assignmentId}/question/${data.questionId}`);
+export const deleteQuestion = (data) => api.post('assignments/question/delete', data);

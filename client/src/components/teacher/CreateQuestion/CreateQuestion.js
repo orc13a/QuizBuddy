@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Card, Col, Divider, Grid, Group, Overlay, Space, Text, Textarea, TextInput, Tooltip } from "@mantine/core";
+import { useMantineTheme, ActionIcon, Button, Card, Col, Divider, Grid, Group, InputWrapper, Loader, LoadingOverlay, Overlay, Space, Text, Textarea, TextInput, Tooltip } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
 import { useNotifications } from "@mantine/notifications";
 import { useState } from "react";
@@ -8,6 +8,7 @@ import Navbar from "../Navbar/Navbar";
 
 export default function TeacherCreateQuestion() {
     const { assignmentId } = useParams();
+    const theme = useMantineTheme();
     const navigate = useNavigate();
     const notifications = useNotifications();
 
@@ -34,8 +35,8 @@ export default function TeacherCreateQuestion() {
         window.scrollTo(0, 0);
         createQuestion(values).then((res) => {
             notifications.showNotification({
-                title: 'Oprettet',
-                message: res.data.message,
+                title: res.data.message,
+                message: '',
                 color: 'teal'
             });
             navigate(`/teacher/opgave/${assignmentId}`)
@@ -89,124 +90,136 @@ export default function TeacherCreateQuestion() {
                     <Col span={12} md={8}>
                         <form onSubmit={ form.onSubmit((values) => onSubmit(values)) }>
                             <Card withBorder radius="md" padding="lg">
-                                <Card radius="md" padding="lg">
-                                    {!visible && <Overlay opacity={0.05} color="#000" zIndex={5} />}
-                                    <Group>
-                                        <Tooltip gutter={10} label="Fed skrift" position="top" withArrow color="indigo">
-                                            <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                { boldIcon }
-                                            </ActionIcon>
-                                        </Tooltip>
-                                        <Tooltip gutter={10} label="Kursive skrift" position="top" withArrow color="indigo">
-                                            <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                { italicIcon }
-                                            </ActionIcon>
-                                        </Tooltip>
-                                        <Tooltip gutter={10} label="Understreget skrift" position="top" withArrow color="indigo">
-                                            <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                { underLineIcon }
-                                            </ActionIcon>
-                                        </Tooltip>
-                                        <Divider orientation="vertical" />
-                                        <Tooltip gutter={10} label="Indsæt link" position="top" withArrow color="indigo">
-                                            <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                { hyperlinkIcon }
-                                            </ActionIcon>
-                                        </Tooltip>
-                                        <Tooltip gutter={10} label="Indsæt billede" position="top" withArrow color="indigo">
-                                            <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                { imageIcon }
-                                            </ActionIcon>
-                                        </Tooltip>
-                                        <Tooltip gutter={10} label="Special tegn / bogstav" position="top" withArrow color="indigo">
-                                            <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                Ω
-                                            </ActionIcon>
-                                        </Tooltip>
-                                        <Divider orientation="vertical" />
-                                        <Tooltip gutter={10} label="Matematik" position="top" withArrow color="indigo">
-                                            <ActionIcon onClick={ () => setMathWindow(!mathWindow) } variant={ mathWindow ? 'filled' : 'light' } color="indigo" radius="md" size="lg">
-                                                <i>ƒx</i>
-                                            </ActionIcon>
-                                        </Tooltip>
-                                    </Group>
-                                    <div hidden={!mathWindow}>
-                                        <Space h="xs" />
-                                        <Divider variant="dashed" />
-                                        <Space h="xs" />
-                                        <Group gutter={20}>
-                                            <Tooltip gutter={10} label="Plus" position="bottom" withArrow color="indigo">
+                                <LoadingOverlay loader={ <Loader variant="dots" size="xl" color={theme.colors.indigo[3]} /> } visible={loading} />
+                                <Col span={12} md={8}>
+                                    <TextInput
+                                    label="Spørgsmålets overskrift"
+                                    size="md"
+                                    radius="md"
+                                    error={ form.errors.questionTitle && 'Angiv overskrift'}
+                                    value={form.values.questionTitle}
+                                    onChange={(event) => form.setFieldValue('questionTitle', event.currentTarget.value)}
+                                    />
+                                    <Space h="md" />
+                                    <Divider />
+                                    <Space h="md" />
+                                    <Card radius="md" padding="lg">
+                                        {!visible && <Overlay opacity={0.05} color="#000" zIndex={5} />}
+                                        <Group>
+                                            <Tooltip gutter={10} label="Fed skrift" position="top" withArrow color="indigo">
                                                 <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                    +
+                                                    { boldIcon }
                                                 </ActionIcon>
                                             </Tooltip>
-                                            <Tooltip gutter={10} label="Minus" position="bottom" withArrow color="indigo">
+                                            <Tooltip gutter={10} label="Kursive skrift" position="top" withArrow color="indigo">
                                                 <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                    -
+                                                    { italicIcon }
                                                 </ActionIcon>
                                             </Tooltip>
-                                            <Tooltip gutter={10} label="Gange" position="bottom" withArrow color="indigo">
+                                            <Tooltip gutter={10} label="Understreget skrift" position="top" withArrow color="indigo">
                                                 <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                    ⋅
+                                                    { underLineIcon }
                                                 </ActionIcon>
                                             </Tooltip>
-                                            <Tooltip gutter={10} label="Dividere" position="bottom" withArrow color="indigo">
+                                            <Divider orientation="vertical" />
+                                            <Tooltip gutter={10} label="Indsæt link" position="top" withArrow color="indigo">
                                                 <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                    /
+                                                    { hyperlinkIcon }
                                                 </ActionIcon>
                                             </Tooltip>
-                                            <Tooltip gutter={10} label="Ligmed" position="bottom" withArrow color="indigo">
+                                            <Tooltip gutter={10} label="Indsæt billede" position="top" withArrow color="indigo">
                                                 <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                    =
+                                                    { imageIcon }
                                                 </ActionIcon>
                                             </Tooltip>
-                                            <Tooltip gutter={10} label="Ikke ligmed" position="bottom" withArrow color="indigo">
+                                            <Tooltip gutter={10} label="Special tegn / bogstav" position="top" withArrow color="indigo">
                                                 <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                    ≠
+                                                    Ω
                                                 </ActionIcon>
                                             </Tooltip>
-                                            <Tooltip gutter={10} label="Mindre end" position="bottom" withArrow color="indigo">
-                                                <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                    {'<'}
-                                                </ActionIcon>
-                                            </Tooltip>
-                                            <Tooltip gutter={10} label="Større end" position="bottom" withArrow color="indigo">
-                                                <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                    {'>'}
-                                                </ActionIcon>
-                                            </Tooltip>
-                                            <Tooltip gutter={10} label="Mindre end og ligmed" position="bottom" withArrow color="indigo">
-                                                <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                    ≤
-                                                </ActionIcon>
-                                            </Tooltip>
-                                            <Tooltip gutter={10} label="Større end og ligmed" position="bottom" withArrow color="indigo">
-                                                <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                    ≥
-                                                </ActionIcon>
-                                            </Tooltip>
-                                            <Tooltip gutter={10} label="x i anden" position="bottom" withArrow color="indigo">
-                                                <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                    x<sup>2</sup>
-                                                </ActionIcon>
-                                            </Tooltip>
-                                            <Tooltip gutter={10} label="Navngiv" position="bottom" withArrow color="indigo">
-                                                <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                    x<sub>2</sub>
-                                                </ActionIcon>
-                                            </Tooltip>
-                                            <Tooltip gutter={10} label="Kvadratrod" position="bottom" withArrow color="indigo">
-                                                <ActionIcon variant="light" color="indigo" radius="md" size="lg">
-                                                    √
+                                            <Divider orientation="vertical" />
+                                            <Tooltip gutter={10} label="Matematik" position="top" withArrow color="indigo">
+                                                <ActionIcon onClick={ () => setMathWindow(!mathWindow) } variant={ mathWindow ? 'filled' : 'light' } color="indigo" radius="md" size="lg">
+                                                    <i>ƒx</i>
                                                 </ActionIcon>
                                             </Tooltip>
                                         </Group>
-                                    </div>
-                                </Card>
-                                <Space h="md" />
-                                <Divider />
-                                <Space h="md" />
-                                <Col span={12} md={8}>
+                                        <div hidden={!mathWindow}>
+                                            <Space h="xs" />
+                                            <Divider variant="dashed" />
+                                            <Space h="xs" />
+                                            <Group gutter={20}>
+                                                <Tooltip gutter={10} label="Plus" position="bottom" withArrow color="indigo">
+                                                    <ActionIcon variant="light" color="indigo" radius="md" size="lg">
+                                                        +
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip gutter={10} label="Minus" position="bottom" withArrow color="indigo">
+                                                    <ActionIcon variant="light" color="indigo" radius="md" size="lg">
+                                                        -
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip gutter={10} label="Gange" position="bottom" withArrow color="indigo">
+                                                    <ActionIcon variant="light" color="indigo" radius="md" size="lg">
+                                                        ⋅
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip gutter={10} label="Dividere" position="bottom" withArrow color="indigo">
+                                                    <ActionIcon variant="light" color="indigo" radius="md" size="lg">
+                                                        /
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip gutter={10} label="Ligmed" position="bottom" withArrow color="indigo">
+                                                    <ActionIcon variant="light" color="indigo" radius="md" size="lg">
+                                                        =
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip gutter={10} label="Ikke ligmed" position="bottom" withArrow color="indigo">
+                                                    <ActionIcon variant="light" color="indigo" radius="md" size="lg">
+                                                        ≠
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip gutter={10} label="Mindre end" position="bottom" withArrow color="indigo">
+                                                    <ActionIcon variant="light" color="indigo" radius="md" size="lg">
+                                                        {'<'}
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip gutter={10} label="Større end" position="bottom" withArrow color="indigo">
+                                                    <ActionIcon variant="light" color="indigo" radius="md" size="lg">
+                                                        {'>'}
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip gutter={10} label="Mindre end og ligmed" position="bottom" withArrow color="indigo">
+                                                    <ActionIcon variant="light" color="indigo" radius="md" size="lg">
+                                                        ≤
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip gutter={10} label="Større end og ligmed" position="bottom" withArrow color="indigo">
+                                                    <ActionIcon variant="light" color="indigo" radius="md" size="lg">
+                                                        ≥
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip gutter={10} label="x i anden" position="bottom" withArrow color="indigo">
+                                                    <ActionIcon variant="light" color="indigo" radius="md" size="lg">
+                                                        x<sup>2</sup>
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip gutter={10} label="Navngiv" position="bottom" withArrow color="indigo">
+                                                    <ActionIcon variant="light" color="indigo" radius="md" size="lg">
+                                                        x<sub>2</sub>
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip gutter={10} label="Kvadratrod" position="bottom" withArrow color="indigo">
+                                                    <ActionIcon variant="light" color="indigo" radius="md" size="lg">
+                                                        √
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                            </Group>
+                                        </div>
+                                    </Card>
+                                    <Space h="md" />
+                                    <Divider />
+                                    <Space h="md" />
                                     <div>
                                         <Group>
                                             <Button onClick={ () => setVisible(true) } variant={ visible ? 'filled' : 'outline' } size="md" color="indigo" radius="md">Skriv</Button>
@@ -215,17 +228,19 @@ export default function TeacherCreateQuestion() {
                                         <Space h="md" />
                                     </div>
                                     <div hidden={ !visible }>
-                                        <Textarea
-                                        radius="md"
-                                        size="md"
-                                        placeholder="Dit spørgsmål"
-                                        multiline={true}
-                                        autosize
-                                        minRows={10}
-                                        error={ form.errors.questionText && 'Angiv spørgsmål'}
-                                        value={form.values.questionText}
-                                        onChange={(event) => form.setFieldValue('questionText', event.currentTarget.value)}
-                                        />
+                                        <InputWrapper label="Spørgsmålet" size="md">
+                                            <Textarea
+                                            radius="md"
+                                            size="md"
+                                            placeholder="Dit spørgsmål"
+                                            multiline={true}
+                                            autosize
+                                            minRows={10}
+                                            error={ form.errors.questionText && 'Angiv spørgsmål'}
+                                            value={form.values.questionText}
+                                            onChange={(event) => form.setFieldValue('questionText', event.currentTarget.value)}
+                                            />
+                                        </InputWrapper>
                                     </div>
                                     <div hidden={ visible }>
                                         {/* <Textarea
@@ -245,15 +260,6 @@ export default function TeacherCreateQuestion() {
                                     </div>
                                 </Col>
                                 <Col span={12} xs={1}>
-                                    <TextInput
-                                    label="Spørgsmål overskrift"
-                                    size="md"
-                                    radius="md"
-                                    error={ form.errors.questionTitle && 'Angiv overskrift'}
-                                    value={form.values.questionTitle}
-                                    onChange={(event) => form.setFieldValue('questionTitle', event.currentTarget.value)}
-                                    />
-                                    <Space h="lg" />
                                     <TextInput
                                     label="Det rigtigte svar"
                                     size="md"

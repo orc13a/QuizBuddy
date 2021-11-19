@@ -55,7 +55,7 @@ export default function TeacherCreateAssignment() {
         createAssignment(values).then((res) => {
             notifications.showNotification({
                 title: res.data.message,
-                message: 'Vent venligst...',
+                message: '',
                 color: 'teal'
             });
             navigate(`/teacher/opgave/${res.data.assignmentId}`, { replace: true });

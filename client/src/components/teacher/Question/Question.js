@@ -1,8 +1,8 @@
-import { Button, Card, Col, Divider, Grid, Input, InputWrapper, Loader, Space, Text, TextInput, Title } from "@mantine/core";
+import { Button, Card, Col, Divider, Grid, Input, InputWrapper, Loader, Modal, Space, Text, TextInput, Title } from "@mantine/core";
 import { useNotifications } from "@mantine/notifications";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { getQuestion } from "../../../api";
+import { deleteQuestion, getQuestion } from "../../../api";
 import Navbar from "../Navbar/Navbar";
 
 export default function TeacherQuestion() {
@@ -12,11 +12,18 @@ export default function TeacherQuestion() {
 
     const [fetching, setFetching] = useState(true);
     const [question, setQuestion] = useState(null);
+    const [okDelete, setOkDelete] = useState(false);
+    const [deletingTeam, setDeletingTeam] = useState(false);
+    const [showDeleteTeamModal, setShowDeleteTeamModal] = useState(false);
 
     useEffect((res) => {
         getQuestion({ assignmentId, questionId }).then((res) => {
             const data = res.data;
-            setQuestion(data);
+            if (data === null) {
+                navigate(`/teacher/opgave/${assignmentId}`, { replace: true });
+            } else {
+                setQuestion(data);
+            }
             setFetching(false);
         }).catch((err) => {
             console.error(err);
@@ -31,6 +38,50 @@ export default function TeacherQuestion() {
         });
     });
 
+    const checkDeleteInput = (e) => {
+        const inputValue = e.target.value;
+        const questionTitle = e.target.id;
+        
+        if (inputValue === questionTitle) {
+            setOkDelete(true);
+        } else {
+            setOkDelete(false);
+        }
+    }
+
+    const deleteQuestionClick = () => {
+        setDeletingTeam(true);
+
+        const qNotifi = notifications.showNotification({
+            loading: true,
+            color: 'indigo',
+            title: `Sletter ${question.title}`,
+            message: 'Vent venligst...',
+            autoClose: false,
+            disallowClose: true,
+        });
+
+        deleteQuestion({ assignmentId, questionId }).then((res) => {
+            notifications.updateNotification(qNotifi, {
+                qNotifi,
+                color: 'teal',
+                title: res.data.message,
+                message: '',
+                autoClose: 3000,
+            });
+            navigate(`/teacher/opgave/${assignmentId}`, { replace: true });
+        }).catch((err) => {
+            console.error(err);
+            notifications.updateNotification(qNotifi, {
+                qNotifi,
+                color: 'red',
+                title: `Ops...`,
+                message: err.response.data.message,
+                autoClose: 4000,
+            });
+        });
+    }
+
     return (
         <>
             <Navbar>
@@ -40,6 +91,30 @@ export default function TeacherQuestion() {
                     </div>
                 ) : (
                     <>
+                        <Modal
+                        opened={showDeleteTeamModal}
+                        hideCloseButton={deletingTeam}
+                        closeOnClickOutside={!deletingTeam}
+                        onClose={ () => setShowDeleteTeamModal(false) }
+                        title={<Title order={3}>Slet spørgsmål '{question.title}'</Title>}
+                        >
+                            <Text>
+                                Er du sikker på at du vil slette spørgsmålet '<b>{question.title}</b>'?<br />
+                                Denne handling kan ikke fortrydes.
+                            </Text>
+                            <Space h="md" />
+                            <Text>
+                                Skriv '{question.title}' forneden i feltet for at slette spørgsmålet. 
+                            </Text>
+                            <Input disabled={deletingTeam} id={question.title} onInput={ checkDeleteInput } radius="md" size="md" />
+                            <Space h="md" />
+                            <Button size="md" radius="md" color="indigo" onClick={ () => setShowDeleteTeamModal(false)} disabled={deletingTeam}>
+                                Fortryd
+                            </Button>
+                            <Button size="md" radius="md" onClick={ deleteQuestionClick } loading={deletingTeam} disabled={!okDelete} color="red" variant="light" style={{ float: 'right' }}>
+                                Slet
+                            </Button>
+                        </Modal>
                         <Grid justify="center">
                             <Col span={12} md={8}>
                                 <Card withBorder radius="md">
@@ -62,7 +137,7 @@ export default function TeacherQuestion() {
                                     <TextInput value={ question.answer } variant="filled" readOnly label="Svar" size="md" radius="md" />
                                     <Space h="lg" />
                                     <Space h="sm" />
-                                    <Button color="red" radius="md" size="md" variant="light">
+                                    <Button onClick={ () => setShowDeleteTeamModal(true) } color="red" radius="md" size="md" variant="light">
                                         Slet
                                     </Button>
                                     <Button color="indigo" radius="md" size="md" style={{ float: 'right' }}>

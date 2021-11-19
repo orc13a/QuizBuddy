@@ -30,7 +30,11 @@ api.get('/get/:assignmentId/question/:questionId', teacherRouteIsAuth, async (re
 
     try {
         const question = await assignmentSchema.findOne({ creatorId: teacher.userId, assignmentId: assignmentId }, { "questions": { $elemMatch: { questionId: questionId } } });
-        res.status(200).json(question.questions[0]);
+        if (question.questions[0] === null) {
+            res.status(200).json(null);
+        } else {
+            res.status(200).json(question.questions[0]);
+        }
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
@@ -73,6 +77,18 @@ api.post('/delete', teacherRouteIsAuth, async (req, res) => {
         await teamSchema.findOneAndUpdate({ creatorId: teacher.userId, teamId: body.teamId }, { $pull: { "assignments": { assignmentId: body.assignmentId } } }).exec();
         await assignmentSchema.findOneAndRemove({ creatorId: teacher.userId, assignmentId: body.assignmentId });
         res.status(200).json({ message: 'Opgave slettet', type: 'success' });
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+});
+
+api.post('/question/delete', teacherRouteIsAuth, async (req, res) => {
+    const teacher = await getTeacher(req);
+    const body = req.body;
+    
+    try {
+        await assignmentSchema.findOneAndUpdate({ creatorId: teacher.userId, assignmentId: body.assignmentId }, { $pull: { "questions": { questionId: body.questionId } } });
+        res.status(200).json({ message: 'Spørgsmål slettet', type: 'success' });
     } catch (error) {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
     }
