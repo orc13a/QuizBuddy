@@ -1,30 +1,53 @@
 import { ActionIcon, Button, Card, Col, Divider, Grid, Group, Overlay, Space, Text, Textarea, TextInput, Tooltip } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
+import { useNotifications } from "@mantine/notifications";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { createQuestion } from "../../../api";
 import Navbar from "../Navbar/Navbar";
 
 export default function TeacherCreateQuestion() {
     const { assignmentId } = useParams();
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
+    const notifications = useNotifications();
 
     const [visible, setVisible] = useState(true);
     const [mathWindow, setMathWindow] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const form = useForm({
         initialValues: {
             assignmentId: assignmentId,
             questionText: '',
+            questionTitle: '',
             questionAnswer: '',
         },
         validationRules: {
-            selectedTeamId: (value) => value.length !== 0,
-            assignmentName: (value) => value.length > 1,
+            questionText: (value) => value.length >= 1,
+            questionTitle: (value) => value.length >= 1,
+            questionAnswer: (value) => value.length >= 1,
         },
     });
 
     const onSubmit = (values) => {
-        console.log(values);
+        setLoading(true);
+        window.scrollTo(0, 0);
+        createQuestion(values).then((res) => {
+            notifications.showNotification({
+                title: 'Oprettet',
+                message: res.data.message,
+                color: 'teal'
+            });
+            navigate(`/teacher/opgave/${assignmentId}`)
+        }).catch((err) => {
+            console.error(err);
+            notifications.showNotification({
+                title: 'Ops...',
+                message: err.response.data.message,
+                color: 'red'
+            });
+            setLoading(false);
+        });
     }
 
     const boldIcon = (
@@ -103,7 +126,7 @@ export default function TeacherCreateQuestion() {
                                         <Divider orientation="vertical" />
                                         <Tooltip gutter={10} label="Matematik" position="top" withArrow color="indigo">
                                             <ActionIcon onClick={ () => setMathWindow(!mathWindow) } variant={ mathWindow ? 'filled' : 'light' } color="indigo" radius="md" size="lg">
-                                                <i>ƒ</i>
+                                                <i>ƒx</i>
                                             </ActionIcon>
                                         </Tooltip>
                                     </Group>
@@ -199,6 +222,7 @@ export default function TeacherCreateQuestion() {
                                         multiline={true}
                                         autosize
                                         minRows={10}
+                                        error={ form.errors.questionText && 'Angiv spørgsmål'}
                                         value={form.values.questionText}
                                         onChange={(event) => form.setFieldValue('questionText', event.currentTarget.value)}
                                         />
@@ -222,9 +246,19 @@ export default function TeacherCreateQuestion() {
                                 </Col>
                                 <Col span={12} xs={1}>
                                     <TextInput
+                                    label="Spørgsmål overskrift"
+                                    size="md"
+                                    radius="md"
+                                    error={ form.errors.questionTitle && 'Angiv overskrift'}
+                                    value={form.values.questionTitle}
+                                    onChange={(event) => form.setFieldValue('questionTitle', event.currentTarget.value)}
+                                    />
+                                    <Space h="lg" />
+                                    <TextInput
                                     label="Det rigtigte svar"
                                     size="md"
                                     radius="md"
+                                    error={ form.errors.questionAnswer && 'Angiv svar'}
                                     value={form.values.questionAnswer}
                                     onChange={(event) => form.setFieldValue('questionAnswer', event.currentTarget.value)}
                                     />

@@ -92,8 +92,8 @@ export default function Navbar({ children }) {
                     </Card>
                 </div>
             </Drawer>
-            <div style={{ padding: 10, position: 'sticky', top: 8 }}>
-                <Card padding="sm" style={{ paddingRight: 25 }} align="stretch" radius="md">
+            <div style={{ padding: 10, position: 'sticky', top: 8, zIndex: 5000 }}>
+                <Card withBorder padding="sm" style={{ paddingRight: 25 }} align="stretch" radius="md">
                     <Grid columns={10}>
                         <Col span={6}>
                             <span className="logoTitleTeacher" style={{ marginLeft: 15 }}>

@@ -6,6 +6,7 @@ const AssignmentSchema = mongoose.Schema({
     teamId: String,
     name: String,
     questions: [],
+    results: [],
     createdAt: {
         type: Date,
         default: new Date()

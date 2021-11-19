@@ -112,6 +112,10 @@ export default function TeacherAssignment() {
                                     Opret spørgsmål
                                 </Button>
                                 <Space h="lg" />
+                                <Button fullWidth radius="md" size="md" color="indigo">
+                                    Se resultater
+                                </Button>
+                                <Space h="lg" />
                                 <Space h="sm" />
                                 <Button onClick={ () => setShowDeleteAssignmentModal(true) } radius="md" size="md" color="red" variant="light">
                                     Slet opgave

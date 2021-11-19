@@ -48,3 +48,4 @@ export const studentConnectTeam = (data) => api.post('/students/teams/join', dat
 export const getAssignment = (id) => api.get(`assignments/get/${id}`);
 export const createAssignment = (data) => api.post('assignments/create', data);
 export const deleteAssignment = (data) => api.post('assignments/delete', data);
+export const createQuestion = (data) => api.post('assignments/question/create', data);

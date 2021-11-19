@@ -57,7 +57,7 @@ export default function TeacherCreateAssignment() {
                 title: res.data.message,
                 message: 'Vent venligst...',
                 color: 'teal'
-            })
+            });
             navigate(`/teacher/opgave/${res.data.assignmentId}`, { replace: true });
         }).catch((err) => {
             console.error(err);

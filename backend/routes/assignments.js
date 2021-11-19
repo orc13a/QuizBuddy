@@ -4,7 +4,7 @@ import { teacherRouteIsAuth } from '../auth/teacherRouteIsAuth.js';
 import { getTeacher } from '../auth/tokens.js';
 import getUuid from 'uuid-by-string';
 import teamSchema from '../models/team.model.js';
-import userSchema from '../models/user.model.js';
+import questionSchema from '../models/questionResult.model.js';
 import assignmentSchema from '../models/assignment.model.js';
 
 // ----------------------------------------
@@ -59,6 +59,29 @@ api.post('/delete', teacherRouteIsAuth, async (req, res) => {
         await teamSchema.findOneAndUpdate({ creatorId: teacher.userId, teamId: body.teamId }, { $pull: { "assignments": { assignmentId: body.assignmentId } } }).exec();
         await assignmentSchema.findOneAndRemove({ creatorId: teacher.userId, assignmentId: body.assignmentId });
         res.status(200).json({ message: 'Opgave slettet', type: 'success' });
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+});
+
+api.post('/question/create', teacherRouteIsAuth, async (req, res) => {
+    const teacher = await getTeacher(req);
+    const body = req.body;
+
+    try {
+        const qObj = {
+            questionId: getUuid(`${teacher.userId}-${body.questionTitle}`),
+            creatorId: teacher.userId,
+            assignmentId: body.assignmentId,
+            title: body.questionTitle,
+            text: body.questionText,
+            answer: body.questionAnswer
+        }
+
+        const q = await questionSchema(qObj);
+        await assignmentSchema.findOneAndUpdate({ creatorId: teacher.userId, assignmentId: body.assignmentId }, { $push: { questions: q } }).exec();
+
+        res.status(200).json({ message: 'Spørgsmål oprettet', type: 'success' });
     } catch (error) {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
     }

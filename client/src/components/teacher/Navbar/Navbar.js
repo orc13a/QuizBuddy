@@ -12,6 +12,7 @@ export default function Navbar({ children }) {
 
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [logoutLoading, setLogoutLoading] = useState(false);
+    const [border, setBorder] = useState(false);
 
     const burgerIcon = (
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
@@ -92,8 +93,8 @@ export default function Navbar({ children }) {
                     </Card>
                 </div>
             </Drawer>
-            <div style={{ padding: 10, position: 'sticky', top: 8 }}>
-                <Card padding="sm" style={{ paddingRight: 25 }} align="stretch" radius="md">
+            <div style={{ padding: 10, position: 'sticky', top: 8, zIndex: 5000 }}>
+                <Card withBorder padding="sm" style={{ paddingRight: 25 }} align="stretch" radius="md">
                     <Grid columns={10}>
                         <Col span={6}>
                             <span className="logoTitleTeacher" style={{ marginLeft: 15 }}>
