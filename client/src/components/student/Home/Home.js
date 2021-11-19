@@ -4,7 +4,7 @@ export default function StudentHome() {
     return (
         <>
             <Navbar>
-                Ingen ting
+                Tomt
             </Navbar>
         </>
     );

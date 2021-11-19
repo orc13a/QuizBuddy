@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Loader, Modal, Space, Text, Title } from "@mantine/core";
+import { Accordion, Button, Card, Divider, Loader, Modal, Space, Text, Title } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useNotifications } from '@mantine/notifications';
@@ -93,9 +93,13 @@ export default function StudentTeam() {
                                             <Space h="lg" />
                                             <Divider />
                                             <Space h="lg" />
-                                            {/* content
+                                            <Accordion>
+                                                <Accordion.Item label="Opgaver">
+
+                                                </Accordion.Item>
+                                            </Accordion>
                                             <Space h="lg" />
-                                            <Space h="sm" />*/}
+                                            <Space h="sm" />
                                             <Button onClick={ () => setShowDeleteTeamModal(true)} variant="light" color="red">
                                                 Forlad hold
                                             </Button>
