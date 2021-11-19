@@ -19,6 +19,7 @@ import TeacherProfile from "./components/teacher/Profile/Profile";
 import StudentProfile from "./components/student/Profile/Profile";
 import TeacherAssignment from "./components/teacher/Assignment/Assignment";
 import TeacherCreateQuestion from "./components/teacher/CreateQuestion/CreateQuestion";
+import TeacherQuestion from "./components/teacher/Question/Question";
 
 function App() {
     const t = useMantineTheme();
@@ -83,6 +84,11 @@ function App() {
                 <Route path="/teacher/opgave/spoergsmaal/opret/:assignmentId" element={
                     <TeacherRoute>
                         <TeacherCreateQuestion />
+                    </TeacherRoute>
+                } />
+                <Route path="/teacher/opgave/:assignmentId/spoergsmaal/:questionId" element={
+                    <TeacherRoute>
+                        <TeacherQuestion />
                     </TeacherRoute>
                 } />
                 {/* #### Student #### */}
