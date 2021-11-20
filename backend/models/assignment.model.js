@@ -5,6 +5,8 @@ const AssignmentSchema = mongoose.Schema({
     creatorId: String,
     teamId: String,
     name: String,
+    timeType: String,
+    time: String,
     questions: [],
     results: [],
     createdAt: {

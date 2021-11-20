@@ -1,4 +1,4 @@
-import { useMantineTheme, Button, Card, Divider, Loader, LoadingOverlay, Select, Space, Title, TextInput } from "@mantine/core";
+import { useMantineTheme, Button, Card, Divider, Loader, LoadingOverlay, Select, Space, Title, TextInput, Input, InputWrapper } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
 import { useNotifications } from "@mantine/notifications";
 import { useEffect, useState } from "react";
@@ -43,10 +43,14 @@ export default function TeacherCreateAssignment() {
         initialValues: {
             selectedTeamId: '',
             assignmentName: '',
+            timeLimit: '',
+            timeType: '',
         },
         validationRules: {
             selectedTeamId: (value) => value.length !== 0,
             assignmentName: (value) => value.length > 1,
+            timeLimit: (value) => value.length !== 0,
+            timeType: (value) => value.length > 1,
         },
     });
 
@@ -74,9 +78,9 @@ export default function TeacherCreateAssignment() {
                     </div>
                 ) : (
                     <>
-                        {/* <div className="centerH-o" style={{ paddingTop: 50, paddingBottom: 100 }}> */}
-                            {/* <div className="centerH-i"> */}
-                            <div className="center">
+                        <div className="centerH-o" style={{ paddingBottom: 100 }}>
+                            <div className="centerH-i">
+                            {/* <div className="center"> */}
                                 <Card style={{ width: 300 }} withBorder radius="md">
                                 <LoadingOverlay loader={ <Loader variant="dots" size="xl" color={theme.colors.indigo[3]} /> } visible={loading} />
                                     <div style={{ textAlign: 'center' }}>
@@ -113,7 +117,36 @@ export default function TeacherCreateAssignment() {
                                         onChange={(event) => form.setFieldValue('assignmentName', event.currentTarget.value)}
                                         />
                                         <Space h="lg" />
-                                        <Space h="sm" />
+                                        <Select
+                                        radius="md"
+                                        size="md"
+                                        label="Vælg tidsform"
+                                        placeholder="Tidsforme"
+                                        required
+                                        data={[
+                                            { value: 'limit', label: 'Begrænset' },
+                                            { value: 'speedrun', label: 'Hurtigste' }
+                                        ]}
+                                        description='Vælg de hold som opgaven skal gives til. Du kan søge efter hold.'
+                                        error={ form.errors.timeType && 'Vælg tidsform'}
+                                        value={form.values.timeType}
+                                        onChange={(value) => form.setFieldValue('timeType', value)}
+                                        />
+                                        <div>
+                                            <Space h="lg" />
+                                            <InputWrapper description="Format timer.minutter" size="md" label="Tid" required>
+                                                <Input
+                                                error={ form.errors.timeLimit && 'Vælg tidsbegrænsning'}
+                                                value={form.values.timeLimit}
+                                                onChange={(value) => form.setFieldValue('timeLimit', value)}
+                                                size="md"
+                                                radius="md"
+                                                type="time"
+                                                />
+                                            </InputWrapper>
+                                        </div>
+                                        <Space h="lg" />
+                                        <Space h="xl" />
                                         <Button onClick={ () => navigate('/teacher/forside', { replace: true }) } radius="md" size="md" color="red" variant="light" style={{ float: 'left' }}>
                                             Kassér
                                         </Button>
@@ -122,9 +155,9 @@ export default function TeacherCreateAssignment() {
                                         </Button>
                                     </form>
                                 </Card>
-                            </div>
                             {/* </div> */}
-                        {/* </div> */}
+                            </div>
+                        </div>
                     </>
                 ) }
             </Navbar>

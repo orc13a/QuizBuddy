@@ -1,7 +1,8 @@
 import express from 'express';
 const api = express.Router();
 import { teacherRouteIsAuth } from '../auth/teacherRouteIsAuth.js';
-import { getTeacher } from '../auth/tokens.js';
+import { studentRouteIsAuth } from '../auth/studentRouteIsAuth.js';
+import { getStudent, getTeacher } from '../auth/tokens.js';
 import getUuid from 'uuid-by-string';
 import teamSchema from '../models/team.model.js';
 import questionSchema from '../models/questionResult.model.js';
@@ -17,6 +18,18 @@ api.get('/get/:assignmentId', teacherRouteIsAuth, async (req, res) => {
 
     try {
         const assignment = await assignmentSchema.findOne({ creatorId: teacher.userId, assignmentId: assignmentId }).exec();
+        res.status(200).json(assignment);
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+});
+
+api.get('/student/get/:assignmentId', studentRouteIsAuth, async (req, res) => {
+    const student = await getStudent(req);
+    const assignmentId = req.params['assignmentId'];
+
+    try {
+        const assignment = await assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
         res.status(200).json(assignment);
     } catch (error) {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
@@ -55,7 +68,9 @@ api.post('/create', teacherRouteIsAuth, async (req, res) => {
             assignmentId: newAssignmentId,
             creatorId: teacher.userId,
             teamId: body.selectedTeamId,
-            name: body.assignmentName
+            name: body.assignmentName,
+            timeType: body.timeType,
+            time: body.timeLimit
         };
         const teamAssigmentObj = {
             assignmentId: newAssignmentId,
