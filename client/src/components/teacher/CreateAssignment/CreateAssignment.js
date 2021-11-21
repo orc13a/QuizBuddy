@@ -1,5 +1,6 @@
 import { useMantineTheme, Button, Card, Divider, Loader, LoadingOverlay, Select, Space, Title, TextInput, Input, InputWrapper } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
+import { TimeInput } from '@mantine/dates';
 import { useNotifications } from "@mantine/notifications";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -22,15 +23,17 @@ export default function TeacherCreateAssignment() {
             setTeams(data); 
             setFetching(false);
         }).then(() => {
-            teacherGetTeamsSelect().then((res) => {
-                setSelectTeams(res.data);
-                setFetching(false);
-            }).catch((err) => {
-                console.error(err);
-                if (err.response !== undefined) {
-                    navigate('/teacher/forside', { replace: true });
-                }
-            });
+            if (selectTeams.length === 0) {
+                teacherGetTeamsSelect().then((res) => {
+                    setSelectTeams(res.data);
+                    setFetching(false);
+                }).catch((err) => {
+                    console.error(err);
+                    if (err.response !== undefined) {
+                        navigate('/teacher/forside', { replace: true });
+                    }
+                });
+            }
         }).catch((err) => {
             console.error(err);
             if (err.response !== undefined) {
@@ -135,10 +138,10 @@ export default function TeacherCreateAssignment() {
                                         <div>
                                             <Space h="lg" />
                                             <InputWrapper description="Format timer.minutter" size="md" label="Tid" required>
-                                                <Input
+                                                <TimeInput
                                                 error={ form.errors.timeLimit && 'Vælg tidsbegrænsning'}
                                                 value={form.values.timeLimit}
-                                                onChange={(value) => form.setFieldValue('timeLimit', value)}
+                                                onChange={(value) => form.setFieldValue('timeLimit', new Date(value))}
                                                 size="md"
                                                 radius="md"
                                                 type="time"
