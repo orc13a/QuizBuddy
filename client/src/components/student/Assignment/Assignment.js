@@ -43,7 +43,7 @@ export default function StudentAssignment() {
                                     <Space h="lg" />
                                     <div style={{ padding: '0px 15px' }}>
                                         <Text size="lg">
-                                            <div style={{ marginBottom: '15px' }}>
+                                            <div>
                                                 <span>
                                                     Antal spørgsmål:
                                                 </span>
@@ -51,19 +51,29 @@ export default function StudentAssignment() {
                                                     { assignment.questions.length }
                                                 </span>
                                             </div>
+                                            <Space h="md" />
                                             <div>
                                                 <span>
                                                     Tid:
                                                 </span>
                                                 <span style={{ float: 'right' }}>
-                                                    02:00
+                                                    { assignment.timeLimitHours } t. { assignment.timeLimitMinutes } min
+                                                </span>
+                                            </div>
+                                            <Space h="md" />
+                                            <div>
+                                                <span>
+                                                    Frist:
+                                                </span>
+                                                <span style={{ float: 'right' }}>
+                                                    { assignment.openTo }
                                                 </span>
                                             </div>
                                         </Text>
                                     </div>
                                     <Space h="lg" />
                                     <Space h="sm" />
-                                    <Button onClick={ () => navigate(`/student/hold/${''}`) } variant="outline" color="indigo" size="md" radius="md">
+                                    <Button onClick={ () => navigate(`/student/hold/${assignment.teamId}`) } variant="outline" color="indigo" size="md" radius="md">
                                         Tilbage
                                     </Button>
                                     <Button style={{ float: 'right' }} color="indigo" size="md" radius="md">
