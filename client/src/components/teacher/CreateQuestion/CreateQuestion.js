@@ -1,4 +1,4 @@
-import { useMantineTheme, ActionIcon, Button, Card, Col, Divider, Grid, Group, InputWrapper, Loader, LoadingOverlay, Overlay, Space, Text, Textarea, TextInput, Tooltip } from "@mantine/core";
+import { useMantineTheme, ActionIcon, Button, Card, Col, Divider, Grid, Group, InputWrapper, Loader, LoadingOverlay, Overlay, Space, Text, Textarea, TextInput, Tooltip, Title } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
 import { useNotifications } from "@mantine/notifications";
 import { useState } from "react";
@@ -91,6 +91,14 @@ export default function TeacherCreateQuestion() {
                         <form onSubmit={ form.onSubmit((values) => onSubmit(values)) }>
                             <Card withBorder radius="md" padding="lg">
                                 <LoadingOverlay loader={ <Loader variant="dots" size="xl" color={theme.colors.indigo[3]} /> } visible={loading} />
+                                <div style={{ textAlign: 'center' }}>
+                                    <Title order={2}>
+                                        Opret spørgsmål
+                                    </Title>
+                                </div>
+                                <Space h="lg" />
+                                <Divider />
+                                <Space h="lg" />
                                 <Col span={12} md={8}>
                                     <TextInput
                                     label="Spørgsmålets overskrift"
@@ -103,6 +111,13 @@ export default function TeacherCreateQuestion() {
                                     <Space h="md" />
                                     <Divider />
                                     <Space h="md" />
+                                    <div>
+                                        <Group>
+                                            <Button onClick={ () => setVisible(true) } variant={ visible ? 'filled' : 'outline' } size="md" color="indigo" radius="md">Skriv</Button>
+                                            <Button onClick={ () => setVisible(false) } variant={ visible ? 'outline' : 'filled' } size="md" color="indigo" radius="md">Visning</Button>
+                                        </Group>
+                                        <Space h="md" />
+                                    </div>
                                     <Card radius="md" padding="lg">
                                         {!visible && <Overlay opacity={0.05} color="#000" zIndex={5} />}
                                         <Group>
@@ -217,16 +232,6 @@ export default function TeacherCreateQuestion() {
                                             </Group>
                                         </div>
                                     </Card>
-                                    <Space h="md" />
-                                    <Divider />
-                                    <Space h="md" />
-                                    <div>
-                                        <Group>
-                                            <Button onClick={ () => setVisible(true) } variant={ visible ? 'filled' : 'outline' } size="md" color="indigo" radius="md">Skriv</Button>
-                                            <Button onClick={ () => setVisible(false) } variant={ visible ? 'outline' : 'filled' } size="md" color="indigo" radius="md">Visning</Button>
-                                        </Group>
-                                        <Space h="md" />
-                                    </div>
                                     <div hidden={ !visible }>
                                         <InputWrapper label="Spørgsmålet" size="md">
                                             <Textarea
@@ -243,6 +248,7 @@ export default function TeacherCreateQuestion() {
                                         </InputWrapper>
                                     </div>
                                     <div hidden={ visible }>
+                                        <Space h="md" />
                                         {/* <Textarea
                                         readOnly
                                         radius="md"
