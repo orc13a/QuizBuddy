@@ -61,7 +61,7 @@ api.get('/get/:assignmentId/question/:questionId', teacherRouteIsAuth, async (re
 api.post('/create', teacherRouteIsAuth, async (req, res) => {
     const teacher = await getTeacher(req);
     const body = req.body;
-
+    
     try {
         const newAssignmentId = getUuid(`${teacher.userId}-${body.assignmentName}`)
         const newAssignmentObj = {
@@ -70,12 +70,15 @@ api.post('/create', teacherRouteIsAuth, async (req, res) => {
             teamId: body.selectedTeamId,
             name: body.assignmentName,
             timeType: body.timeType,
-            time: body.timeLimit
+            timeLimitHours: body.timeLimitHours,
+            timeLimitMinutes: body.timeLimitMinutes,
+            openTo: body.openTo,
         };
         const teamAssigmentObj = {
             assignmentId: newAssignmentId,
             name: body.assignmentName
         }
+
         await assignmentSchema(newAssignmentObj).save();
         await teamSchema.findOneAndUpdate({ creatorId: teacher.userId, teamId: body.selectedTeamId }, { $push: { assignments: teamAssigmentObj } }).exec();
         res.status(200).json({ message: 'Opgave oprettet', type: 'success', assignmentName: body.assignmentName, assignmentId: newAssignmentId });
@@ -83,6 +86,23 @@ api.post('/create', teacherRouteIsAuth, async (req, res) => {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
     }
 });
+
+// const newAssignmentId = getUuid(`${teacher.userId}-${body.assignmentName}`)
+// const newAssignmentObj = {
+//     assignmentId: newAssignmentId,
+//     creatorId: teacher.userId,
+//     teamId: body.selectedTeamId,
+//     name: body.assignmentName,
+//     timeType: body.timeType,
+//     time: body.timeLimit
+// };
+// const teamAssigmentObj = {
+//     assignmentId: newAssignmentId,
+//     name: body.assignmentName
+// }
+// await assignmentSchema(newAssignmentObj).save();
+// await teamSchema.findOneAndUpdate({ creatorId: teacher.userId, teamId: body.selectedTeamId }, { $push: { assignments: teamAssigmentObj } }).exec();
+// res.status(200).json({ message: 'Opgave oprettet', type: 'success', assignmentName: body.assignmentName, assignmentId: newAssignmentId });
 
 api.post('/delete', teacherRouteIsAuth, async (req, res) => {
     const teacher = await getTeacher(req);

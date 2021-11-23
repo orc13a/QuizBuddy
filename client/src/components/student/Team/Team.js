@@ -135,7 +135,7 @@ export default function StudentTeam() {
                                             </Accordion>
                                             <Space h="lg" />
                                             <Space h="sm" />
-                                            <Button onClick={ () => setShowDeleteTeamModal(true)} variant="light" color="red">
+                                            <Button onClick={ () => setShowDeleteTeamModal(true)} size="md" radius="md" variant="light" color="red">
                                                 Forlad hold
                                             </Button>
                                         </Card>

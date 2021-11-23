@@ -232,7 +232,7 @@ export default function TeacherTeam() {
                                             <CardInfo createdAt={team.createdAt} />
                                             <Space h="lg" />
                                             <Space h="sm" />
-                                            <Button onClick={ () => setShowDeleteTeamModal(true)} variant="light" color="red">
+                                            <Button onClick={ () => setShowDeleteTeamModal(true)} variant="light" color="red" size="md" radius="md">
                                                 Slet hold
                                             </Button>
                                         </Card>

@@ -1,6 +1,5 @@
-import { useMantineTheme, Button, Card, Divider, Loader, LoadingOverlay, Select, Space, Title, TextInput, Input, InputWrapper } from "@mantine/core";
+import { useMantineTheme, Button, Card, Divider, Loader, LoadingOverlay, Select, Space, Title, TextInput, Input, InputWrapper, NumberInput } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
-import { TimeInput } from '@mantine/dates';
 import { useNotifications } from "@mantine/notifications";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -16,6 +15,7 @@ export default function TeacherCreateAssignment() {
     const [loading, setLoading] = useState(false);
     const [, setTeams] = useState(null);
     const [selectTeams, setSelectTeams] = useState([]);
+    const [timeLimit, setTimeLimit] = useState(false);
 
     useEffect(() => {
         teacherGetTeams().then((res) => {
@@ -46,14 +46,18 @@ export default function TeacherCreateAssignment() {
         initialValues: {
             selectedTeamId: '',
             assignmentName: '',
-            timeLimit: '',
+            timeLimitHours: 0,
+            timeLimitMinutes: 0,
             timeType: '',
+            openTo: '',
         },
         validationRules: {
             selectedTeamId: (value) => value.length !== 0,
-            assignmentName: (value) => value.length > 1,
-            timeLimit: (value) => value.length !== 0,
+            assignmentName: (value) => value.length !== 0,
             timeType: (value) => value.length > 1,
+            openTo: (value) => value.length !== 0,
+            timeLimitHours: (value) => Number(value) >= 0,
+            timeLimitMinutes: (value) => Number(value) > 0,
         },
     });
 
@@ -70,6 +74,20 @@ export default function TeacherCreateAssignment() {
             console.error(err);
             setLoading(false);
         });
+    }
+
+    const timeSelectOnChange = (value) => {
+        form.setFieldValue('timeType', value);
+        if (value === 'limit') {
+            setTimeLimit(true);
+        } else {
+            setTimeLimit(false);
+        }
+    }
+
+    const openToOnChange = (e) => {
+        const value = e.target.value;
+        form.setFieldValue('openTo', value);
     }
 
     return (
@@ -120,7 +138,17 @@ export default function TeacherCreateAssignment() {
                                         onChange={(event) => form.setFieldValue('assignmentName', event.currentTarget.value)}
                                         />
                                         <Space h="lg" />
+                                        <InputWrapper error={ form.errors.openTo && 'Vælg dato'} required label="Frist" size="md">
+                                            <Input
+                                            size="md"
+                                            radius="md"
+                                            type="date"
+                                            onChange={(e) => openToOnChange(e) }
+                                            />
+                                        </InputWrapper>
+                                        <Space h="lg" />
                                         <Select
+                                        maxDropdownHeight={80}
                                         radius="md"
                                         size="md"
                                         label="Vælg tidsform"
@@ -133,12 +161,33 @@ export default function TeacherCreateAssignment() {
                                         description='Vælg de hold som opgaven skal gives til. Du kan søge efter hold.'
                                         error={ form.errors.timeType && 'Vælg tidsform'}
                                         value={form.values.timeType}
-                                        onChange={(value) => form.setFieldValue('timeType', value)}
+                                        onChange={(value) => timeSelectOnChange(value) }
                                         />
-                                        <div>
+                                        <div hidden={!timeLimit}>
                                             <Space h="lg" />
-                                            time
+                                            <InputWrapper label="" description="Angiv de timer og minutter som eleven har til opgaven" size="md">
+                                                <NumberInput
+                                                label="Timer"
+                                                size="md" radius="md"
+                                                style={{ display: 'inline-block', width: 120 }}
+                                                error={ form.errors.timeLimitHours}
+                                                value={form.values.timeLimitHours}
+                                                onChange={(value) => form.setFieldValue('timeLimitHours', value) }
+                                                />
+                                                <Space w="md" style={{ display: 'inline-block' }} />
+                                                <NumberInput
+                                                label="Minutter"
+                                                step={5}
+                                                required={ timeLimit }
+                                                size="md" radius="md"
+                                                style={{ display: 'inline-block', width: 120 }}
+                                                error={ form.errors.timeLimitMinutes}
+                                                value={form.values.timeLimitMinutes}
+                                                onChange={(value) => form.setFieldValue('timeLimitMinutes', value) }
+                                                />
+                                            </InputWrapper>
                                         </div>
+
                                         <Space h="lg" />
                                         <Space h="xl" />
                                         <Button onClick={ () => navigate('/teacher/forside', { replace: true }) } radius="md" size="md" color="red" variant="light" style={{ float: 'left' }}>

@@ -6,8 +6,10 @@ const AssignmentSchema = mongoose.Schema({
     teamId: String,
     name: String,
     timeType: String,
-    time: String,
-    openTo: String,
+    timeLimitHours: Number,
+    timeLimitMinutes: Number,
+    openTo: Date,
+    studentsStarted: [],
     questions: [],
     results: [],
     createdAt: {
