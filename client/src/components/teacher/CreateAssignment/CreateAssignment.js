@@ -137,16 +137,7 @@ export default function TeacherCreateAssignment() {
                                         />
                                         <div>
                                             <Space h="lg" />
-                                            <InputWrapper description="Format timer.minutter" size="md" label="Tid" required>
-                                                <TimeInput
-                                                error={ form.errors.timeLimit && 'Vælg tidsbegrænsning'}
-                                                value={form.values.timeLimit}
-                                                onChange={(value) => form.setFieldValue('timeLimit', new Date(value))}
-                                                size="md"
-                                                radius="md"
-                                                type="time"
-                                                />
-                                            </InputWrapper>
+                                            time
                                         </div>
                                         <Space h="lg" />
                                         <Space h="xl" />

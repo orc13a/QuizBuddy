@@ -7,6 +7,7 @@ const AssignmentSchema = mongoose.Schema({
     name: String,
     timeType: String,
     time: String,
+    openTo: String,
     questions: [],
     results: [],
     createdAt: {

@@ -1472,10 +1472,10 @@
     react-popper "^2.2.5"
     react-textarea-autosize "^8.3.2"
 
-"@mantine/dates@^3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@mantine/dates/-/dates-3.2.1.tgz#5ad2350aad163efb78b4521c14bee5dd6e3caf4e"
-  integrity sha512-76biCOG2bv0RmK5LCRqP8KhWZPVMmlzPUddXi7dEvqTuiNGD74CzGHoKk8U0hFSUdVNB52FvjbX5FPgRXFmVPg==
+"@mantine/dates@^3.2.2":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@mantine/dates/-/dates-3.2.2.tgz#047d838d808e7713aef44328414b50ec82b868d7"
+  integrity sha512-0x6sz7RHqx0xLDATx4e80m+y5tO6kAnt1OtAiCBTREHlEY7o1GyDWnI1vGwe3JXSXvoc2l1UHSgidXpEMtVi3A==
   dependencies:
     "@popperjs/core" "^2.9.3"
     clsx "^1.1.1"
@@ -3901,6 +3901,11 @@ data-urls@^2.0.0:
     abab "^2.0.3"
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
+
+dayjs@^1.10.7:
+  version "1.10.7"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.10.7.tgz#2cf5f91add28116748440866a0a1d26f3a6ce468"
+  integrity sha512-P6twpd70BcPK34K26uJ1KT3wlhpuOAPoMwJzpsIWUxHZ7wpmbdZL/hQqBDfz7hGurYSa5PhzdhDHtt319hL3ig==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.9:
   version "2.6.9"
