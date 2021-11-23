@@ -201,10 +201,12 @@ export default function TeacherAssignment() {
                                             </Accordion.Item>
                                         </Accordion>
                                         <Space h="lg" />
-                                        <Button onClick={ () => navigate(`/teacher/opgave/spoergsmaal/opret/${assignment.assignmentId}`) } fullWidth radius="md" size="md" color="indigo">
-                                            Opret spørgsmål
-                                        </Button>
-                                        <Space h="lg" />
+                                        <div hidden={ !assignment.studentsStarted.length === 0 }>
+                                            <Button onClick={ () => navigate(`/teacher/opgave/spoergsmaal/opret/${assignment.assignmentId}`) } fullWidth radius="md" size="md" color="indigo">
+                                                Opret spørgsmål
+                                            </Button>
+                                            <Space h="lg" />
+                                        </div>
                                         <Button fullWidth radius="md" size="md" color="indigo">
                                             Se resultater
                                         </Button>
