@@ -41,26 +41,26 @@ export default function StudentAssignment() {
                                     <Space h="lg" />
                                     <Divider />
                                     <Space h="lg" />
-                                        <div style={{ padding: '0px 15px' }}>
-                                            <Text size="lg">
-                                                <div style={{ marginBottom: '15px' }}>
-                                                    <span>
-                                                        Antal spørgsmål:
-                                                    </span>
-                                                    <span style={{ float: 'right' }}>
-                                                        { assignment.questions.length }
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span>
-                                                        Tid:
-                                                    </span>
-                                                    <span style={{ float: 'right' }}>
-                                                        02:00
-                                                    </span>
-                                                </div>
-                                            </Text>
-                                        </div>
+                                    <div style={{ padding: '0px 15px' }}>
+                                        <Text size="lg">
+                                            <div style={{ marginBottom: '15px' }}>
+                                                <span>
+                                                    Antal spørgsmål:
+                                                </span>
+                                                <span style={{ float: 'right' }}>
+                                                    { assignment.questions.length }
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span>
+                                                    Tid:
+                                                </span>
+                                                <span style={{ float: 'right' }}>
+                                                    02:00
+                                                </span>
+                                            </div>
+                                        </Text>
+                                    </div>
                                     <Space h="lg" />
                                     <Space h="sm" />
                                     <Button onClick={ () => navigate(`/student/hold/${''}`) } variant="outline" color="indigo" size="md" radius="md">

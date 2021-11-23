@@ -70,89 +70,158 @@ export default function TeacherAssignment() {
     return (
         <>
             <Navbar>
-                <div className="center">
+                {/* <div className="center"> */}
                     { fetching ? (
-                        <Loader color="indigo" size="xl" variant="dots" />
+                        <div className="center">
+                            <Loader color="indigo" size="xl" variant="dots" />
+                        </div>
                     ) : (
                         <>
                             <Modal
-                                opened={showDeleteAssignmentModal}
-                                hideCloseButton={deletingAssignment}
-                                closeOnClickOutside={!deletingAssignment}
-                                onClose={ () => setShowDeleteAssignmentModal(false) }
-                                title={<Title order={3}>Slet opgave '{assignment.name}'</Title>}
-                                >
-                                    <Text>
-                                        Er du sikker på at du vil slette denne opgave<br />
-                                        Denne handling kan ikke fortrydes.
-                                    </Text>
-                                    <Space h="md" />
-                                    <Button onClick={ () => setShowDeleteAssignmentModal(false)} disabled={deletingAssignment} color="indigo">
-                                        Fortryd
-                                    </Button>
-                                    <Button onClick={ deleteAssignmentClick } loading={deleteAssignmentLoading} color="red" variant="light" style={{ float: 'right' }}>
-                                        Slet
-                                    </Button>
-                                </Modal>
-                            <Card withBorder style={{ width: 300 }}>
-                            {/* <LoadingOverlay loader={ <Loader variant="dots" size="xl" color={theme.colors.indigo[3]} /> } visible={deleteAssignmentLoading} /> */}
-                                <div style={{ textAlign: 'center' }}>
-                                    <Title order={2}>
-                                        { assignment.name }
-                                    </Title>
-                                </div>
-                                <Space h="lg" />
-                                <Divider />
-                                <Space h="lg" />
-                                <Accordion>
-                                    <Accordion.Item label="Alle spørgsmål">
-                                        { assignment.questions.length === 0 ? (
-                                            <div style={{ textAlign: 'center', fontStyle: 'italic' }}>
-                                                <Text size="sm">
-                                                    Ingen spørgsmål i denne opgave
-                                                </Text>
-                                            </div>
-                                        ) : (
-                                            <>  
+                            opened={showDeleteAssignmentModal}
+                            hideCloseButton={deletingAssignment}
+                            closeOnClickOutside={!deletingAssignment}
+                            onClose={ () => setShowDeleteAssignmentModal(false) }
+                            title={<Title order={3}>Slet opgave '{assignment.name}'</Title>}
+                            >
+                                <Text>
+                                    Er du sikker på at du vil slette denne opgave<br />
+                                    Denne handling kan ikke fortrydes.
+                                </Text>
+                                <Space h="md" />
+                                <Button size="md" radius="md" onClick={ () => setShowDeleteAssignmentModal(false)} disabled={deletingAssignment} color="indigo">
+                                    Fortryd
+                                </Button>
+                                <Button size="md" radius="md" onClick={ deleteAssignmentClick } loading={deleteAssignmentLoading} color="red" variant="light" style={{ float: 'right' }}>
+                                    Slet
+                                </Button>
+                            </Modal>
+                            <div className="centerH-o">
+                                <div className="centerH-i">
+                                    <Card withBorder style={{ width: 300 }}>
+                                    {/* <LoadingOverlay loader={ <Loader variant="dots" size="xl" color={theme.colors.indigo[3]} /> } visible={deleteAssignmentLoading} /> */}
+                                        <div style={{ textAlign: 'center' }}>
+                                            <Title order={2}>
+                                                { assignment.name }
+                                            </Title>
+                                        </div>
+                                        <Space h="lg" />
+                                        <Divider />
+                                        <Space h="lg" />
+                                        <div style={{ padding: '0px 15px' }}>
+                                            <Text size="lg">
+                                                <div>
+                                                    <span>
+                                                        Antal spørgsmål:
+                                                    </span>
+                                                    <span style={{ float: 'right' }}>
+                                                        { assignment.questions.length }
+                                                    </span>
+                                                </div>
                                                 <Space h="md" />
-                                                { assignment.questions.map((question) => (
+                                                <div>
+                                                    <span>
+                                                        Tid:
+                                                    </span>
+                                                    <span style={{ float: 'right' }}>
+                                                        { assignment.timeLimitHours } t. { assignment.timeLimitMinutes } min
+                                                    </span>
+                                                </div>
+                                                <Space h="md" />
+                                                <div>
+                                                    <span>
+                                                        Frist:
+                                                    </span>
+                                                    <span style={{ float: 'right' }}>
+                                                        { assignment.openTo }
+                                                    </span>
+                                                </div>
+                                            </Text>
+                                        </div>
+                                        <Space h="lg" />
+                                        <Accordion>
+                                            <Accordion.Item label="Elever påbegyndt opgave">
+                                                { assignment.studentsStarted.length === 0 ? (
+                                                    <div style={{ textAlign: 'center', fontStyle: 'italic' }}>
+                                                        <Text size="sm">
+                                                            Ingen elever påbegyndt opgave
+                                                        </Text>
+                                                    </div>
+                                                ) : (
                                                     <>
-                                                        <Link to={`/teacher/opgave/${question.assignmentId}/spoergsmaal/${question.questionId}`}>
-                                                            <Card style={{ cursor: 'pointer' }} withBorder radius="md">
-                                                                <div style={{ display: 'inline-block', width: '90%', position: 'relative', bottom: 2 }}>
-                                                                    { question.title }
-                                                                </div>
-                                                                <div style={{ display: 'inline-block', width: '10%' }}>
-                                                                    <ActionIcon radius="md">
-                                                                        { jumpToicon }
-                                                                    </ActionIcon>
-                                                                </div>
-                                                            </Card>
-                                                        </Link>
                                                         <Space h="md" />
+                                                        { assignment.studentsStarted.map((student) => (
+                                                            <>
+                                                                <Card style={{ cursor: 'pointer' }} withBorder radius="md">
+                                                                    <div style={{ display: 'inline-block', width: '90%', position: 'relative', bottom: 2 }}>
+                                                                        { student.firstname } { student.lastname }
+                                                                    </div>
+                                                                    <div style={{ display: 'inline-block', width: '10%' }}>
+                                                                        {/* plads til ikon */}
+                                                                    </div>
+                                                                </Card>
+                                                                <Space h="md" />
+                                                            </>
+                                                        )) }
                                                     </>
-                                                )) }
-                                            </>
-                                        ) }
-                                    </Accordion.Item>
-                                </Accordion>
-                                <Space h="lg" />
-                                <Button onClick={ () => navigate(`/teacher/opgave/spoergsmaal/opret/${assignment.assignmentId}`) } fullWidth radius="md" size="md" color="indigo">
-                                    Opret spørgsmål
-                                </Button>
-                                <Space h="lg" />
-                                <Button fullWidth radius="md" size="md" color="indigo">
-                                    Se resultater
-                                </Button>
-                                <Space h="lg" />
-                                <Space h="sm" />
-                                <Button onClick={ () => setShowDeleteAssignmentModal(true) } radius="md" size="md" color="red" variant="light">
-                                    Slet opgave
-                                </Button>
-                            </Card>
+                                                ) }
+                                            </Accordion.Item>
+                                        </Accordion>
+                                        <Space h="lg" />
+                                        <Accordion>
+                                            <Accordion.Item label="Se spørgsmål">
+                                                { assignment.questions.length === 0 ? (
+                                                    <div style={{ textAlign: 'center', fontStyle: 'italic' }}>
+                                                        <Text size="sm">
+                                                            Ingen spørgsmål i denne opgave
+                                                        </Text>
+                                                    </div>
+                                                ) : (
+                                                    <>  
+                                                        <Space h="md" />
+                                                        { assignment.questions.map((question) => (
+                                                            <>
+                                                                <Link to={`/teacher/opgave/${question.assignmentId}/spoergsmaal/${question.questionId}`}>
+                                                                    <Card style={{ cursor: 'pointer' }} withBorder radius="md">
+                                                                        <div style={{ display: 'inline-block', width: '90%', position: 'relative', bottom: 2 }}>
+                                                                            { question.title }
+                                                                        </div>
+                                                                        <div style={{ display: 'inline-block', width: '10%' }}>
+                                                                            <ActionIcon radius="md">
+                                                                                { jumpToicon }
+                                                                            </ActionIcon>
+                                                                        </div>
+                                                                    </Card>
+                                                                </Link>
+                                                                <Space h="md" />
+                                                            </>
+                                                        )) }
+                                                    </>
+                                                ) }
+                                            </Accordion.Item>
+                                        </Accordion>
+                                        <Space h="lg" />
+                                        <Button onClick={ () => navigate(`/teacher/opgave/spoergsmaal/opret/${assignment.assignmentId}`) } fullWidth radius="md" size="md" color="indigo">
+                                            Opret spørgsmål
+                                        </Button>
+                                        <Space h="lg" />
+                                        <Button fullWidth radius="md" size="md" color="indigo">
+                                            Se resultater
+                                        </Button>
+                                        <Space h="lg" />
+                                        <Space h="sm" />
+                                        <Button onClick={ () => setShowDeleteAssignmentModal(true) } radius="md" size="md" color="red" variant="light">
+                                            Slet
+                                        </Button>
+                                        <Button style={{ float: 'right' }} variant="light" radius="md" size="md" color="indigo">
+                                            Rediger
+                                        </Button>
+                                    </Card>
+                                </div>
+                            </div>
                         </>
                     ) }
-                </div>
+                {/* </div> */}
             </Navbar>
         </>
     );

@@ -203,6 +203,10 @@ export default function TeacherTeam() {
                                                             <Text size="sm">
                                                                 Ingen opgaver i dette hold
                                                             </Text>
+                                                            <Space h="md" />
+                                                            <Button onClick={ () => navigate('/teacher/opgave/opret') } color="indigo">
+                                                                Opret opgave
+                                                            </Button>
                                                         </div>
                                                     ) : (
                                                         <>  

@@ -73,6 +73,7 @@ api.post('/create', teacherRouteIsAuth, async (req, res) => {
             timeLimitHours: body.timeLimitHours,
             timeLimitMinutes: body.timeLimitMinutes,
             openTo: body.openTo,
+            openToDate: body.openTo
         };
         const teamAssigmentObj = {
             assignmentId: newAssignmentId,
