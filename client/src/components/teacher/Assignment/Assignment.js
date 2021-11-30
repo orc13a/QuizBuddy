@@ -70,8 +70,8 @@ export default function TeacherAssignment() {
     );
 
     // <div className="center">
-    //                         <Loader color="indigo" size="xl" variant="dots" />
-    //                     </div>
+    //  <Loader color="indigo" size="xl" variant="dots" />
+    // </div>
 
     return (
         <>
@@ -215,11 +215,13 @@ export default function TeacherAssignment() {
                                             </Accordion.Item>
                                         </Accordion>
                                         <Space h="lg" />
-                                        <div hidden={ !assignment.studentsStarted.length === 0 || checkDatePastToday(assignment.openToDate) }>
+                                        <div hidden={ assignment.studentsStarted.length > 0 || checkDatePastToday(assignment.openToDate) }>
+                                        {/* <div hidden={ checkDatePastToday(assignment.openToDate) }> */}
                                             <Button onClick={ () => navigate(`/teacher/opgave/spoergsmaal/opret/${assignment.assignmentId}`) } fullWidth radius="md" size="md" color="indigo">
                                                 Opret spørgsmål
                                             </Button>
                                             <Space h="lg" />
+                                        {/* </div> */}
                                         </div>
                                         <Button fullWidth radius="md" size="md" color="indigo">
                                             Se resultater

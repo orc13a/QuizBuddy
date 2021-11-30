@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 const UserInAssignmentSchema = mongoose.Schema({
     studentId: String,
+    firstname: String,
+    lastname: String,
     assignmentId: String,
     time: String,
     questionId: String,

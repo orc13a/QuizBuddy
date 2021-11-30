@@ -104,17 +104,19 @@ api.post('/assignment/:assignmentId/start', studentRouteIsAuth, async (req, res)
         if (alreadyStartedCheck.studentsStarted.length > 0) {
             res.status(406).json({ message: 'Elev allerede startet opgaven', type: 'error' });
         } else {
-            const assignment = assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
+            const assignment = await assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
 
             const startObj = userInAssignmentSchema({
                 studentId: student.userId,
                 assignmentId: body.assignmentId,
+                firstname: student.firstname,
+                lastname: student.lastname, 
                 time: 0,
                 questionId: assignment.questions[0].questionId,
                 nextQuestionId: '',
             });
 
-            assignmentSchema.findByIdAndUpdate({ assignmentId: assignmentId }, { $push: { studentsStarted: startObj }}).exec();
+            await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId }, { $push: { studentsStarted: startObj }}).exec();
 
             res.status(200).json({ message: 'Elev startet på opgaven', type: 'success', startQuestionId: startObj.questionId });
         }
