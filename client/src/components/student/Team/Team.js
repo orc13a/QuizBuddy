@@ -131,7 +131,7 @@ export default function StudentTeam() {
                                                                     </Link>
                                                                     <Space h="md" />
                                                                 </>
-                                                            )) }
+                                                            )).reverse() }
                                                         </>
                                                     ) }
                                                 </Accordion.Item>

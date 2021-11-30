@@ -1,9 +1,11 @@
-import { Accordion, Button, Card, Divider, Loader, Space, Title, Text, Modal, ActionIcon } from '@mantine/core';
+import { Accordion, Button, Card, Divider, Loader, Space, Title, Text, Modal, ActionIcon, Tooltip } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { deleteAssignment, getAssignment } from '../../../api/index.js';
+import { checkDatePastToday } from '../../checkDatePastToday.js';
+import LoadingCard from '../../LoadingCard/LoadingCard.js';
 import Navbar from '../Navbar/Navbar';
 
 export default function TeacherAssignment() {
@@ -67,14 +69,16 @@ export default function TeacherAssignment() {
         </svg>
     );
 
+    // <div className="center">
+    //                         <Loader color="indigo" size="xl" variant="dots" />
+    //                     </div>
+
     return (
         <>
             <Navbar>
                 {/* <div className="center"> */}
                     { fetching ? (
-                        <div className="center">
-                            <Loader color="indigo" size="xl" variant="dots" />
-                        </div>
+                        <LoadingCard align="middle" />
                     ) : (
                         <>
                             <Modal
@@ -124,7 +128,9 @@ export default function TeacherAssignment() {
                                                         Tid:
                                                     </span>
                                                     <span style={{ float: 'right' }}>
-                                                        { assignment.timeLimitHours } t. { assignment.timeLimitMinutes } min
+                                                        { assignment.timeType === 'limit' ? (
+                                                                assignment.timeLimitHours + ' t. ' + assignment.timeLimitMinutes + ' min'
+                                                        ) : 'Tidstagning' }
                                                     </span>
                                                 </div>
                                                 <Space h="md" />
@@ -133,7 +139,15 @@ export default function TeacherAssignment() {
                                                         Frist:
                                                     </span>
                                                     <span style={{ float: 'right' }}>
-                                                        { assignment.openTo }
+                                                        { checkDatePastToday(assignment.openToDate) ? (
+                                                            <>
+                                                                <Tooltip label={assignment.openTo}>
+                                                                    <Text style={{ cursor: 'default' }} color="red">
+                                                                        Lukket
+                                                                    </Text>
+                                                                </Tooltip>
+                                                            </>
+                                                        ) : assignment.openTo }
                                                     </span>
                                                 </div>
                                             </Text>
@@ -201,7 +215,7 @@ export default function TeacherAssignment() {
                                             </Accordion.Item>
                                         </Accordion>
                                         <Space h="lg" />
-                                        <div hidden={ !assignment.studentsStarted.length === 0 }>
+                                        <div hidden={ !assignment.studentsStarted.length === 0 || checkDatePastToday(assignment.openToDate) }>
                                             <Button onClick={ () => navigate(`/teacher/opgave/spoergsmaal/opret/${assignment.assignmentId}`) } fullWidth radius="md" size="md" color="indigo">
                                                 Opret spørgsmål
                                             </Button>
@@ -215,10 +229,16 @@ export default function TeacherAssignment() {
                                         <Button onClick={ () => setShowDeleteAssignmentModal(true) } radius="md" size="md" color="red" variant="light">
                                             Slet
                                         </Button>
-                                        <Button style={{ float: 'right' }} variant="light" radius="md" size="md" color="indigo">
-                                            Rediger
-                                        </Button>
+                                        { !checkDatePastToday(assignment.openToDate) ? (
+                                            <Button style={{ float: 'right' }} variant="light" radius="md" size="md" color="indigo">
+                                                Rediger
+                                            </Button> 
+                                        ) : null }
                                     </Card>
+                                    <Space h="lg" />
+                                    <Button onClick={ () => navigate(`/teacher/hold/${assignment.teamId}`) } variant="outline" size="sm" radius="md" color="indigo">
+                                        Tilbage
+                                    </Button>
                                 </div>
                             </div>
                         </>

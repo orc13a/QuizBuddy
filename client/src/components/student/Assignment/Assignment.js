@@ -1,13 +1,16 @@
-import { Button, Card, Divider, Loader, Skeleton, Space, Text, Title } from "@mantine/core";
+import { Button, Card, Divider, Space, Text, Title, Tooltip } from "@mantine/core";
+import { useNotifications } from "@mantine/notifications";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { studentGetAssignment } from "../../../api";
+import { checkDatePastToday } from "../../checkDatePastToday";
 import LoadingCard from "../../LoadingCard/LoadingCard";
 import Navbar from "../Navbar/Navbar";
 
 export default function StudentAssignment() {
     const { assignmentId } = useParams();
     const navigate = useNavigate();
+    const notifications = useNotifications();
 
     const [fetching, setFetching] = useState(true);
     const [assignment, setAssignment] = useState(null);
@@ -16,10 +19,18 @@ export default function StudentAssignment() {
         studentGetAssignment(assignmentId).then((res) => {
             setAssignment(res.data);
             setFetching(false);
+            if (fetching === false && res.data.questions.length === 0) {
+                notifications.showNotification({
+                    title: 'Hov',
+                    message: 'Der er ingen spørgsmål i denne opgave, din lærer skal oprette nogen spørgsmål.',
+                    color: 'yellow',
+                    autoClose: false
+                });
+            }
         }).catch((err) => {
             console.error(err);
         });
-    });
+    }, [fetching]);
     // {/* <div className="center">
     //                     <Loader color="indigo" size="xl" variant="dots" />
     //                 </div> */}
@@ -59,7 +70,9 @@ export default function StudentAssignment() {
                                                     Tid:
                                                 </span>
                                                 <span style={{ float: 'right' }}>
-                                                    { assignment.timeLimitHours } t. { assignment.timeLimitMinutes } min
+                                                    { assignment.timeType === 'limit' ? (
+                                                            assignment.timeLimitHours + ' t. ' + assignment.timeLimitMinutes + ' min'
+                                                    ) : 'Tidstagning' }
                                                 </span>
                                             </div>
                                             <Space h="md" />
@@ -68,19 +81,37 @@ export default function StudentAssignment() {
                                                     Frist:
                                                 </span>
                                                 <span style={{ float: 'right' }}>
-                                                    { assignment.openTo }
+                                                    { checkDatePastToday(assignment.openToDate) ? (
+                                                        <>
+                                                            <Tooltip label={assignment.openTo}>
+                                                                <Text style={{ cursor: 'default' }} color="red">
+                                                                    Lukket
+                                                                </Text>
+                                                            </Tooltip>
+                                                        </>
+                                                    ) : assignment.openTo }
                                                 </span>
                                             </div>
                                         </Text>
                                     </div>
+                                    { checkDatePastToday(assignment.openToDate) ? (
+                                        <div>
+                                            <Space h="lg" />
+                                            <Button fullWidth color="indigo" size="md" radius="md">
+                                                Dine resultater
+                                            </Button>
+                                        </div>
+                                    ) : null }
                                     <Space h="lg" />
                                     <Space h="sm" />
                                     <Button onClick={ () => navigate(`/student/hold/${assignment.teamId}`) } variant="outline" color="indigo" size="md" radius="md">
                                         Tilbage
                                     </Button>
-                                    <Button style={{ float: 'right' }} color="indigo" size="md" radius="md">
-                                        Start
-                                    </Button>
+                                    { !checkDatePastToday(assignment.openToDate) && assignment.questions.length > 0 ? (
+                                        <Button style={{ float: 'right' }} color="indigo" size="md" radius="md">
+                                            Start
+                                        </Button>
+                                    ) : null }
                                 </Card>
                         </div>
                             {/* </div>

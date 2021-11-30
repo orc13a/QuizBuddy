@@ -57,7 +57,7 @@ export default function TeacherCreateAssignment() {
             timeType: (value) => value.length > 1,
             openTo: (value) => value.length !== 0,
             timeLimitHours: (value) => Number(value) >= 0,
-            timeLimitMinutes: (value) => Number(value) > 0,
+            timeLimitMinutes: (value) => timeLimit ? Number(value) > 0 : Number(value) >= 0,
         },
     });
 

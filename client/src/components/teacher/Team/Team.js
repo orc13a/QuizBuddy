@@ -227,7 +227,7 @@ export default function TeacherTeam() {
                                                                     </Link>
                                                                     <Space h="md" />
                                                                 </>
-                                                            )) }
+                                                            )).reverse() }
                                                         </>
                                                     ) }
                                                 </Accordion.Item>
