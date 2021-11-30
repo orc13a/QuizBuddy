@@ -2,7 +2,7 @@ import { Button, Card, Divider, Space, Text, Title, Tooltip } from "@mantine/cor
 import { useNotifications } from "@mantine/notifications";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { studentGetAssignment } from "../../../api";
+import { studentGetAssignment, studentStartAssignment } from "../../../api";
 import { checkDatePastToday } from "../../checkDatePastToday";
 import LoadingCard from "../../LoadingCard/LoadingCard";
 import Navbar from "../Navbar/Navbar";
@@ -13,6 +13,7 @@ export default function StudentAssignment() {
     const notifications = useNotifications();
 
     const [fetching, setFetching] = useState(true);
+    const [starting, setStarting] = useState(false);
     const [assignment, setAssignment] = useState(null);
 
     useEffect(() => {
@@ -24,16 +25,28 @@ export default function StudentAssignment() {
                     title: 'Hov',
                     message: 'Der er ingen spørgsmål i denne opgave, din lærer skal oprette nogen spørgsmål.',
                     color: 'yellow',
-                    autoClose: false
+                    autoClose: 5000
                 });
             }
         }).catch((err) => {
             console.error(err);
         });
     }, [fetching]);
+
+    const startAssignment = () => {
+        setStarting(true);
+        studentStartAssignment(assignment).then((res) => {
+            const data = res.data;
+            navigate(`/student/opgave/${assignment.assignmentId}/spoergsmaal/${data.startQuestionId}`, { replace: true });
+        }).catch((err) => {
+            console.error(err);
+        });
+    }
+
     // {/* <div className="center">
     //                     <Loader color="indigo" size="xl" variant="dots" />
     //                 </div> */}
+
     return(
         <>
             <Navbar>
@@ -104,11 +117,11 @@ export default function StudentAssignment() {
                                     ) : null }
                                     <Space h="lg" />
                                     <Space h="sm" />
-                                    <Button onClick={ () => navigate(`/student/hold/${assignment.teamId}`) } variant="outline" color="indigo" size="md" radius="md">
+                                    <Button disabled={ starting } onClick={ () => navigate(`/student/hold/${assignment.teamId}`) } variant="outline" color="indigo" size="md" radius="md">
                                         Tilbage
                                     </Button>
                                     { !checkDatePastToday(assignment.openToDate) && assignment.questions.length > 0 ? (
-                                        <Button style={{ float: 'right' }} color="indigo" size="md" radius="md">
+                                        <Button loading={starting} onClick={ startAssignment } style={{ float: 'right' }} color="indigo" size="md" radius="md">
                                             Start
                                         </Button>
                                     ) : null }

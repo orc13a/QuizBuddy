@@ -4,6 +4,8 @@ import { studentRouteIsAuth } from '../auth/studentRouteIsAuth.js';
 import { getStudent } from '../auth/tokens.js';
 import teamSchema from '../models/team.model.js';
 import userSchema from '../models/user.model.js';
+import assignmentSchema from '../models/assignment.model.js';
+import userInAssignmentSchema from '../models/userInAssignment.model.js';
 
 // ----------------------------------------
 // GET requests
@@ -86,6 +88,36 @@ api.post('/teams/leave/:teamId', studentRouteIsAuth, async (req, res) => {
         await teamSchema.findOneAndUpdate({ teamId: teamId }, { $pull: { "members": { userId: student.userId } } }).exec();
         await userSchema.findOneAndUpdate({ userId: student.userId }, { $pull: { "teams": { teamId: teamId } } }).exec();
         res.status(200).json({ message: `Du har forladt holdet`, type: 'success' });
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+});
+
+api.post('/assignment/:assignmentId/start', studentRouteIsAuth, async (req, res) => {
+    const student = await getStudent(req);
+    const assignmentId = req.params['assignmentId'];
+    const body = req.body;
+
+    try {
+        const alreadyStartedCheck = await assignmentSchema.findOne({ assignmentId: assignmentId }, { 'studentsStarted': { $elemMatch: { assignmentId: assignmentId, studentId: student.userId }}}).exec();
+        
+        if (alreadyStartedCheck.studentsStarted.length > 0) {
+            res.status(406).json({ message: 'Elev allerede startet opgaven', type: 'error' });
+        } else {
+            const assignment = assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
+
+            const startObj = userInAssignmentSchema({
+                studentId: student.userId,
+                assignmentId: body.assignmentId,
+                time: 0,
+                questionId: assignment.questions[0].questionId,
+                nextQuestionId: '',
+            });
+
+            assignmentSchema.findByIdAndUpdate({ assignmentId: assignmentId }, { $push: { studentsStarted: startObj }}).exec();
+
+            res.status(200).json({ message: 'Elev startet på opgaven', type: 'success', startQuestionId: startObj.questionId });
+        }
     } catch (error) {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
     }
