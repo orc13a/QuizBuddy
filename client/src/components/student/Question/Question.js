@@ -32,7 +32,9 @@ export default function StudentQuestion() {
                                 <Grid>
                                     <Col span={8}>
                                         <Card style={{ minHeight: 200 }} withBorder>
-                                            hej
+                                            <Text>
+                                                hej
+                                            </Text>
                                         </Card>
                                     </Col>
                                     <Col span={4}>

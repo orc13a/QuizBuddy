@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import Navbar from "../Navbar/Navbar";
 import { studentGetTeam, studentLeaveTeam } from "../../../api";
 import { Link } from "react-router-dom";
+import LoadingCard from "../../LoadingCard/LoadingCard";
 
 export default function StudentTeam() {
     const { teamId } = useParams();
@@ -58,13 +59,15 @@ export default function StudentTeam() {
         </svg>
     );
 
+    // <div className="center">
+    //     <Loader variant="dots" size="xl" color="indigo" />
+    // </div>
+
     return (
         <>
             <Navbar>
                 { fetching ? (
-                    <div className="center">
-                        <Loader variant="dots" size="xl" color="indigo" />
-                    </div>
+                    <LoadingCard align="middle" style={{ paddingTop: 50, paddingBottom: 100 }} />
                 ) : (
                     <>
                         { team === null ? (

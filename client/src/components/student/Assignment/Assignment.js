@@ -1,7 +1,8 @@
-import { Button, Card, Divider, Loader, Space, Text, Title } from "@mantine/core";
+import { Button, Card, Divider, Loader, Skeleton, Space, Text, Title } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { studentGetAssignment } from "../../../api";
+import LoadingCard from "../../LoadingCard/LoadingCard";
 import Navbar from "../Navbar/Navbar";
 
 export default function StudentAssignment() {
@@ -19,14 +20,15 @@ export default function StudentAssignment() {
             console.error(err);
         });
     });
-
+    // {/* <div className="center">
+    //                     <Loader color="indigo" size="xl" variant="dots" />
+    //                 </div> */}
     return(
         <>
             <Navbar>
                 { fetching ? (
-                    <div className="center">
-                        <Loader color="indigo" size="xl" variant="dots" />
-                    </div>
+                    
+                    <LoadingCard align="center" />
                 ) : (
                     <>
                         {/* <div className="centerH-o">

@@ -14,7 +14,7 @@ export default function Frontpage() {
                         <Col span={5}>
                             <span className="logoTitle">
                                 <Link style={{ color: theme.colors.indigo[3], textDecoration: 'none' }} to="/">
-                                    QuizBuddy
+                                    { window.innerWidth < 385 ? 'QB' : 'QuizBuddy' }
                                 </Link>
                             </span>
                         </Col>
