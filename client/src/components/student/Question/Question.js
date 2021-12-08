@@ -1,8 +1,7 @@
-import { Button, Card, Col, Divider, Grid, Skeleton, Space, Text, TextInput, Title } from '@mantine/core';
+import { Button, Card, Col, Divider, Grid, Skeleton, Space, Text, Textarea, TextInput, Title } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
-import { studentGetQuestion } from '../../../api';
-import TimeCountUp from '../../TimeCountUp/TimeCountUp';
+import { useParams } from 'react-router';
+import { studentGetQuestion, studentGetQuestionByIndex } from '../../../api';
 import Navbar from '../Navbar/Navbar';
 
 export default function StudentQuestion() {
@@ -12,14 +11,23 @@ export default function StudentQuestion() {
     const [question, setQuestion] = useState(null);
 
     useEffect(() => {
-        studentGetQuestion({ assignmentId, questionId }).then((res) => {
-            const data = res.data;
-            console.log(data);
-            setQuestion(data);
-            setFetching(false);
-        }).catch((err) => {
-            console.error(err);
-        });
+        if (questionId.replace(/[^-]/g, "").length >= 4) {
+            studentGetQuestion({ assignmentId, questionId }).then((res) => {
+                const data = res.data;
+                setQuestion(data);
+                setFetching(false);
+            }).catch((err) => {
+                console.error(err);
+            });
+        } else {
+            studentGetQuestionByIndex({ assignmentId, questionId }).then((res) => {
+                const data = res.data;
+                setQuestion(data);
+                setFetching(false);
+            }).catch((err) => {
+                console.error(err);
+            });
+        }
     }, [question]);
 
     return (
@@ -57,7 +65,7 @@ export default function StudentQuestion() {
                                 <Grid>
                                     <Col span={8}>
                                         <Skeleton visible={fetching} radius="md">
-                                            <Card style={{ minHeight: 200 }} withBorder>
+                                            <Card style={{ minHeight: 200 }} withBorder radius="md">
                                                 <Text>
                                                     <div style={{whiteSpace: "pre-wrap"}}>{ fetching ? null : question.text }</div>
                                                 </Text>
@@ -66,7 +74,8 @@ export default function StudentQuestion() {
                                     </Col>
                                     <Col span={4}>
                                         <form>
-                                            <TextInput disabled={fetching} placeholder="Dit svar" size="md" radius="md" color="indigo" />
+                                            {/* <TextInput disabled={fetching} placeholder="Dit svar" size="md" radius="md" color="indigo" /> */}
+                                            <Textarea disabled={fetching} multiline={true} rows={5} placeholder="Dit svar" radius="md" />
                                             <Space h="lg" />
                                             <Button disabled={fetching} size="md" radius="md" color="indigo" fullWidth>Svar</Button>
                                         </form>

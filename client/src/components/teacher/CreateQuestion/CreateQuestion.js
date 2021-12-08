@@ -1,4 +1,4 @@
-import { useMantineTheme, ActionIcon, Button, Card, Col, Divider, Grid, Group, InputWrapper, Loader, LoadingOverlay, Overlay, Space, Text, Textarea, TextInput, Tooltip, Title } from "@mantine/core";
+import { useMantineTheme, ActionIcon, Button, Card, Col, Divider, Grid, Group, InputWrapper, Loader, LoadingOverlay, Overlay, Space, Text, Textarea, TextInput, Tooltip, Title, Checkbox } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
 import { useNotifications } from "@mantine/notifications";
 import { useState } from "react";
@@ -15,18 +15,19 @@ export default function TeacherCreateQuestion() {
     const [visible, setVisible] = useState(true);
     const [mathWindow, setMathWindow] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [noCorrectAnswer, setNoCorrectAnswer] = useState(false);
 
     const form = useForm({
         initialValues: {
             assignmentId: assignmentId,
             questionText: '',
             questionTitle: '',
+            noCorrectAnswer: noCorrectAnswer,
             questionAnswer: '',
         },
         validationRules: {
             questionText: (value) => value.length >= 1,
             questionTitle: (value) => value.length >= 1,
-            questionAnswer: (value) => value.length >= 1,
         },
     });
 
@@ -266,14 +267,18 @@ export default function TeacherCreateQuestion() {
                                     </div>
                                 </Col>
                                 <Col span={12} xs={1}>
-                                    <TextInput
-                                    label="Det rigtigte svar"
-                                    size="md"
-                                    radius="md"
-                                    error={ form.errors.questionAnswer && 'Angiv svar'}
-                                    value={form.values.questionAnswer}
-                                    onChange={(event) => form.setFieldValue('questionAnswer', event.currentTarget.value)}
-                                    />
+                                    <Checkbox label="Spørgsmål har ikke et rigtigt svar" onClick={ () => setNoCorrectAnswer(!noCorrectAnswer) } defaultChecked={noCorrectAnswer} />
+                                    <Space h="md" />
+                                    { noCorrectAnswer ? null : (
+                                        <TextInput
+                                        label="Det rigtigte svar"
+                                        size="md"
+                                        radius="md"
+                                        error={ form.errors.questionAnswer && 'Angiv svar'}
+                                        value={form.values.questionAnswer}
+                                        onChange={(event) => form.setFieldValue('questionAnswer', event.currentTarget.value)}
+                                        />
+                                    ) }
                                 </Col>
                                 <Col span={12} xs={1}>
                                     <Space h="xl" />

@@ -6,6 +6,7 @@ const QuestionSchema = mongoose.Schema({
     assignmentId: String,
     title: String,
     text: String,
+    noCorrectAnswer: Boolean,
     answer: String,
     createdAt: {
         type: Date,

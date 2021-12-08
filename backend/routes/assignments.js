@@ -30,7 +30,7 @@ api.get('/student/get/:assignmentId', studentRouteIsAuth, async (req, res) => {
 
     try {
         const assignment = await assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
-        res.status(200).json(assignment);
+        res.status(200).json({assignment, studentId: student.userId});
     } catch (error) {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
     }
@@ -132,7 +132,7 @@ api.post('/question/delete', teacherRouteIsAuth, async (req, res) => {
 api.post('/question/create', teacherRouteIsAuth, async (req, res) => {
     const teacher = await getTeacher(req);
     const body = req.body;
-
+    
     try {
         const qObj = {
             questionId: getUuid(`${teacher.userId}-${body.questionTitle}`),
@@ -140,6 +140,7 @@ api.post('/question/create', teacherRouteIsAuth, async (req, res) => {
             assignmentId: body.assignmentId,
             title: body.questionTitle,
             text: body.questionText,
+            noCorrectAnswer: body.noCorrectAnswer,
             answer: body.questionAnswer
         }
 

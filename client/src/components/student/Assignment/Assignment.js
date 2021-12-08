@@ -15,12 +15,15 @@ export default function StudentAssignment() {
     const [fetching, setFetching] = useState(true);
     const [starting, setStarting] = useState(false);
     const [assignment, setAssignment] = useState(null);
+    const [studentId, setStudentId] = useState('');
+    const [startedAssignment, setStartedAssignment] = useState(null);
 
     useEffect(() => {
         studentGetAssignment(assignmentId).then((res) => {
-            setAssignment(res.data);
+            setAssignment(res.data.assignment);
+            setStudentId(res.data.studentId);
             setFetching(false);
-            if (fetching === false && res.data.questions.length === 0) {
+            if (fetching === false && res.data.assignment.questions.length === 0) {
                 notifications.showNotification({
                     title: 'Hov',
                     message: 'Der er ingen spørgsmål i denne opgave, din lærer skal oprette nogen spørgsmål.',
@@ -28,6 +31,11 @@ export default function StudentAssignment() {
                     autoClose: 5000
                 });
             }
+            assignment.studentsStarted.forEach(student => {
+                if (student.studentId === studentId) {
+                    setStartedAssignment(student);
+                }
+            });
         }).catch((err) => {
             console.error(err);
         });
@@ -38,6 +46,16 @@ export default function StudentAssignment() {
         studentStartAssignment(assignment).then((res) => {
             const data = res.data;
             navigate(`/student/opgave/${assignment.assignmentId}/spoergsmaal/${data.startQuestionId}`, { replace: true });
+        }).catch((err) => {
+            console.error(err);
+        });
+    }
+
+    const continueAssignment = () => {
+        setStarting(true);
+        studentStartAssignment(assignment).then((res) => {
+            const data = res.data;
+            navigate(`/student/opgave/${assignment.assignmentId}/spoergsmaal/${startedAssignment.questionIndex}`, { replace: true });
         }).catch((err) => {
             console.error(err);
         });
@@ -78,6 +96,19 @@ export default function StudentAssignment() {
                                                 </span>
                                             </div>
                                             <Space h="md" />
+                                            { startedAssignment !== null ? (
+                                                <>
+                                                    <div>
+                                                        <span>
+                                                            Du er ved spørgsmål:
+                                                        </span>
+                                                        <span style={{ float: 'right' }}>
+                                                            { startedAssignment.questionIndex + 1 }
+                                                        </span>
+                                                    </div>
+                                                    <Space h="md" />
+                                                </>
+                                            ) : null }
                                             <div>
                                                 <span>
                                                     Tid:
@@ -121,9 +152,21 @@ export default function StudentAssignment() {
                                         Tilbage
                                     </Button>
                                     { !checkDatePastToday(assignment.openToDate) && assignment.questions.length > 0 ? (
-                                        <Button loading={starting} onClick={ startAssignment } style={{ float: 'right' }} color="indigo" size="md" radius="md">
-                                            Start
-                                        </Button>
+                                        <>
+                                            { startedAssignment === null ? null : (
+                                                <>
+                                                    { startedAssignment !== null ? (
+                                                        <Button loading={starting} onClick={ continueAssignment } style={{ float: 'right' }} color="indigo" size="md" radius="md">
+                                                            Forsæt
+                                                        </Button>
+                                                    ) : (
+                                                        <Button loading={starting} onClick={ startAssignment } style={{ float: 'right' }} color="indigo" size="md" radius="md">
+                                                            Start
+                                                        </Button>
+                                                    ) }
+                                                </>
+                                            ) }
+                                        </>
                                     ) : null }
                                 </Card>
                         </div>

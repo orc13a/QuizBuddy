@@ -5,9 +5,8 @@ const UserInAssignmentSchema = mongoose.Schema({
     firstname: String,
     lastname: String,
     assignmentId: String,
-    time: String,
-    questionId: String,
-    nextQuestionId: String,
+    time: Number,
+    questionIndex: Number,
     startedAt: {
         type: Date,
         default: new Date()

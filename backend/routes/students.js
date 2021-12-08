@@ -49,6 +49,22 @@ api.get('/assignment/:assignmentId/get/question/:questionId', studentRouteIsAuth
     }
 });
 
+api.get('/assignment/:assignmentId/getIndex/question/:questionIndex', studentRouteIsAuth, async (req, res) => {
+    const assignmentId = req.params['assignmentId'];
+    const questionIndex = req.params['questionIndex'];
+
+    try {
+        const assignment = await assignmentSchema.findOne({ assignmentId: assignmentId });
+        if (assignment.questions[questionIndex] === null) {
+            res.status(200).json(null);
+        } else {
+            res.status(200).json(assignment.questions[questionIndex]);
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+});
+
 // ----------------------------------------
 // POST requests
 // ----------------------------------------
@@ -123,19 +139,19 @@ api.post('/assignment/:assignmentId/start', studentRouteIsAuth, async (req, res)
         } else {
             const assignment = await assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
 
+            // questionId: assignment.questions[0].questionId,
             const startObj = userInAssignmentSchema({
                 studentId: student.userId,
                 assignmentId: body.assignmentId,
                 firstname: student.firstname,
                 lastname: student.lastname, 
                 time: 0,
-                questionId: assignment.questions[0].questionId,
-                nextQuestionId: '',
+                questionIndex: 0
             });
 
             await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId }, { $push: { studentsStarted: startObj }}).exec();
 
-            res.status(200).json({ message: 'Elev startet på opgaven', type: 'success', startQuestionId: startObj.questionId });
+            res.status(200).json({ message: 'Elev startet på opgaven', type: 'success', startQuestionId: assignment.questions[0].questionId });
         }
     } catch (error) {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
