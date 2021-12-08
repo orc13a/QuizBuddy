@@ -53,12 +53,7 @@ export default function StudentAssignment() {
 
     const continueAssignment = () => {
         setStarting(true);
-        studentStartAssignment(assignment).then((res) => {
-            const data = res.data;
-            navigate(`/student/opgave/${assignment.assignmentId}/spoergsmaal/${startedAssignment.questionIndex}`, { replace: true });
-        }).catch((err) => {
-            console.error(err);
-        });
+        navigate(`/student/opgave/${assignmentId}/spoergsmaal/${startedAssignment.questionIndex}`, { replace: true });
     }
 
     // {/* <div className="center">
