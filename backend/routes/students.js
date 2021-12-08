@@ -6,6 +6,7 @@ import teamSchema from '../models/team.model.js';
 import userSchema from '../models/user.model.js';
 import assignmentSchema from '../models/assignment.model.js';
 import userInAssignmentSchema from '../models/userInAssignment.model.js';
+import questionSchema from '../models/question.model.js';
 
 // ----------------------------------------
 // GET requests
@@ -21,12 +22,28 @@ api.get('/student', studentRouteIsAuth, async (req, res) => {
 });
 
 api.get('/teams/get/:teamId', studentRouteIsAuth, async (req, res) => {
-    const student = await getStudent(req);
+    // const student = await getStudent(req);
     const teamId = req.params['teamId'];
 
     try {
         const team = await teamSchema.findOne({ teamId: teamId });
         res.status(200).json(team);
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+});
+
+api.get('/assignment/:assignmentId/get/question/:questionId', studentRouteIsAuth, async (req, res) => {
+    const assignmentId = req.params['assignmentId'];
+    const questionId = req.params['questionId'];
+
+    try {
+        const question = await assignmentSchema.findOne({ assignmentId: assignmentId }, { "questions": { $elemMatch: { questionId: questionId } } });
+        if (question.questions[0] === null) {
+            res.status(200).json(null);
+        } else {
+            res.status(200).json(question.questions[0]);
+        }
     } catch (error) {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
     }

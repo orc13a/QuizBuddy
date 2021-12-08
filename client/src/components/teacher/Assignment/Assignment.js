@@ -10,6 +10,7 @@ import Navbar from '../Navbar/Navbar';
 
 export default function TeacherAssignment() {
     const { assignmentId } = useParams();
+    const tId = assignmentId.teamId;
     // const theme = useMantineTheme();
     const navigate = useNavigate();
     const notifications = useNotifications();
@@ -22,23 +23,23 @@ export default function TeacherAssignment() {
 
     useEffect(() => {
         getAssignment(assignmentId).then((res) => {
-            if (res.data === null) {
+            if (res.data === null && assignment !== null) {
                 notifications.showNotification({
                     title: 'Ops...',
                     message: 'Opgave findes ikke',
                     color: 'red'
                 });
-                navigate('/teacher/hold', { replace: true });
+                navigate(`/teacher/hold/${tId}`, { replace: true });
             }
             setAssignment(res.data);
             setFetching(false);
         }).catch((err) => {
             console.error(err);
             if (err.response !== undefined) {
-                navigate('/teacher/hold', { replace: true });
+                navigate(`/teacher/hold/${tId}`, { replace: true });
             }
         });
-    });
+    }, [assignment]);
 
     const deleteAssignmentClick = () => {
         setDeleteAssignmentLoading(true);
@@ -49,7 +50,7 @@ export default function TeacherAssignment() {
                 message: res.data.message,
                 color: 'teal'
             });
-            navigate('/teacher/hold', { replace: true });
+            navigate(`/teacher/hold/${tId}`, { replace: true });
         }).catch((err) => {
             console.error(err);
             notifications.showNotification({

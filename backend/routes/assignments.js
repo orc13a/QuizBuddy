@@ -5,7 +5,7 @@ import { studentRouteIsAuth } from '../auth/studentRouteIsAuth.js';
 import { getStudent, getTeacher } from '../auth/tokens.js';
 import getUuid from 'uuid-by-string';
 import teamSchema from '../models/team.model.js';
-import questionSchema from '../models/questionResult.model.js';
+import questionSchema from '../models/question.model.js';
 import assignmentSchema from '../models/assignment.model.js';
 
 // ----------------------------------------
@@ -49,7 +49,6 @@ api.get('/get/:assignmentId/question/:questionId', teacherRouteIsAuth, async (re
             res.status(200).json(question.questions[0]);
         }
     } catch (error) {
-        console.log(error)
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
     }
 });

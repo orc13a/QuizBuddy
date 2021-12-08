@@ -1,9 +1,26 @@
-import { Button, Card, Col, Divider, Grid, Space, Text, TextInput, Title } from '@mantine/core';
+import { Button, Card, Col, Divider, Grid, Skeleton, Space, Text, TextInput, Title } from '@mantine/core';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import { studentGetQuestion } from '../../../api';
+import TimeCountUp from '../../TimeCountUp/TimeCountUp';
 import Navbar from '../Navbar/Navbar';
 
 export default function StudentQuestion() {
     const { assignmentId, questionId } = useParams();
+
+    const [fetching, setFetching] = useState(true);
+    const [question, setQuestion] = useState(null);
+
+    useEffect(() => {
+        studentGetQuestion({ assignmentId, questionId }).then((res) => {
+            const data = res.data;
+            console.log(data);
+            setQuestion(data);
+            setFetching(false);
+        }).catch((err) => {
+            console.error(err);
+        });
+    }, [question]);
 
     return (
         <>
@@ -16,32 +33,42 @@ export default function StudentQuestion() {
                                     Tid: 
                                 </span>
                                 <span style={{ float: 'right' }}>
-                                    1:0
+                                    { fetching ?
+                                        <Skeleton radius="md" height={25} width={125} />
+                                    : '00:00:00' }
                                 </span>
                             </Text>
                         </Card>
                         <Space h="xl" />
                         <Card withBorder radius="md" padding="lg">
                             <div>
-                                <Title order={3}>
-                                    Hej
-                                </Title>
+                                { fetching ?
+                                    <Skeleton radius="md" height={29.5} width={250} />
+                                : (
+                                    <>
+                                        <Title order={3}>
+                                            { question.title }
+                                        </Title>
+                                    </>
+                                ) }
                                 <Space h="lg" />
                                 <Divider />
                                 <Space h="lg" />
                                 <Grid>
                                     <Col span={8}>
-                                        <Card style={{ minHeight: 200 }} withBorder>
-                                            <Text>
-                                                hej
-                                            </Text>
-                                        </Card>
+                                        <Skeleton visible={fetching} radius="md">
+                                            <Card style={{ minHeight: 200 }} withBorder>
+                                                <Text>
+                                                    <div style={{whiteSpace: "pre-wrap"}}>{ fetching ? null : question.text }</div>
+                                                </Text>
+                                            </Card>
+                                        </Skeleton>
                                     </Col>
                                     <Col span={4}>
                                         <form>
-                                            <TextInput placeholder="Dit svar" size="md" radius="md" color="indigo" />
+                                            <TextInput disabled={fetching} placeholder="Dit svar" size="md" radius="md" color="indigo" />
                                             <Space h="lg" />
-                                            <Button size="md" radius="md" color="indigo" fullWidth>Svar</Button>
+                                            <Button disabled={fetching} size="md" radius="md" color="indigo" fullWidth>Svar</Button>
                                         </form>
                                     </Col>
                                 </Grid>
