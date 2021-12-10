@@ -1,4 +1,5 @@
 import { Button, Card, Col, Divider, Grid, Skeleton, Space, Text, Textarea, TextInput, Title } from '@mantine/core';
+import { useForm } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { studentGetQuestion, studentGetQuestionByIndex } from '../../../api';
@@ -29,6 +30,19 @@ export default function StudentQuestion() {
             });
         }
     }, [question]);
+
+    const form = useForm({
+        initialValues: {
+            answer: '',
+        },
+        validationRules: {
+            answer: (value) => value.length > 0,
+        },
+    });
+
+    const onSubmit = () => {
+        
+    }
 
     return (
         <>
@@ -73,11 +87,20 @@ export default function StudentQuestion() {
                                         </Skeleton>
                                     </Col>
                                     <Col span={4}>
-                                        <form>
+                                        <form onSubmit={ form.onSubmit((values) => onSubmit(values)) }>
                                             {/* <TextInput disabled={fetching} placeholder="Dit svar" size="md" radius="md" color="indigo" /> */}
-                                            <Textarea disabled={fetching} multiline={true} rows={5} placeholder="Dit svar" radius="md" />
+                                            <Textarea
+                                            disabled={fetching}
+                                            multiline={true}
+                                            rows={4}
+                                            placeholder="Dit svar"
+                                            radius="md"
+                                            error={form.errors.answer && 'Du skal skrive dit svar'}
+                                            value={form.values.answer}
+                                            onChange={(event) => form.setFieldValue('answer', event.currentTarget.value)}
+                                            />
                                             <Space h="lg" />
-                                            <Button disabled={fetching} size="md" radius="md" color="indigo" fullWidth>Svar</Button>
+                                            <Button type="submit" disabled={fetching} size="md" radius="md" color="indigo" fullWidth>Svar</Button>
                                         </form>
                                     </Col>
                                 </Grid>
