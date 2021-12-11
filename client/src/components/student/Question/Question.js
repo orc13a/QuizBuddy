@@ -33,6 +33,8 @@ export default function StudentQuestion() {
 
     const form = useForm({
         initialValues: {
+            assignmentId: assignmentId,
+            questionId: questionId,
             answer: '',
         },
         validationRules: {
@@ -40,9 +42,10 @@ export default function StudentQuestion() {
         },
     });
 
-    const onSubmit = () => {
-        studentAnswerQuestion().then((res) => {
-            
+    const onSubmit = (values) => {
+        console.log(values);
+        studentAnswerQuestion(values).then((res) => {
+
         }).catch((err) => {
 
         });

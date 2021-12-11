@@ -164,7 +164,8 @@ api.post('assignment/:assignmentId/question/:questionId/answer', studentRouteIsA
     const questionId = req.params['questionId'];
     const body = req.body;
 
-    
+    console.log(body);
+    res.end();
 });
 
 // ----------------------------------------
