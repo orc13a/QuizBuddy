@@ -2,7 +2,7 @@ import { Button, Card, Col, Divider, Grid, Skeleton, Space, Text, Textarea, Text
 import { useForm } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { studentGetQuestion, studentGetQuestionByIndex } from '../../../api';
+import { studentAnswerQuestion, studentGetQuestion, studentGetQuestionByIndex } from '../../../api';
 import Navbar from '../Navbar/Navbar';
 
 export default function StudentQuestion() {
@@ -41,7 +41,11 @@ export default function StudentQuestion() {
     });
 
     const onSubmit = () => {
-        
+        studentAnswerQuestion().then((res) => {
+            
+        }).catch((err) => {
+
+        });
     }
 
     return (

@@ -158,6 +158,15 @@ api.post('/assignment/:assignmentId/start', studentRouteIsAuth, async (req, res)
     }
 });
 
+api.post('assignment/:assignmentId/question/:questionId/answer', studentRouteIsAuth, async (req, res) => {
+    const student = await getStudent(req);
+    const assignmentId = req.params['assignmentId'];
+    const questionId = req.params['questionId'];
+    const body = req.body;
+
+    
+});
+
 // ----------------------------------------
 // PUT requests
 // ----------------------------------------

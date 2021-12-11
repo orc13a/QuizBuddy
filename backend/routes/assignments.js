@@ -140,7 +140,7 @@ api.post('/question/create', teacherRouteIsAuth, async (req, res) => {
             assignmentId: body.assignmentId,
             title: body.questionTitle,
             text: body.questionText,
-            noCorrectAnswer: body.noCorrectAnswer,
+            noCorrectAnswer: body.questionAnswer.length > 0 ? false : true,
             answer: body.questionAnswer
         }
 

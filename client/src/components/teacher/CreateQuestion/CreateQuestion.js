@@ -22,7 +22,7 @@ export default function TeacherCreateQuestion() {
             assignmentId: assignmentId,
             questionText: '',
             questionTitle: '',
-            noCorrectAnswer: noCorrectAnswer,
+            noCorrectAnswer: !noCorrectAnswer,
             questionAnswer: '',
         },
         validationRules: {

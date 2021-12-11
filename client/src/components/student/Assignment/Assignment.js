@@ -148,18 +148,14 @@ export default function StudentAssignment() {
                                     </Button>
                                     { !checkDatePastToday(assignment.openToDate) && assignment.questions.length > 0 ? (
                                         <>
-                                            { startedAssignment === null ? null : (
-                                                <>
-                                                    { startedAssignment !== null ? (
-                                                        <Button loading={starting} onClick={ continueAssignment } style={{ float: 'right' }} color="indigo" size="md" radius="md">
-                                                            Forsæt
-                                                        </Button>
-                                                    ) : (
-                                                        <Button loading={starting} onClick={ startAssignment } style={{ float: 'right' }} color="indigo" size="md" radius="md">
-                                                            Start
-                                                        </Button>
-                                                    ) }
-                                                </>
+                                            { startedAssignment === null ? (
+                                                <Button loading={starting} onClick={ startAssignment } style={{ float: 'right' }} color="indigo" size="md" radius="md">
+                                                    Start
+                                                </Button>
+                                            ) : (
+                                                <Button loading={starting} onClick={ continueAssignment } style={{ float: 'right' }} color="indigo" size="md" radius="md">
+                                                    Forsæt
+                                                </Button>
                                             ) }
                                         </>
                                     ) : null }

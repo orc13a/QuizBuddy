@@ -46,6 +46,7 @@ export const studentConnectTeam = (data) => api.post('/students/teams/join', dat
 export const studentStartAssignment = (data) => api.post(`/students/assignment/${data.assignmentId}/start`);
 export const studentGetQuestion = (data) => api.get(`/students/assignment/${data.assignmentId}/get/question/${data.questionId}`);
 export const studentGetQuestionByIndex = (data) => api.get(`/students/assignment/${data.assignmentId}/getIndex/question/${data.questionId}`);
+export const studentAnswerQuestion = (data) => api.post(`/students/assignment/${data.assignmentId}/question/${data.questionId}/answer`);
 
 // Assignments
 export const getAssignment = (id) => api.get(`assignments/get/${id}`);
