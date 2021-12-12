@@ -31,6 +31,7 @@ export default function StudentAssignment() {
                     autoClose: 5000
                 });
             }
+
             assignment.studentsStarted.forEach(student => {
                 if (student.studentId === studentId) {
                     setStartedAssignment(student);
@@ -133,7 +134,7 @@ export default function StudentAssignment() {
                                             </div>
                                         </Text>
                                     </div>
-                                    { checkDatePastToday(assignment.openToDate) || startedAssignment.finished ? (
+                                    { checkDatePastToday(assignment.openToDate) ? (
                                         <div>
                                             <Space h="lg" />
                                             <Button fullWidth color="indigo" size="md" radius="md">
@@ -146,7 +147,7 @@ export default function StudentAssignment() {
                                     <Button disabled={ starting } onClick={ () => navigate(`/student/hold/${assignment.teamId}`) } variant="outline" color="indigo" size="md" radius="md">
                                         Tilbage
                                     </Button>
-                                    { !checkDatePastToday(assignment.openToDate) && assignment.questions.length > 0 && startedAssignment.finished === false ? (
+                                    { !checkDatePastToday(assignment.openToDate) && assignment.questions.length > 0 ? (
                                         <>
                                             { startedAssignment === null ? (
                                                 <Button loading={starting} onClick={ startAssignment } style={{ float: 'right' }} color="indigo" size="md" radius="md">

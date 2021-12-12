@@ -1,6 +1,8 @@
-import { Affix, ActionIcon, Tooltip } from "@mantine/core";
+import { Affix, ActionIcon, Tooltip, Button } from "@mantine/core";
 import { Link } from "react-router-dom";
+import EmptyState from "../../EmptyState/EmptyState";
 import Navbar from "../Navbar/Navbar";
+import ConfusedImg from '../../../images/confused.png';
 
 export default function TeacherHome() {
 
@@ -28,7 +30,12 @@ export default function TeacherHome() {
                         </Link>
                     </Tooltip>
                 </Affix>
-                Ingen ting
+                { false ? null : (
+                    <EmptyState
+                    image={ ConfusedImg }
+                    text="Her er helt tomt" 
+                    />
+                )}
             </Navbar>
         </>
     );

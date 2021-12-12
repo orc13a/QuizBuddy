@@ -1,10 +1,15 @@
-import { ActionIcon, Affix, Card, Col, Grid, Text, Tooltip, Skeleton } from "@mantine/core";
+import { ActionIcon, Affix, Card, Col, Grid, Text, Tooltip, Skeleton, Button } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { getStudent } from "../../../api";
+import EmptyState from "../../EmptyState/EmptyState";
 import Navbar from "../Navbar/Navbar";
+import ConfusedImg from '../../../images/confused.png';
 
 export default function StudentTeams() {
+    const navigate = useNavigate();
+
     const [fetching, setFetching] = useState(true);
     const [teams, setTeams] = useState(null);
 
@@ -58,7 +63,17 @@ export default function StudentTeams() {
                 ) : (
                     <Grid gutter="xl">
                         { teams === null || Object.keys(teams).length === 0 ? (
-                            <Text>Du er i nogen hold, endnu</Text>
+                            <Col span={12}>
+                                <EmptyState
+                                image={ConfusedImg}
+                                text="Du er i nogen hold, endnu"
+                                action={
+                                    <Button onClick={() => navigate('/student/hold/tilslut')} size="md" color="indigo" radius="md">
+                                        Tilslut et hold
+                                    </Button>
+                                }
+                                />
+                            </Col>
                         ) : (
                             teams.map((team) => (
                                 <Col span={12} sm={3} md={4} lg={3} key={ team.teamId }>
