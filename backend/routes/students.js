@@ -43,7 +43,7 @@ api.get('/assignment/:assignmentId/get/question/:questionId', studentRouteIsAuth
             'results': { $elemMatch: { studentId: student.userId, 'userResults.questionId': questionId } }
         }).exec();
 
-        if (findIsQuestionIsAnswered.results.length > 0) {
+        if (findIsQuestionIsAnswered !== null && findIsQuestionIsAnswered.results.length > 0) {
             res.status(406).json({ message: 'Spørgsmål allerede svaret', type: 'error' });
         } else {
             const question = await assignmentSchema.findOne({ assignmentId: assignmentId }, { "questions": { $elemMatch: { questionId: questionId } } });
@@ -68,7 +68,7 @@ api.get('/assignment/:assignmentId/getIndex/question/:questionIndex', studentRou
             'results': { $elemMatch: { studentId: student.userId, 'userResults.questionId': questionIndex } }
         }).exec();
 
-        if (findIsQuestionIsAnswered.results.length > 0) {
+        if (findIsQuestionIsAnswered !== null && findIsQuestionIsAnswered.results.length > 0) {
             res.status(406).json({ message: 'Spørgsmål allerede svaret', type: 'error' });
         } else {
             const assignment = await assignmentSchema.findOne({ assignmentId: assignmentId });
@@ -106,7 +106,7 @@ api.post('/teams/find', studentRouteIsAuth, async (req, res) => {
 api.post('/teams/join', studentRouteIsAuth, async (req, res) => {
     const student = await getStudent(req);
     const body = req.body;
-    
+
     try {
         const team = await teamSchema.findOne({ shareCode: body.teamShareCode, creatorId: body.teamCreatorId }).exec();
 
@@ -114,7 +114,7 @@ api.post('/teams/join', studentRouteIsAuth, async (req, res) => {
             res.status(404).json({ message: 'Der blev ikke fundet noget hold', type: 'error' });
         } else {
             const teamJoinedObj = {
-                teamId: team.teamId, 
+                teamId: team.teamId,
                 teamName: team.teamName
             };
             const teamMemberObj = {
@@ -122,8 +122,8 @@ api.post('/teams/join', studentRouteIsAuth, async (req, res) => {
                 firstname: student.firstname,
                 lastname: student.lastname,
             };
-            await userSchema.findOneAndUpdate({ userId: student.userId }, {$push: { teams: teamJoinedObj }});
-            await teamSchema.findOneAndUpdate({ teamId: team.teamId }, {$push: {members: teamMemberObj }})
+            await userSchema.findOneAndUpdate({ userId: student.userId }, { $push: { teams: teamJoinedObj } });
+            await teamSchema.findOneAndUpdate({ teamId: team.teamId }, { $push: { members: teamMemberObj } })
             res.status(200).json({ message: `Du er nu tilsluttet holdet '${team.teamName}'`, type: 'success' });
         }
     } catch (error) {
@@ -150,8 +150,8 @@ api.post('/assignment/:assignmentId/start', studentRouteIsAuth, async (req, res)
     const body = req.body;
 
     try {
-        const alreadyStartedCheck = await assignmentSchema.findOne({ assignmentId: assignmentId }, { 'studentsStarted': { $elemMatch: { assignmentId: assignmentId, studentId: student.userId }}}).exec();
-        
+        const alreadyStartedCheck = await assignmentSchema.findOne({ assignmentId: assignmentId }, { 'studentsStarted': { $elemMatch: { assignmentId: assignmentId, studentId: student.userId } } }).exec();
+
         if (alreadyStartedCheck.studentsStarted.length > 0) {
             res.status(406).json({ message: 'Elev allerede startet opgaven', type: 'error' });
         } else {
@@ -162,12 +162,12 @@ api.post('/assignment/:assignmentId/start', studentRouteIsAuth, async (req, res)
                 studentId: student.userId,
                 assignmentId: body.assignmentId,
                 firstname: student.firstname,
-                lastname: student.lastname, 
+                lastname: student.lastname,
                 time: 0,
                 questionIndex: 0
             });
 
-            await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId }, { $push: { studentsStarted: startObj }}).exec();
+            await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId }, { $push: { studentsStarted: startObj } }).exec();
 
             res.status(200).json({ message: 'Elev startet på opgaven', type: 'success', startQuestionId: assignment.questions[0].questionId });
         }
@@ -184,6 +184,7 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
     const body = req.body;
     const assignmentId = body.assignmentId;
     const questionId = body.questionId;
+    let questionUuId = '';
     let findByIndex = false;
 
     let resultObj = {
@@ -201,6 +202,13 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
     }
 
     try {
+        const aa = await assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
+        if (findByIndex === true) {
+            questionUuId = aa.questions[questionId].questionId;
+        } else {
+            questionUuId = questionId;
+        }
+
         const assignment = await assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
         const questions = assignment.questions;
         let question = null;
@@ -238,22 +246,54 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
         const result = await questionResultSchema(resultObj);
 
         const findStudentResults = await assignmentSchema.findOne({ assignmentId: assignmentId, 'results.studentId': student.userId }).exec();
-        // const findIsQuestionIsAnswered = await assignmentSchema.findOne({ assignmentId: assignmentId, 'results.studentId': student.userId }, {
-        //     'results': { $elemMatch: { studentId: student.userId, 'userResults.questionId': questionId } }
-        // }).exec();
+        const findIsQuestionIsAnswered = await assignmentSchema.findOne({ assignmentId: assignmentId, 'results.studentId': student.userId }, {
+            'results': { $elemMatch: { studentId: student.userId, 'userResults.questionId': questionId } }
+        }).exec();
 
-        if (findStudentResults !== null) {
-            await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId, 'results.studentId': student.userId }, {
-                $addToSet: { 'results.$.userResults': result }
-            });
+        if (findIsQuestionIsAnswered !== null && findIsQuestionIsAnswered.results.length > 0) {
+            res.status(406).json({ message: 'Spørgsmål allerede svaret', type: 'error' });
         } else {
-            const obj = {
-                studentId: student.userId,
-                firstname: student.firstname,
-                lastname: student.lastname,
-                userResults: [result]
-            }
-            await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId }, { $push: { 'results': obj }});
+            // if (findStudentResults !== null) {
+            //     await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId, 'results.studentId': student.userId }, {
+            //         $addToSet: { 'results.$.userResults': result }
+            //     });
+            // } else {
+            //     const obj = {
+            //         studentId: student.userId,
+            //         firstname: student.firstname,
+            //         lastname: student.lastname,
+            //         userResults: [result]
+            //     }
+            //     await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId }, { $push: { 'results': obj }});
+            // }
+
+            const nextQuestionIndex = await assignmentSchema.aggregate([
+                {
+                    "$project": {
+                        "matchedIndex": {
+                            "$indexOfArray": [
+                                "$questions.questionId",
+                                questionUuId
+                            ]
+                        }
+                    }
+                }
+            ]);
+            
+            let nextQuestionIndex = 0;
+            let nextQuestionId = '';
+
+            nextQuestionIndex.forEach(a => {
+                const matchedIndex = a.matchedIndex;
+                if (matchedIndex !== -1) {
+                    nextQuestionIndex = matchedIndex;
+                }
+            });
+
+            const nextQuestionAssignment = await assignmentSchema.findOne({ assignmentId: assignmentId }, {
+                'questions': { $elemMatch: { studentId: student.userId, 'userResults.questionId': questionId } }
+            }).exec();
+            
         }
 
         res.status(200).json({ message: 'OK' });
