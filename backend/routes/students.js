@@ -34,16 +34,24 @@ api.get('/teams/get/:teamId', studentRouteIsAuth, async (req, res) => {
 });
 
 api.get('/assignment/:assignmentId/get/question/:questionId', studentRouteIsAuth, async (req, res) => {
+    const student = await getStudent(req);
     const assignmentId = req.params['assignmentId'];
     const questionId = req.params['questionId'];
 
     try {
-        
-        const question = await assignmentSchema.findOne({ assignmentId: assignmentId }, { "questions": { $elemMatch: { questionId: questionId } } });
-        if (question.questions[0] === null) {
-            res.status(200).json(null);
+        const findIsQuestionIsAnswered = await assignmentSchema.findOne({ assignmentId: assignmentId, 'results.studentId': student.userId }, {
+            'results': { $elemMatch: { studentId: student.userId, 'userResults.questionId': questionId } }
+        }).exec();
+
+        if (findIsQuestionIsAnswered.results.length > 0) {
+            res.status(406).json({ message: 'Spørgsmål allerede svaret', type: 'error' });
         } else {
-            res.status(200).json(question.questions[0]);
+            const question = await assignmentSchema.findOne({ assignmentId: assignmentId }, { "questions": { $elemMatch: { questionId: questionId } } });
+            if (question.questions[0] === null) {
+                res.status(200).json(null);
+            } else {
+                res.status(200).json(question.questions[0]);
+            }
         }
     } catch (error) {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
