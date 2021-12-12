@@ -43,11 +43,10 @@ export default function StudentQuestion() {
     });
 
     const onSubmit = (values) => {
-        console.log(values);
         studentAnswerQuestion(values).then((res) => {
-
+            console.log(res.data);
         }).catch((err) => {
-
+            console.error(err);
         });
     }
 

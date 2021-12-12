@@ -6,7 +6,7 @@ import teamSchema from '../models/team.model.js';
 import userSchema from '../models/user.model.js';
 import assignmentSchema from '../models/assignment.model.js';
 import userInAssignmentSchema from '../models/userInAssignment.model.js';
-import questionSchema from '../models/question.model.js';
+import questionResultSchema from '../models/questionResult.model.js';
 
 // ----------------------------------------
 // GET requests
@@ -158,14 +158,95 @@ api.post('/assignment/:assignmentId/start', studentRouteIsAuth, async (req, res)
     }
 });
 
-api.post('assignment/:assignmentId/question/:questionId/answer', studentRouteIsAuth, async (req, res) => {
+api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
+    // /assignment/:assignmentId/answer/question/:questionId
     const student = await getStudent(req);
-    const assignmentId = req.params['assignmentId'];
-    const questionId = req.params['questionId'];
+    // const assignmentId = req.params['assignmentId'];
+    // const questionId = req.params['questionId'];
     const body = req.body;
+    const assignmentId = body.assignmentId;
+    const questionId = body.questionId;
+    let findByIndex = false;
 
-    console.log(body);
-    res.end();
+    let resultObj = {
+        student: student,
+        isAnswerCorrect: false,
+        answer: body.answer,
+        questionId: questionId,
+        assignmentId: assignmentId,
+    }
+
+    if (questionId.replace(/[^-]/g, "").length < 4) {
+        findByIndex = true;
+    }
+
+    try {
+        const assignment = await assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
+        const questions = assignment.questions;
+        let question = null;
+
+        if (findByIndex) {
+            if (questions[questionId] === undefined) {
+                res.status(406).json({ message: 'Spørgsmål ikke fundet', type: 'error' });
+            } else {
+                question = questions[questionId];
+            }
+        } else {
+            questions.forEach(q => {
+                if (q.questionId === questionId) {
+                    if (q !== undefined) {
+                        question = q;
+                    }
+                }
+            });
+        }
+
+        if (question === null) {
+            res.status(406).json({ message: 'Spørgsmål ikke fundet', type: 'error' });
+        } else {
+            if (question.noCorrectAnswer === false) {
+                if (question.answer === body.answer) {
+                    resultObj.isAnswerCorrect = true;
+                } else {
+                    resultObj.isAnswerCorrect = false;
+                }
+            } else {
+                resultObj.isAnswerCorrect = true;
+            }
+        }
+
+        const result = await questionResultSchema(resultObj);
+        // let findStudentResults = false;
+        // let findStudentResultsIndex = 0;
+
+        // for (let i = 0; i < assignment.results.length; i++) {
+        //     const r = array[i];
+        //     if (r.studentId === student.userId) {
+        //         findStudentResults = true;
+        //         findStudentResultsIndex = i;
+        //     }
+        // }
+
+        const findStudentResults = await assignmentSchema.findOne({ assignmentId: assignmentId, 'results.studentId': student.userId }).exec();
+
+        if (findStudentResults === null) {
+            // assignmentSchema.findByIdAndUpdate({ assignmentId: assignmentId, 'result.studentId': student.userId }, {
+            //     $addToSet: { 'results': result }
+            // });
+        } else {
+            const obj = {
+                studentId: student.userId,
+                firstname: student.firstname,
+                lastname: student.lastname,
+                result: result
+            }
+            // assignmentSchema.findByIdAndUpdate({ assignmentId: assignmentId }, { $push: { results: obj }});
+        }
+
+        res.status(200).json({ message: 'OK' });
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
 });
 
 // ----------------------------------------
