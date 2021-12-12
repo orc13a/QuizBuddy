@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const QuestionResultSchema = mongoose.Schema({
     student: Object,
     answer: String,
-    isAnswerCorrect: String,
+    isAnswerCorrect: Boolean,
     questionId: String,
     assignmentId: String,
     answeredAt: {

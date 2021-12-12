@@ -1,12 +1,13 @@
 import { Button, Card, Col, Divider, Grid, Skeleton, Space, Text, Textarea, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { studentAnswerQuestion, studentGetQuestion, studentGetQuestionByIndex } from '../../../api';
 import Navbar from '../Navbar/Navbar';
 
 export default function StudentQuestion() {
     const { assignmentId, questionId } = useParams();
+    const navigate = useNavigate();
 
     const [fetching, setFetching] = useState(true);
     const [question, setQuestion] = useState(null);
@@ -18,6 +19,7 @@ export default function StudentQuestion() {
                 setQuestion(data);
                 setFetching(false);
             }).catch((err) => {
+                navigate(`/student/opgave/${assignmentId}`, { replace: true });
                 console.error(err);
             });
         } else {
@@ -26,6 +28,7 @@ export default function StudentQuestion() {
                 setQuestion(data);
                 setFetching(false);
             }).catch((err) => {
+                navigate(`/student/opgave/${assignmentId}`, { replace: true });
                 console.error(err);
             });
         }

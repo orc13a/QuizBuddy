@@ -38,6 +38,7 @@ api.get('/assignment/:assignmentId/get/question/:questionId', studentRouteIsAuth
     const questionId = req.params['questionId'];
 
     try {
+        
         const question = await assignmentSchema.findOne({ assignmentId: assignmentId }, { "questions": { $elemMatch: { questionId: questionId } } });
         if (question.questions[0] === null) {
             res.status(200).json(null);
@@ -50,15 +51,24 @@ api.get('/assignment/:assignmentId/get/question/:questionId', studentRouteIsAuth
 });
 
 api.get('/assignment/:assignmentId/getIndex/question/:questionIndex', studentRouteIsAuth, async (req, res) => {
+    const student = await getStudent(req);
     const assignmentId = req.params['assignmentId'];
     const questionIndex = req.params['questionIndex'];
 
     try {
-        const assignment = await assignmentSchema.findOne({ assignmentId: assignmentId });
-        if (assignment.questions[questionIndex] === null) {
-            res.status(200).json(null);
+        const findIsQuestionIsAnswered = await assignmentSchema.findOne({ assignmentId: assignmentId, 'results.studentId': student.userId }, {
+            'results': { $elemMatch: { studentId: student.userId, 'userResults.questionId': questionIndex } }
+        }).exec();
+
+        if (findIsQuestionIsAnswered.results.length > 0) {
+            res.status(406).json({ message: 'Spørgsmål allerede svaret', type: 'error' });
         } else {
-            res.status(200).json(assignment.questions[questionIndex]);
+            const assignment = await assignmentSchema.findOne({ assignmentId: assignmentId });
+            if (assignment.questions[questionIndex] === null) {
+                res.status(200).json(null);
+            } else {
+                res.status(200).json(assignment.questions[questionIndex]);
+            }
         }
     } catch (error) {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
@@ -169,7 +179,9 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
     let findByIndex = false;
 
     let resultObj = {
-        student: student,
+        studentId: student.userId,
+        firstname: student.firstname,
+        lastname: student.lastname,
         isAnswerCorrect: false,
         answer: body.answer,
         questionId: questionId,
@@ -216,35 +228,29 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
         }
 
         const result = await questionResultSchema(resultObj);
-        // let findStudentResults = false;
-        // let findStudentResultsIndex = 0;
-
-        // for (let i = 0; i < assignment.results.length; i++) {
-        //     const r = array[i];
-        //     if (r.studentId === student.userId) {
-        //         findStudentResults = true;
-        //         findStudentResultsIndex = i;
-        //     }
-        // }
 
         const findStudentResults = await assignmentSchema.findOne({ assignmentId: assignmentId, 'results.studentId': student.userId }).exec();
+        // const findIsQuestionIsAnswered = await assignmentSchema.findOne({ assignmentId: assignmentId, 'results.studentId': student.userId }, {
+        //     'results': { $elemMatch: { studentId: student.userId, 'userResults.questionId': questionId } }
+        // }).exec();
 
-        if (findStudentResults === null) {
-            // assignmentSchema.findByIdAndUpdate({ assignmentId: assignmentId, 'result.studentId': student.userId }, {
-            //     $addToSet: { 'results': result }
-            // });
+        if (findStudentResults !== null) {
+            await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId, 'results.studentId': student.userId }, {
+                $addToSet: { 'results.$.userResults': result }
+            });
         } else {
             const obj = {
                 studentId: student.userId,
                 firstname: student.firstname,
                 lastname: student.lastname,
-                result: result
+                userResults: [result]
             }
-            // assignmentSchema.findByIdAndUpdate({ assignmentId: assignmentId }, { $push: { results: obj }});
+            await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId }, { $push: { 'results': obj }});
         }
 
         res.status(200).json({ message: 'OK' });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
     }
 });
