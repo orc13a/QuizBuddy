@@ -164,7 +164,8 @@ api.post('/assignment/:assignmentId/start', studentRouteIsAuth, async (req, res)
                 firstname: student.firstname,
                 lastname: student.lastname,
                 time: 0,
-                questionIndex: 0
+                questionIndex: 0,
+                finished: false,
             });
 
             await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId }, { $push: { studentsStarted: startObj } }).exec();
@@ -185,7 +186,7 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
     const assignmentId = body.assignmentId;
     const questionId = body.questionId;
     let questionUuId = '';
-    let findByIndex = false;
+    let findByIndex = true;
 
     let resultObj = {
         studentId: student.userId,
@@ -197,10 +198,10 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
         assignmentId: assignmentId,
     }
 
-    if (questionId.replace(/[^-]/g, "").length < 4) {
-        findByIndex = true;
+    if (questionId.replace(/[^-]/g, "").length >= 4) {
+        findByIndex = false;
     }
-
+    
     try {
         const aa = await assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
         if (findByIndex === true) {
@@ -208,7 +209,7 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
         } else {
             questionUuId = questionId;
         }
-
+        
         const assignment = await assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
         const questions = assignment.questions;
         let question = null;
@@ -253,19 +254,19 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
         if (findIsQuestionIsAnswered !== null && findIsQuestionIsAnswered.results.length > 0) {
             res.status(406).json({ message: 'Spørgsmål allerede svaret', type: 'error' });
         } else {
-            // if (findStudentResults !== null) {
-            //     await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId, 'results.studentId': student.userId }, {
-            //         $addToSet: { 'results.$.userResults': result }
-            //     });
-            // } else {
-            //     const obj = {
-            //         studentId: student.userId,
-            //         firstname: student.firstname,
-            //         lastname: student.lastname,
-            //         userResults: [result]
-            //     }
-            //     await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId }, { $push: { 'results': obj }});
-            // }
+            if (findStudentResults !== null) {
+                await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId, 'results.studentId': student.userId }, {
+                    $addToSet: { 'results.$.userResults': result }
+                });
+            } else {
+                const obj = {
+                    studentId: student.userId,
+                    firstname: student.firstname,
+                    lastname: student.lastname,
+                    userResults: [result]
+                }
+                await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId }, { $push: { 'results': obj }});
+            }
 
             const nextQuestionIndex = await assignmentSchema.aggregate([
                 {
@@ -280,23 +281,30 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
                 }
             ]);
             
-            let nextQuestionIndex = 0;
-            let nextQuestionId = '';
+            let forNextQuestionIndex = 0;
+            let forNextQuestionId = '';
 
             nextQuestionIndex.forEach(a => {
                 const matchedIndex = a.matchedIndex;
                 if (matchedIndex !== -1) {
-                    nextQuestionIndex = matchedIndex;
+                    forNextQuestionIndex = matchedIndex;
                 }
             });
 
-            const nextQuestionAssignment = await assignmentSchema.findOne({ assignmentId: assignmentId }, {
-                'questions': { $elemMatch: { studentId: student.userId, 'userResults.questionId': questionId } }
-            }).exec();
-            
-        }
+            const nextQuestionAssignment = await assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
+            const currentQuestion = nextQuestionAssignment.questions[forNextQuestionIndex];
+            const nextQuestion = nextQuestionAssignment.questions[forNextQuestionIndex + 1];
+            forNextQuestionId = nextQuestion === undefined ? '' : nextQuestion.questionId;
 
-        res.status(200).json({ message: 'OK' });
+            if (nextQuestion === undefined) {
+                await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId, 'studentsStarted.studentId': student.userId }, {
+                    $set: { 'studentsStarted.$.finished': true } 
+                });
+                res.status(200).json({ message: 'Færdig med opgave', status: 'success', question: currentQuestion, isAnswerCorrect: result.isAnswerCorrect, nextQuestionId: undefined });
+            } else {
+                res.status(200).json({ question: currentQuestion, isAnswerCorrect: result.isAnswerCorrect, nextQuestionId: forNextQuestionId });
+            }
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });

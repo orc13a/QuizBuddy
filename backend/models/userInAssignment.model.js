@@ -7,6 +7,7 @@ const UserInAssignmentSchema = mongoose.Schema({
     assignmentId: String,
     time: Number,
     questionIndex: Number,
+    finished: Boolean,
     startedAt: {
         type: Date,
         default: new Date()
