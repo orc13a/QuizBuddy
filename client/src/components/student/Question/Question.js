@@ -17,41 +17,45 @@ export default function StudentQuestion() {
     const [showDoneScreen, setShowDoneScreen] = useState(false);
 
     useEffect(() => {
-        if (questionId.replace(/[^-]/g, "").length >= 4) {
-            studentGetQuestion({ assignmentId, questionId }).then((res) => {
-                const data = res.data;
-                if (res.data === null || res.data.length === 0) {
+        if (answerFeeback === null) {
+            if (questionId.replace(/[^-]/g, "").length >= 4) {
+                studentGetQuestion({ assignmentId, questionId }).then((res) => {
+                    const data = res.data;
+                    if (res.data === null || res.data.length === 0) {
+                        navigate(`/student/opgave/${assignmentId}`, { replace: true });
+                    }
+    
+                    setQuestion(data);
+                    setFetching(false);
+                }).catch((err) => {
                     navigate(`/student/opgave/${assignmentId}`, { replace: true });
-                }
-
-                setQuestion(data);
-                setFetching(false);
-            }).catch((err) => {
-                navigate(`/student/opgave/${assignmentId}`, { replace: true });
-                console.error(err);
-            });
-        } else {
-            studentGetQuestionByIndex({ assignmentId, questionId }).then((res) => {
-                const data = res.data;
-                if (res.data === null || res.data.length === 0) {
+                    console.error(err);
+                });
+            } else {
+                studentGetQuestionByIndex({ assignmentId, questionId }).then((res) => {
+                    const data = res.data;
+                    if (res.data === null || res.data.length === 0) {
+                        navigate(`/student/opgave/${assignmentId}`, { replace: true });
+                    }
+    
+                    setQuestion(data);
+                    setFetching(false);
+                }).catch((err) => {
                     navigate(`/student/opgave/${assignmentId}`, { replace: true });
-                }
-
-                setQuestion(data);
-                setFetching(false);
-            }).catch((err) => {
-                navigate(`/student/opgave/${assignmentId}`, { replace: true });
-                console.error(err);
-            });
+                    console.error(err);
+                });
+            }
         }
     }, [question, answerFeeback]);
 
     const nextQuestion = () => {
+        setFetching(true);
         form.setFieldValue('answer', '');
         form.setFieldValue('questionId', answerFeeback.nextQuestionId);
         navigate(`/student/opgave/${assignmentId}/spoergsmaal/${answerFeeback.nextQuestionId}`, { replace: true });
         setCheckingAnswerLoading(false);
         setAnswerFeeback(null);
+        setFetching(false);
     }
 
     const form = useForm({

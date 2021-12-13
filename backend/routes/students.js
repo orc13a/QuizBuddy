@@ -62,12 +62,16 @@ api.get('/assignment/:assignmentId/getIndex/question/:questionIndex', studentRou
     const student = await getStudent(req);
     const assignmentId = req.params['assignmentId'];
     const questionIndex = req.params['questionIndex'];
+    let questionUuId = '';
 
     try {
-        const findIsQuestionIsAnswered = await assignmentSchema.findOne({ assignmentId: assignmentId, 'results.studentId': student.userId }, {
-            'results': { $elemMatch: { studentId: student.userId, 'userResults.questionId': questionIndex } }
-        }).exec();
+        const aa = await assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
+        questionUuId = aa.questions[questionIndex].questionId;
 
+        const findIsQuestionIsAnswered = await assignmentSchema.findOne({ assignmentId: assignmentId, 'results.studentId': student.userId }, {
+            'results': { $elemMatch: { studentId: student.userId, 'userResults.questionId': questionUuId } }
+        }).exec();
+        
         if (findIsQuestionIsAnswered !== null && findIsQuestionIsAnswered.results.length > 0) {
             res.status(406).json({ message: 'Spørgsmål allerede svaret', type: 'error' });
         } else {
@@ -188,16 +192,6 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
     let questionUuId = '';
     let findByIndex = true;
 
-    let resultObj = {
-        studentId: student.userId,
-        firstname: student.firstname,
-        lastname: student.lastname,
-        isAnswerCorrect: false,
-        answer: body.answer,
-        questionId: questionId,
-        assignmentId: assignmentId,
-    }
-
     if (questionId.replace(/[^-]/g, "").length >= 4) {
         findByIndex = false;
     }
@@ -208,6 +202,16 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
             questionUuId = aa.questions[questionId].questionId;
         } else {
             questionUuId = questionId;
+        }
+
+        let resultObj = {
+            studentId: student.userId,
+            firstname: student.firstname,
+            lastname: student.lastname,
+            isAnswerCorrect: false,
+            answer: body.answer,
+            questionId: questionUuId,
+            assignmentId: assignmentId,
         }
         
         const assignment = await assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
@@ -296,9 +300,13 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
             const nextQuestion = nextQuestionAssignment.questions[forNextQuestionIndex + 1];
             forNextQuestionId = nextQuestion === undefined ? '' : nextQuestion.questionId;
 
+            await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId, 'studentsStarted.studentId': student.userId }, {
+                $set: { 'studentsStarted.$.questionIndex': forNextQuestionIndex + 1 }
+            });
+
             if (nextQuestion === undefined) {
                 await assignmentSchema.findOneAndUpdate({ assignmentId: assignmentId, 'studentsStarted.studentId': student.userId }, {
-                    $set: { 'studentsStarted.$.finished': true } 
+                    $set: { 'studentsStarted.$.finished': true }
                 });
                 res.status(200).json({ message: 'Færdig med opgave', status: 'success', question: currentQuestion, isAnswerCorrect: result.isAnswerCorrect, nextQuestionId: undefined });
             } else {

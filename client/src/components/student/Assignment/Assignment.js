@@ -64,8 +64,7 @@ export default function StudentAssignment() {
     return(
         <>
             <Navbar>
-                { fetching ? (
-                    
+                { fetching && startedAssignment === null ? (
                     <LoadingCard align="center" />
                 ) : (
                     <>
@@ -92,7 +91,7 @@ export default function StudentAssignment() {
                                                 </span>
                                             </div>
                                             <Space h="md" />
-                                            { startedAssignment !== null ? (
+                                            { startedAssignment !== null && startedAssignment.finished === false ? (
                                                 <>
                                                     <div>
                                                         <span>
@@ -134,7 +133,7 @@ export default function StudentAssignment() {
                                             </div>
                                         </Text>
                                     </div>
-                                    { checkDatePastToday(assignment.openToDate) ? (
+                                    { checkDatePastToday(assignment.openToDate) || startedAssignment.finished === true ? (
                                         <div>
                                             <Space h="lg" />
                                             <Button fullWidth color="indigo" size="md" radius="md">
@@ -147,7 +146,7 @@ export default function StudentAssignment() {
                                     <Button disabled={ starting } onClick={ () => navigate(`/student/hold/${assignment.teamId}`) } variant="outline" color="indigo" size="md" radius="md">
                                         Tilbage
                                     </Button>
-                                    { !checkDatePastToday(assignment.openToDate) && assignment.questions.length > 0 ? (
+                                    { !checkDatePastToday(assignment.openToDate) && assignment.questions.length > 0 && startedAssignment.finished === false ? (
                                         <>
                                             { startedAssignment === null ? (
                                                 <Button loading={starting} onClick={ startAssignment } style={{ float: 'right' }} color="indigo" size="md" radius="md">
