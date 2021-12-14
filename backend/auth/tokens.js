@@ -59,9 +59,12 @@ export const createRefreshToken = (user_) => {
     return token;
 }
 
-// #### Teacher ####
+// #### Student ####
 
+// Generer access token til elever
 export const createStudentAccessToken = (user_) => {
+    // Bruger jwt til at lave en token, med given payload (indhold)
+    // Indhold er om brugeren
     const token = jwt.sign({
         user: {
             userId: user_.userId,
@@ -70,6 +73,10 @@ export const createStudentAccessToken = (user_) => {
             profileType: user_.profileType
         }
     }, process.env.STUDENT_ACCESS_TOKEN_SECRET, { expiresIn: "2h" });
+    // process.env.STUDENT_ACCESS_TOKEN_SECRET = _
+    //      henter secret key fra fil kun serveren kan læse
+    // STUDENT_ACCESS_TOKEN_SECRET er et environment variable
+    // token er gylig i 2 timer
 
     return token;
 }

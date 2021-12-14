@@ -16,7 +16,7 @@ import userSchema from '../models/user.model.js';
 // POST requests
 // ----------------------------------------
 
-// Giv user new access token
+// Give user new access token
 // r_t = refresh_token
 api.post('/teacher', (req, res) => {
     const token = req.cookies['qbid'];
