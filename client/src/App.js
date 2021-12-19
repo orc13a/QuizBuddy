@@ -26,6 +26,7 @@ import StudentAssignment from "./components/student/Assignment/Assignment";
 import StudentQuestion from "./components/student/Question/Question";
 import StudentResults from "./components/student/Results/Results";
 import TeacherResults from "./components/teacher/Results/Results";
+import NotFound404 from "./components/NotFound404/NotFound404";
 
 function App() {
     const t = useMantineTheme();
@@ -143,6 +144,8 @@ function App() {
                         <StudentResults />
                     </StudentRoute>
                 } />
+                {/* #### Other #### */}
+                <Route path="*" element={ <NotFound404 /> } />
             </Routes>
         </AppShell>
     );
