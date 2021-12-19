@@ -25,7 +25,7 @@ const DBCONSTR = process.env.DBCONSTR;
 // Dev
 // const originUrl ='http://localhost:3000'
 // pro
-const originUrl = 'https://quiz-buddy.vercel.app/';
+const originUrl = '*';
 server.use(cors({
     origin: originUrl,
     credentials: true
@@ -35,7 +35,7 @@ server.use(cookieParser());
 
 // En route/endpoint
 server.get('/', (req, res) => {
-    res.status(200).json({ message: 'QuizBuddy API' });
+    res.status(200).json({ message: 'QuizBuddy API', version: '1.0.3' });
 });
 
 // Vores routes
