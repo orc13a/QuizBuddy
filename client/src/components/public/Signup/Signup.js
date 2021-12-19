@@ -1,3 +1,6 @@
+// Importere hvad vi skal bruge på siden
+// Det kan være alt fra UI components eller hooks (funktioner)
+// og andre af vores components eller billeder
 import { Button, Text, Card, Divider, Loader, LoadingOverlay, PasswordInput, Popover, Progress, Space, TextInput, Title, useMantineTheme, SegmentedControl, InputWrapper, Alert } from "@mantine/core";
 import Logo from "../Logo/Logo";
 import { useForm } from '@mantine/hooks';
@@ -6,6 +9,7 @@ import { useNavigate } from "react-router";
 import { signup } from "../../../api";
 import { useNotifications } from "@mantine/notifications";
 
+// Const er et variable som værdi ikke kan ændres
 const requirements = [
     { re: /[0-9]/, label: 'Skal indholde et tal' },
     { re: /[a-z]/, label: 'Skal indholde småt bogstav' },
@@ -13,6 +17,8 @@ const requirements = [
     { re: /[$&+,:;=?@#|'<>.^*()%!-]/, label: 'Skal indholde specielt tegn' },
 ];
 
+// Laver vi vores eget React component
+// mere om det ved linje 58
 function PasswordRequirement({ meets, label }) {
     const checkIcon = (
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check-lg" viewBox="0 0 16 16">
@@ -49,17 +55,23 @@ function getStrength(password) {
     return Math.max(100 - (100 / (requirements.length + 1)) * multiplier, 10);
 }
 
-export default function Signup() {
+export default function Signup() { // Sådan laver man et React component, skal starte med stort
+    // Laver nogen variabler for nogen hooks
     const theme = useMantineTheme();
     const navigate = useNavigate();
     const notifications = useNotifications();
 
+    // Man kan kalde de her variabler i React,
+    // når en af de har opdateres, opdateres hele siden
+    //       👇 navn    👇 sæt variablen
     const [loading, setLoading] = useState(false);
+    // useState er en hook i react til at holde styr på variablerne
     const [popoverOpened, setPopoverOpened] = useState(false);
     const [userType, setUserType] = useState('student');
     const [errorMsg, setErrorMsg] = useState('');
     const [formError, setFormError] = useState(false);
 
+    // Vores form values, en del af vores UI libary (Mantine)
     const form = useForm({
         initialValues: {
             studentType: '',
@@ -78,6 +90,8 @@ export default function Signup() {
         },
     });
 
+    // Ligesom at lave en funktion, bare en anden måde i Javascript, det er en arrow function
+    // Tjekker om adgangskoderne er ens
     const checkPwd = () => {
         if (form.values.passwordRepeat === form.values.password) {
             return true;
@@ -89,6 +103,7 @@ export default function Signup() {
     const strength = getStrength(form.values.password);
     const color = strength === 100 ? 'teal' : strength > 50 ? 'yellow' : 'red';
     const checks = requirements.map((requirement, index) => (
+        // Her bruger vi så det component
         <PasswordRequirement key={index} label={requirement.label} meets={requirement.re.test(form.values.password)} />
     ));
 
@@ -100,20 +115,29 @@ export default function Signup() {
         }
     }
 
+    // Når man trykker "Opret" knappen
     const onSubmit = (values) => {
         window.scrollTo(0, 0);
-        setLoading(true);
+        setLoading(true); // Sådan sætter man en af "React variablerne"
         values.profileType = userType;
 
-        signup(values).then((res) => {
+        // Her bruger vi "signup" fra api/index.js til at kalde serveren
+        // Læs mere om det i den fil
+        // Da vi skal vente på serveren svare tilbage, arbejder man med et promise i Javascript,
+        // Dermed bruger vi "then and catch" til at venter og når den så kommer et svar (then)
+        // Så arbejder vi med den data, catch er til at fange alle eventuelle errors
+        signup(values).then((res) => { // res er responde fra serveren
+            // Dette er til at lave de der popup notifications, en del af Mantine
             notifications.showNotification({
                 title: 'Profil oprettet',
                 message: 'Du kan nu logge ind med din profil',
                 color: 'teal'
             });
 
+            // Navigate er en hook til at gå til en ny side (url side)
             navigate(`/login`, { replace: true });
-        }).catch((err) => {
+            // replace, er til at brugeren ikke kan gå tilbage i sin browser til denne side
+        }).catch((err) => { // Hvis der er fejl, køre vi denne kode block
             const data = err.response.data;
             setErrorMsg(data.message);
             setFormError(true);
@@ -121,6 +145,8 @@ export default function Signup() {
         });
     }
 
+    // Variable med JSX i, (JSX) er en form for javascript med HTML i sig
+    // Det er et svg for et ikon
     const userIcon = (
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-fill" viewBox="0 0 16 16">
             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
@@ -145,7 +171,12 @@ export default function Signup() {
         </svg>
     );
 
+    // Her i skriver vi vores JSX,
+    // det er ved der ses på siden.
+    // JSX er meget som HTML, men mere i en Javascript stil
+    // så man har <tags>, dem med stort forbogstav er React components
     return (
+        // Et tomt <tag>
         <>
             <Logo />
             <div className="centerH-o" style={{ paddingTop: 125, paddingBottom: 100 }}>
@@ -170,6 +201,7 @@ export default function Signup() {
                         <Space h="lg" />
                         <form onSubmit={form.onSubmit((values) => onSubmit(values))}>
                             <InputWrapper size="md" label="Hvad er du?">
+                            {/* Dem som fx "size" er ligesom HTML attributs, men dette er nogen som man selv kan lave når man laver det component */}
                             <SegmentedControl
                             size="md"
                             radius="md"

@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { getAccessToken } from '../accessToken';
 
+// ####
+// Denne sider vores mellem-mand til vores server.
+// Det her her giver bestemmer hvor der skal sendes http requests til.
+// ####
+
 // Dev
 const api = axios.create({
     baseURL: 'http://localhost:2000/',
@@ -14,7 +19,9 @@ const api = axios.create({
 //     credentials: 'include'
 // });
 
+// Dette sender vores mellem-mand (axios) med hver request
 api.interceptors.request.use((req) => {
+    // Det er en web standart at have "bearer" foran sin token
     const token = 'bearer ' + getAccessToken();
     req.headers['authorization'] = token;
 
@@ -22,7 +29,9 @@ api.interceptors.request.use((req) => {
 });
 
 // Public
+//                Det endpoint vi requester til 👇           👇 data vi sender med (body)             
 export const signup = (data) => api.post('public/signup', data);
+//                                   👆 Siger hvilken type request vi laver
 export const login = (data) => api.post('public/login', data);
 export const logout = () => api.post('public/logout', '');
 

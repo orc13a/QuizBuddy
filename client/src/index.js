@@ -1,3 +1,7 @@
+// ####
+// Dette er lidt vores mother fil vores hele vores hjemmeside
+// ####
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';

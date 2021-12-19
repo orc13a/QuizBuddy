@@ -21,10 +21,6 @@ export default function Login() {
         }
     });
 
-    // validationRules: {
-    //     email: (value) => /^\S+@\S+$/.test(value),
-    // },
-
     const onSubmit = (values) => {
         setLoading(true);
         login(values).then((res) => {

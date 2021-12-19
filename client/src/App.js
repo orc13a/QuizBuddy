@@ -1,3 +1,7 @@
+// ####
+// Denne ser er sådan set vores "app", her samles alle siderne.
+// ####
+
 import { AppShell, useMantineTheme } from "@mantine/core";
 import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
@@ -47,6 +51,7 @@ function App() {
                 main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
             })}
         >
+            {/* Alle vores routes (sider) */}
             <Routes>
                 {/* #### Public #### */}
                 <Route index path="/" element={<Frontpage />} />

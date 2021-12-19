@@ -33,6 +33,7 @@ export default function StudentRoute({ children }) {
         );
     } else {
         if (tokenState === 'success') {
+            // "children" er den side som denne "firewall" beskøter
             return children;
         } else {
             notifications.showNotification({
