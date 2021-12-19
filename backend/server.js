@@ -28,7 +28,8 @@ const DBCONSTR = process.env.DBCONSTR;
 const originUrl = 'https://quiz-buddy.vercel.app';
 server.use(cors({
     origin: originUrl,
-    credentials: true
+    credentials: true,
+    credentials: 'include'
 }));
 server.use(bodyParser.json());
 server.use(cookieParser());
