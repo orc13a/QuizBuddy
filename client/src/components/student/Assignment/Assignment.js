@@ -22,7 +22,22 @@ export default function StudentAssignment() {
         studentGetAssignment(assignmentId).then((res) => {
             setAssignment(res.data.assignment);
             setStudentId(res.data.studentId);
+            
+            if (res.data.assignment.studentsStarted.length > 0) {
+                res.data.assignment.studentsStarted.forEach(student => {
+                    if (student.studentId === res.data.studentId) {
+                        setStartedAssignment(student);
+                    }
+                });
+            }
+            // else {
+            //     setStartedAssignment({
+            //         finished: false
+            //     });
+            // }
+
             setFetching(false);
+
             if (fetching === false && res.data.assignment.questions.length === 0) {
                 notifications.showNotification({
                     title: 'Hov',
@@ -31,12 +46,6 @@ export default function StudentAssignment() {
                     autoClose: 5000
                 });
             }
-
-            assignment.studentsStarted.forEach(student => {
-                if (student.studentId === studentId) {
-                    setStartedAssignment(student);
-                }
-            });
         }).catch((err) => {
             console.error(err);
         });
@@ -91,17 +100,21 @@ export default function StudentAssignment() {
                                                 </span>
                                             </div>
                                             <Space h="md" />
-                                            { startedAssignment !== null && startedAssignment.finished === false ? (
+                                            { assignment.studentsStarted.length > 0 ? (
                                                 <>
-                                                    <div>
-                                                        <span>
-                                                            Du er ved spørgsmål:
-                                                        </span>
-                                                        <span style={{ float: 'right' }}>
-                                                            { startedAssignment.questionIndex + 1 }
-                                                        </span>
-                                                    </div>
-                                                    <Space h="md" />
+                                                    { startedAssignment !== null && startedAssignment.finished === false ? (
+                                                        <>
+                                                            <div>
+                                                                <span>
+                                                                    Du er ved spørgsmål:
+                                                                </span>
+                                                                <span style={{ float: 'right' }}>
+                                                                    { startedAssignment.questionIndex + 1 }
+                                                                </span>
+                                                            </div>
+                                                            <Space h="md" />
+                                                        </>
+                                                    ) : null }
                                                 </>
                                             ) : null }
                                             <div>
@@ -133,32 +146,47 @@ export default function StudentAssignment() {
                                             </div>
                                         </Text>
                                     </div>
-                                    { checkDatePastToday(assignment.openToDate) || startedAssignment.finished === true ? (
-                                        <div>
-                                            <Space h="lg" />
-                                            <Button fullWidth color="indigo" size="md" radius="md">
-                                                Dine resultater
-                                            </Button>
-                                        </div>
+                                    { assignment.studentsStarted.length > 0 ? (
+                                        <>
+                                            { startedAssignment.finished === true && assignment.questions.length > 0 ? (
+                                                <div>
+                                                    <Space h="lg" />
+                                                    <Button fullWidth color="indigo" size="md" radius="md">
+                                                        Dine resultater
+                                                    </Button>
+                                                </div>
+                                            ) : null }
+                                        </>
                                     ) : null }
                                     <Space h="lg" />
                                     <Space h="sm" />
                                     <Button disabled={ starting } onClick={ () => navigate(`/student/hold/${assignment.teamId}`) } variant="outline" color="indigo" size="md" radius="md">
                                         Tilbage
                                     </Button>
-                                    { !checkDatePastToday(assignment.openToDate) && assignment.questions.length > 0 && startedAssignment.finished === false ? (
+                                    { assignment.studentsStarted.length > 0 && !checkDatePastToday(assignment.openToDate) && assignment.questions.length > 0 ? (
                                         <>
-                                            { startedAssignment === null ? (
+                                            { startedAssignment.finished === false || startedAssignment.finished === undefined ? (
+                                                <>
+                                                    { startedAssignment === null || startedAssignment.finished === undefined ? (
+                                                        <>
+                                                            {/* Fejl når man forsætter, derfor skjult */}
+                                                            {/* <Button loading={starting} onClick={ continueAssignment } style={{ float: 'right' }} color="indigo" size="md" radius="md">
+                                                                Forsæt
+                                                            </Button> */}
+                                                        </>
+                                                    ) : null }
+                                                </>
+                                            ) : null }
+                                        </>
+                                    ) : (
+                                        <>
+                                            { !checkDatePastToday(assignment.openToDate) && assignment.questions.length > 0 ? (
                                                 <Button loading={starting} onClick={ startAssignment } style={{ float: 'right' }} color="indigo" size="md" radius="md">
                                                     Start
                                                 </Button>
-                                            ) : (
-                                                <Button loading={starting} onClick={ continueAssignment } style={{ float: 'right' }} color="indigo" size="md" radius="md">
-                                                    Forsæt
-                                                </Button>
-                                            ) }
+                                            ) : null }
                                         </>
-                                    ) : null }
+                                    )}
                                 </Card>
                         </div>
                             {/* </div>

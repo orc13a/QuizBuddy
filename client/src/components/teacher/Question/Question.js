@@ -134,7 +134,7 @@ export default function TeacherQuestion() {
                                         </Card>
                                     </InputWrapper>
                                     <Space h="lg" />
-                                    <TextInput value={ !question.noCorrectAnswer ? 'Spørgsmål har ikke et rigtigt svar' : question.answer } variant="filled" readOnly label="Svar" size="md" radius="md" />
+                                    <TextInput value={ question.noCorrectAnswer ? 'Spørgsmål har ikke et rigtigt svar' : question.answer } variant="filled" readOnly label="Svar" size="md" radius="md" />
                                     <Space h="lg" />
                                     <Space h="sm" />
                                     <Button onClick={ () => setShowDeleteTeamModal(true) } color="red" radius="md" size="md" variant="light">

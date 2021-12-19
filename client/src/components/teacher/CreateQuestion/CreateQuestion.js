@@ -22,7 +22,7 @@ export default function TeacherCreateQuestion() {
             assignmentId: assignmentId,
             questionText: '',
             questionTitle: '',
-            noCorrectAnswer: !noCorrectAnswer,
+            noCorrectAnswer: noCorrectAnswer,
             questionAnswer: '',
         },
         validationRules: {
@@ -50,6 +50,11 @@ export default function TeacherCreateQuestion() {
             });
             setLoading(false);
         });
+    }
+
+    const checkmarkAnswer = () => {
+        form.setFieldValue('questionAnswer', '');
+        setNoCorrectAnswer(!noCorrectAnswer);
     }
 
     const boldIcon = (
@@ -267,7 +272,7 @@ export default function TeacherCreateQuestion() {
                                     </div>
                                 </Col>
                                 <Col span={12} xs={1}>
-                                    <Checkbox label="Spørgsmål har ikke et rigtigt svar" onClick={ () => setNoCorrectAnswer(!noCorrectAnswer) } defaultChecked={noCorrectAnswer} />
+                                    <Checkbox color="indigo" label="Spørgsmål har ikke et rigtigt svar" onClick={ checkmarkAnswer } defaultChecked={noCorrectAnswer} />
                                     <Space h="md" />
                                     { noCorrectAnswer ? null : (
                                         <TextInput
