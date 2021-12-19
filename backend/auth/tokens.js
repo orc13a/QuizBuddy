@@ -1,3 +1,8 @@
+// ####
+// Hvordan vores tokens bliver generetet
+// Læs om hvordan de viker på linje 69
+// ####
+
 import jwt from 'jsonwebtoken';
 import userSchema from '../models/user.model.js';
 

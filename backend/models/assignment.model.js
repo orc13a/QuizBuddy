@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Opret schema og dens "felter"
 const AssignmentSchema = mongoose.Schema({
     assignmentId: String,
     creatorId: String,
@@ -19,4 +20,5 @@ const AssignmentSchema = mongoose.Schema({
     },
 });
 
+// gem, dette bliver til en collection i vores database
 export default mongoose.model('assignments', AssignmentSchema);
