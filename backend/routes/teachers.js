@@ -5,6 +5,7 @@ import { getTeacher } from '../auth/tokens.js';
 import getUuid from 'uuid-by-string';
 import teamSchema from '../models/team.model.js';
 import userSchema from '../models/user.model.js';
+import assignmentSchema from '../models/assignment.model.js';
 
 // ----------------------------------------
 // GET requests
@@ -50,6 +51,18 @@ api.get('/teams/get/:teamId', teacherRouteIsAuth, async (req, res) => {
     try {
         const team = await teamSchema.findOne({ creatorId: teacher.userId, teamId: teamId });
         res.status(200).json(team);
+    } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+});
+
+api.get('/assignment/:assignmentId/results', teacherRouteIsAuth, async (req, res) => {
+    const assignmentId = req.params['assignmentId'];
+    
+    try {
+        const assignment = await assignmentSchema.findOne({ assignmentId: assignmentId });
+        
+        res.status(200).json({ results: assignment.results });
     } catch (error) {
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
     }

@@ -29,12 +29,9 @@ export default function StudentAssignment() {
                         setStartedAssignment(student);
                     }
                 });
+            } else {
+                setStartedAssignment({});
             }
-            // else {
-            //     setStartedAssignment({
-            //         finished: false
-            //     });
-            // }
 
             setFetching(false);
 
@@ -146,12 +143,12 @@ export default function StudentAssignment() {
                                             </div>
                                         </Text>
                                     </div>
-                                    { assignment.studentsStarted.length > 0 ? (
+                                    { assignment.studentsStarted.length > 0 && startedAssignment !== null ? (
                                         <>
                                             { startedAssignment.finished === true && assignment.questions.length > 0 ? (
                                                 <div>
                                                     <Space h="lg" />
-                                                    <Button onClick={ () => navigate(`/student/opgave/${assignmentId}/resultater`) } fullWidth color="indigo" size="md" radius="md">
+                                                    <Button onClick={ () => navigate(`/student/opgave/${assignmentId}/${assignment.name}/resultater`) } fullWidth color="indigo" size="md" radius="md">
                                                         Dine resultater
                                                     </Button>
                                                 </div>
@@ -163,7 +160,7 @@ export default function StudentAssignment() {
                                     <Button disabled={ starting } onClick={ () => navigate(`/student/hold/${assignment.teamId}`) } variant="outline" color="indigo" size="md" radius="md">
                                         Tilbage
                                     </Button>
-                                    { assignment.studentsStarted.length > 0 && !checkDatePastToday(assignment.openToDate) && assignment.questions.length > 0 ? (
+                                    { assignment.studentsStarted.length > 0 && !checkDatePastToday(assignment.openToDate) && assignment.questions.length > 0 && startedAssignment !== null ? (
                                         <>
                                             { startedAssignment.finished === false || startedAssignment.finished === undefined ? (
                                                 <>

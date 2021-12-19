@@ -35,6 +35,7 @@ export const teacherGetTeamsSelect = () => api.get('teachers/teams/get/select');
 export const teacherGetTeam = (teamId) => api.get(`teachers/teams/get/${teamId}`);
 export const teacherDeleteTeam = (teamId) => api.post(`teachers/teams/delete/${teamId}`, '');
 export const teacherRemoveStudentTeam = (data) => api.post(`teachers/teams/remove/student`, data);
+export const teacherGetResults = (assignmentId) => api.get(`teachers/assignment/${assignmentId}/results`);
 
 // Student 
 export const studentRF = () => api.post('r_t/student', '');

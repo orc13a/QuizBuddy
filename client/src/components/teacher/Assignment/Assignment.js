@@ -224,7 +224,7 @@ export default function TeacherAssignment() {
                                             <Space h="lg" />
                                         {/* </div> */}
                                         </div>
-                                        <Button fullWidth radius="md" size="md" color="indigo">
+                                        <Button onClick={ () => navigate(`/teacher/opgave/${assignmentId}/${assignment.name}/resultater`) } fullWidth radius="md" size="md" color="indigo">
                                             Se resultater
                                         </Button>
                                         <Space h="lg" />

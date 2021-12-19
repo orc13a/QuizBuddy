@@ -1,14 +1,15 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
-import { Skeleton, Table } from '@mantine/core';
+import { Button, Card, Divider, Skeleton, Space, Table, Text } from '@mantine/core';
 import { useEffect, useState } from "react";
 import { studentGetResults } from "../../../api";
 import { useNotifications } from "@mantine/notifications";
 
 export default function StudentResults() {
+    const navigate = useNavigate();
     const notifications = useNotifications();
 
-    const { assignmentId } = useParams();
+    const { assignmentId, assignmentName } = useParams();
     const [rows, setRows] = useState([]);
     const [isFetching, setIsFetching] = useState(true);
 
@@ -34,7 +35,7 @@ export default function StudentResults() {
             });
     }, [isFetching]);
 
-    const x = (row) => {
+    const createRow = (row) => {
         nr++;
         return (
             <>
@@ -71,52 +72,65 @@ export default function StudentResults() {
             <Navbar />
             <main style={{ textAlign: 'center' }}>
                 <div style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto' }}>
-                    <Table striped highlightOnHover={!isFetching}>
-                        <thead>
-                            <tr>
-                                <th>Nr.</th>
-                                <th>Spørgsmål title</th>
-                                <th>Spørgsmål</th>
-                                <th>Rigtige svar</th>
-                                <th>Dit svar</th>
-                                <th>Rigtigt</th>
-                            </tr>
-                        </thead>
-                        <tbody style={{ textAlign: 'left' }}>
-                            { isFetching ? (
-                                <>
-                                    <tr key="0-1">
-                                        <td><Skeleton height={35} /></td>
-                                        <td><Skeleton height={35} /></td>
-                                        <td><Skeleton height={35} /></td>
-                                        <td><Skeleton height={35} /></td>
-                                        <td><Skeleton height={35} /></td>
-                                        <td><Skeleton height={35} /></td>
-                                    </tr>
-                                    <tr key="0-2">
-                                        <td><Skeleton height={35} /></td>
-                                        <td><Skeleton height={35} /></td>
-                                        <td><Skeleton height={35} /></td>
-                                        <td><Skeleton height={35} /></td>
-                                        <td><Skeleton height={35} /></td>
-                                        <td><Skeleton height={35} /></td>
-                                    </tr>
-                                    <tr key="0-3">
-                                        <td><Skeleton height={35} /></td>
-                                        <td><Skeleton height={35} /></td>
-                                        <td><Skeleton height={35} /></td>
-                                        <td><Skeleton height={35} /></td>
-                                        <td><Skeleton height={35} /></td>
-                                        <td><Skeleton height={35} /></td>
-                                    </tr>
-                                </>
-                            ) : 
-                                rows.map((row) => (
-                                    x(row)
-                                ))
-                            }
-                        </tbody>
-                    </Table>
+                    <Card radius="md" withBorder>
+                        <div style={{ textAlign: 'left' }}>
+                            <Button onClick={ () => navigate(-1) } color="indigo" variant="outline" style={{ display: 'inline-block', marginRight: '25px' }}>
+                                Tilbage
+                            </Button>
+                            <Text style={{ display: 'inline-block', fontSize: '26px', fontWeight: 600, position: 'relative', top: '4px' }}>
+                                { assignmentName }
+                            </Text>
+                        </div>
+                        <Space h="md" />
+                        <Divider />
+                        <Space h="md" />
+                        <Table striped>
+                            <thead>
+                                <tr>
+                                    <th>Nr.</th>
+                                    <th>Spørgsmål title</th>
+                                    <th>Spørgsmål</th>
+                                    <th>Rigtige svar</th>
+                                    <th>Dit svar</th>
+                                    <th>Rigtigt</th>
+                                </tr>
+                            </thead>
+                            <tbody style={{ textAlign: 'left' }}>
+                                { isFetching ? (
+                                    <>
+                                        <tr key="0-1">
+                                            <td><Skeleton height={35} /></td>
+                                            <td><Skeleton height={35} /></td>
+                                            <td><Skeleton height={35} /></td>
+                                            <td><Skeleton height={35} /></td>
+                                            <td><Skeleton height={35} /></td>
+                                            <td><Skeleton height={35} /></td>
+                                        </tr>
+                                        <tr key="0-2">
+                                            <td><Skeleton height={35} /></td>
+                                            <td><Skeleton height={35} /></td>
+                                            <td><Skeleton height={35} /></td>
+                                            <td><Skeleton height={35} /></td>
+                                            <td><Skeleton height={35} /></td>
+                                            <td><Skeleton height={35} /></td>
+                                        </tr>
+                                        <tr key="0-3">
+                                            <td><Skeleton height={35} /></td>
+                                            <td><Skeleton height={35} /></td>
+                                            <td><Skeleton height={35} /></td>
+                                            <td><Skeleton height={35} /></td>
+                                            <td><Skeleton height={35} /></td>
+                                            <td><Skeleton height={35} /></td>
+                                        </tr>
+                                    </>
+                                ) : 
+                                    rows.map((row) => (
+                                        createRow(row)
+                                    ))
+                                }
+                            </tbody>
+                        </Table>
+                    </Card>
                 </div>
             </main>
         </>
