@@ -21,8 +21,13 @@ const PORT = process.env.PORT || 2000;
 const DBCONSTR = process.env.DBCONSTR;
 
 // .use, giver sig selv, brug givet
+// Origin:
+// Dev
+// const originUrl ='http://localhost:3000'
+// pro
+const originUrl = 'https://quiz-buddy.vercel.app/';
 server.use(cors({
-    origin: 'http://localhost:3000',
+    origin: originUrl,
     credentials: true
 }));
 server.use(bodyParser.json());
