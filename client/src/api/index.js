@@ -7,17 +7,17 @@ import { getAccessToken } from '../accessToken';
 // ####
 
 // Dev
-const api = axios.create({
-    baseURL: 'http://localhost:2000/',
-    withCredentials: true,
-    credentials: 'include'
-});
-// Pro
 // const api = axios.create({
-//     baseURL: '',
+//     baseURL: 'http://localhost:2000/',
 //     withCredentials: true,
 //     credentials: 'include'
 // });
+// Pro
+const api = axios.create({
+    baseURL: 'https://young-bastion-64816.herokuapp.com/',
+    withCredentials: true,
+    credentials: 'include'
+});
 
 // Dette sender vores mellem-mand (axios) med hver request
 api.interceptors.request.use((req) => {
