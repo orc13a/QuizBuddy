@@ -1,7 +1,7 @@
 export const sendRefreshToken = (response, token) => {
     response.cookie('qbid', token, {
-        httpOnly: true,
-        sameSite: true,
+        httpOnly: false,
+        sameSite: false,
         path: '/'
     });
 }

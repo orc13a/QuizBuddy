@@ -29,14 +29,13 @@ const originUrl = 'https://quiz-buddy.vercel.app';
 server.use(cors({
     origin: originUrl,
     credentials: true,
-    credentials: 'include'
 }));
 server.use(bodyParser.json());
 server.use(cookieParser());
 
 // En route/endpoint
 server.get('/', (req, res) => {
-    res.status(200).json({ message: 'QuizBuddy API', version: '1.0.6' });
+    res.status(200).json({ message: 'QuizBuddy API', version: '1.0.7' });
 });
 
 // Vores routes
