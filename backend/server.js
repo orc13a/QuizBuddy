@@ -36,7 +36,7 @@ server.use(cookieParser());
 
 // En route/endpoint
 server.get('/', (req, res) => {
-    res.status(200).json({ message: 'QuizBuddy API', version: '1.0.5' });
+    res.status(200).json({ message: 'QuizBuddy API', version: '1.0.6' });
 });
 
 // Vores routes
