@@ -28,7 +28,7 @@ ReactDOM.render(
         {/* <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}> */}
             <MantineProvider theme={{ colorScheme: 'light' }}>
                 <NotificationsProvider limit={4} position="bottom-left">
-                    <BrowserRouter>
+                    <BrowserRouter basename="/">
                         <App />
                     </BrowserRouter>
                 </NotificationsProvider>
