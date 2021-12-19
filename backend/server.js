@@ -25,7 +25,7 @@ const DBCONSTR = process.env.DBCONSTR;
 // Dev
 // const originUrl ='http://localhost:3000'
 // pro
-const originUrl = 'https://quiz-buddy.vercel.app/*';
+const originUrl = 'https://quiz-buddy.vercel.app';
 server.use(cors({
     origin: originUrl,
     credentials: true
