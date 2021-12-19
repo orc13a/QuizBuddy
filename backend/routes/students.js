@@ -212,6 +212,8 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
             answer: body.answer,
             questionId: questionUuId,
             assignmentId: assignmentId,
+            questionTitle: '',
+            questionText: '',
         }
         
         const assignment = await assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
@@ -247,6 +249,9 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
                 resultObj.isAnswerCorrect = true;
             }
         }
+
+        resultObj.questionTitle = question.title;
+        resultObj.questionText = question.text;
 
         const result = await questionResultSchema(resultObj);
 

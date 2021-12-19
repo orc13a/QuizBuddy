@@ -1,6 +1,8 @@
 import { AppShell, useMantineTheme } from "@mantine/core";
 import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+
+// Components
 import TeacherRoute from "./components/routes/TeacherRoute";
 import StudentRoute from "./components/routes/StudentRoute";
 import Frontpage from './components/public/Frontpage/Frontpage';
@@ -22,6 +24,7 @@ import TeacherCreateQuestion from "./components/teacher/CreateQuestion/CreateQue
 import TeacherQuestion from "./components/teacher/Question/Question";
 import StudentAssignment from "./components/student/Assignment/Assignment";
 import StudentQuestion from "./components/student/Question/Question";
+import StudentResults from "./components/student/Results/Results";
 
 function App() {
     const t = useMantineTheme();
@@ -127,6 +130,11 @@ function App() {
                 <Route path="/student/opgave/:assignmentId/spoergsmaal/:questionId" element={
                     <StudentRoute>
                         <StudentQuestion />
+                    </StudentRoute>
+                } />
+                <Route path="/student/opgave/:assignmentId/resultater" element={
+                    <StudentRoute>
+                        <StudentResults />
                     </StudentRoute>
                 } />
             </Routes>

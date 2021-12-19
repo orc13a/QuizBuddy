@@ -151,7 +151,7 @@ export default function StudentAssignment() {
                                             { startedAssignment.finished === true && assignment.questions.length > 0 ? (
                                                 <div>
                                                     <Space h="lg" />
-                                                    <Button fullWidth color="indigo" size="md" radius="md">
+                                                    <Button onClick={ () => navigate(`/student/opgave/${assignmentId}/resultater`) } fullWidth color="indigo" size="md" radius="md">
                                                         Dine resultater
                                                     </Button>
                                                 </div>

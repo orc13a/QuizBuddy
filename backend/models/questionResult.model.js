@@ -5,6 +5,8 @@ const QuestionResultSchema = mongoose.Schema({
     answer: String,
     isAnswerCorrect: Boolean,
     questionId: String,
+    questionTitle: String,
+    questionText: String,
     assignmentId: String,
     answeredAt: {
         type: Date,
