@@ -26,16 +26,17 @@ const DBCONSTR = process.env.DBCONSTR;
 // const originUrl ='http://localhost:3000'
 // pro
 const originUrl = '*';
-server.use(cors({
-    origin: originUrl,
-    credentials: true
-}));
+// server.use(cors({
+//     origin: originUrl,
+//     credentials: true
+// }));
+server.options('*', cors());
 server.use(bodyParser.json());
 server.use(cookieParser());
 
 // En route/endpoint
 server.get('/', (req, res) => {
-    res.status(200).json({ message: 'QuizBuddy API', version: '1.0.3' });
+    res.status(200).json({ message: 'QuizBuddy API', version: '1.0.4' });
 });
 
 // Vores routes
