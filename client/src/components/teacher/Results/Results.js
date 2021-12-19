@@ -33,7 +33,7 @@ export default function TeacherResults() {
             }).catch((err) => {
                 console.error(err);
             });
-    }, [isFetching]);
+    }, [isFetching, assignmentId, notifications]);
 
     const createRow = (row) => {
         nr++;
@@ -115,11 +115,21 @@ export default function TeacherResults() {
                         <Space h="md" />
                         <Divider />
                         <Space h="md" />
-                        {/* <Accordion> */}
-                            { students.map(s => (
-                                createAccordion(s)
-                            )) }
-                        {/* </Accordion> */}
+                        { isFetching ? (
+                            <>
+                                <Skeleton height={40} />
+                                <Space h="sm" />
+                                <Skeleton height={40} />
+                                <Space h="sm" />
+                                <Skeleton height={40} />
+                            </>
+                        ) : (
+                            <>
+                                { students.map(s => (
+                                    createAccordion(s)
+                                )) }
+                            </>
+                        ) }
                     </Card>
                 </div>
             </main>

@@ -1,4 +1,4 @@
-import { Button, Card, Col, Divider, Grid, Skeleton, Space, Text, Textarea, TextInput, Title } from '@mantine/core';
+import { Button, Card, Col, Divider, Grid, Skeleton, Space, Text, Textarea, Title } from '@mantine/core';
 import { useForm } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
@@ -46,7 +46,7 @@ export default function StudentQuestion() {
                 });
             }
         }
-    }, [question, answerFeeback]);
+    }, [question, answerFeeback, assignmentId, navigate, questionId]);
 
     const nextQuestion = () => {
         setFetching(true);
@@ -152,7 +152,7 @@ export default function StudentQuestion() {
                                                     Du er færdige med denne opgave
                                                 </Title>
                                                 <div style={{ textAlign: 'center' }}>
-                                                    <img src={SadImage} height={350} />
+                                                    <img alt="trist maskot" src={SadImage} height={350} />
                                                 </div>
                                                 <Button onClick={ () => navigate(`/student/opgave/${assignmentId}`, { replace: true }) } style={{ float: 'right' }} color="indigo" size="md" radius="md">
                                                     Afslut

@@ -71,7 +71,6 @@ export default function Navbar({ children }) {
                 opened={drawerOpen}
                 onClose={() => setDrawerOpen(false)}
                 position="right"
-                title=""
                 padding={0}
                 size="md"
                 overlayOpacity={0.15}

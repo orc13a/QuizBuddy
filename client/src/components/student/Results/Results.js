@@ -33,7 +33,7 @@ export default function StudentResults() {
             }).catch((err) => {
                 console.error(err);
             });
-    }, [isFetching]);
+    }, [isFetching, assignmentId, notifications]);
 
     const createRow = (row) => {
         nr++;

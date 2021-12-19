@@ -15,13 +15,13 @@ export default function StudentAssignment() {
     const [fetching, setFetching] = useState(true);
     const [starting, setStarting] = useState(false);
     const [assignment, setAssignment] = useState(null);
-    const [studentId, setStudentId] = useState('');
+    // const [studentId, setStudentId] = useState('');
     const [startedAssignment, setStartedAssignment] = useState(null);
 
     useEffect(() => {
         studentGetAssignment(assignmentId).then((res) => {
             setAssignment(res.data.assignment);
-            setStudentId(res.data.studentId);
+            // setStudentId(res.data.studentId);
             
             if (res.data.assignment.studentsStarted.length > 0) {
                 res.data.assignment.studentsStarted.forEach(student => {
@@ -46,7 +46,7 @@ export default function StudentAssignment() {
         }).catch((err) => {
             console.error(err);
         });
-    }, [fetching]);
+    }, [fetching, assignmentId, notifications]);
 
     const startAssignment = () => {
         setStarting(true);
@@ -58,10 +58,11 @@ export default function StudentAssignment() {
         });
     }
 
-    const continueAssignment = () => {
-        setStarting(true);
-        navigate(`/student/opgave/${assignmentId}/spoergsmaal/${startedAssignment.questionIndex}`, { replace: true });
-    }
+    // Issue #3
+    // const continueAssignment = () => {
+    //     setStarting(true);
+    //     navigate(`/student/opgave/${assignmentId}/spoergsmaal/${startedAssignment.questionIndex}`, { replace: true });
+    // }
 
     // {/* <div className="center">
     //                     <Loader color="indigo" size="xl" variant="dots" />

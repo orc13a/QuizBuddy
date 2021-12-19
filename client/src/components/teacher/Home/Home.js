@@ -1,4 +1,4 @@
-import { Affix, ActionIcon, Tooltip, Button } from "@mantine/core";
+import { Affix, ActionIcon, Tooltip } from "@mantine/core";
 import { Link } from "react-router-dom";
 import EmptyState from "../../EmptyState/EmptyState";
 import Navbar from "../Navbar/Navbar";

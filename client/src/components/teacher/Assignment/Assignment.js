@@ -1,4 +1,4 @@
-import { Accordion, Button, Card, Divider, Loader, Space, Title, Text, Modal, ActionIcon, Tooltip } from '@mantine/core';
+import { Accordion, Button, Card, Divider, Space, Title, Text, Modal, ActionIcon, Tooltip } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
@@ -39,7 +39,7 @@ export default function TeacherAssignment() {
                 navigate(`/teacher/hold/${tId}`, { replace: true });
             }
         });
-    }, [assignment]);
+    }, [assignment, assignmentId, navigate, notifications, tId]);
 
     const deleteAssignmentClick = () => {
         setDeleteAssignmentLoading(true);

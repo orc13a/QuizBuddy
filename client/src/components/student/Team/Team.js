@@ -1,4 +1,4 @@
-import { Accordion, ActionIcon, Button, Card, Divider, Loader, Modal, Space, Text, Title } from "@mantine/core";
+import { Accordion, ActionIcon, Button, Card, Divider, Modal, Space, Text, Title } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useNotifications } from '@mantine/notifications';
