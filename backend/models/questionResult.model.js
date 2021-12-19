@@ -7,6 +7,7 @@ const QuestionResultSchema = mongoose.Schema({
     questionId: String,
     questionTitle: String,
     questionText: String,
+    questionAnswer: String,
     assignmentId: String,
     answeredAt: {
         type: Date,

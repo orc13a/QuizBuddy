@@ -39,6 +39,7 @@ api.get('/assignment/:assignmentId/get/question/:questionId', studentRouteIsAuth
     const questionId = req.params['questionId'];
 
     try {
+        // #### Issue #3
         // const findIsQuestionIsAnswered = await assignmentSchema.findOne({ assignmentId: assignmentId, 'results.studentId': student.userId }, {
         //     'results': { $elemMatch: { studentId: student.userId, 'userResults.questionId': questionId } }
         // }).exec();
@@ -68,6 +69,7 @@ api.get('/assignment/:assignmentId/getIndex/question/:questionIndex', studentRou
         const aa = await assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
         questionUuId = aa.questions[questionIndex].questionId;
 
+        // #### Issue #3
         // const findIsQuestionIsAnswered = await assignmentSchema.findOne({ assignmentId: assignmentId, 'results.studentId': student.userId }, {
         //     'results': { $elemMatch: { studentId: student.userId, 'userResults.questionId': questionUuId } }
         // }).exec();
@@ -83,6 +85,22 @@ api.get('/assignment/:assignmentId/getIndex/question/:questionIndex', studentRou
             }
         // }
     } catch (error) {
+        res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
+    }
+});
+
+api.get('/assignment/:assignmentId/results', studentRouteIsAuth, async (req, res) => {
+    const student = await getStudent(req);
+    const assignmentId = req.params['assignmentId'];
+
+    try {
+        const studentResults = await assignmentSchema.find({ assignmentId: assignmentId, results: { $elemMatch: { studentId: student.userId }}}, {
+            "results.$": 1, studentId: 1
+        });
+        
+        res.status(200).json({ studentResults: studentResults[0].results[0].userResults });
+    } catch (error) {
+        console.log(error);
         res.status(500).json({ message: 'Der opstod en fejl, prøv igen', type: 'error' });
     }
 });
@@ -214,6 +232,7 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
             assignmentId: assignmentId,
             questionTitle: '',
             questionText: '',
+            questionAnswer: ''
         }
         
         const assignment = await assignmentSchema.findOne({ assignmentId: assignmentId }).exec();
@@ -252,10 +271,12 @@ api.post('/question/answer', studentRouteIsAuth, async (req, res) => {
 
         resultObj.questionTitle = question.title;
         resultObj.questionText = question.text;
+        resultObj.questionAnswer = question.answer;
 
         const result = await questionResultSchema(resultObj);
 
         const findStudentResults = await assignmentSchema.findOne({ assignmentId: assignmentId, 'results.studentId': student.userId }).exec();
+        // #### Issue #3
         // const findIsQuestionIsAnswered = await assignmentSchema.findOne({ assignmentId: assignmentId, 'results.studentId': student.userId }, {
         //     'results': { $elemMatch: { studentId: student.userId, 'userResults.questionId': questionId } }
         // }).exec();
