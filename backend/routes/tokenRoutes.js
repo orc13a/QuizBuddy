@@ -19,7 +19,14 @@ import userSchema from '../models/user.model.js';
 // Give user new access token
 // r_t = refresh_token
 api.post('/teacher', (req, res) => {
-    const token = req.cookies['qbid'];
+    let token = req.cookies['qbid'];
+
+    // if (req.cookies['qbid'] === undefined || req.cookies['qbid'] === null || req.cookies['qbid']) {
+    //     const t = req.headers['authorization'];
+    //     token = t.split(' ')[1];
+    // } else {
+    //     token = req.cookies['qbid']
+    // }
 
     if (!token) {
         res.status(406).json({ message: 'fejl1', type: 'error' });
@@ -54,7 +61,13 @@ api.post('/teacher', (req, res) => {
 });
 
 api.post('/student', (req, res) => {
-    const token = req.cookies['qbid'];
+    let token = req.cookies['qbid'];
+
+    // if (req.cookies['qbid'] === undefined || req.cookies['qbid'] === null || req.cookies['qbid']) {
+    //     token = req.headers['authorization'].split[' '][1];
+    // } else {
+    //     token = req.cookies['qbid']
+    // }
 
     if (!token) {
         res.status(406).json({ message: 'fejl1', type: 'error' });
