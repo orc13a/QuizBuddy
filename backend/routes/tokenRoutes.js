@@ -21,7 +21,7 @@ import userSchema from '../models/user.model.js';
 api.post('/teacher', (req, res) => {
     let token = req.cookies['qbid'];
 
-    // if (req.cookies['qbid'] === undefined || req.cookies['qbid'] === null || req.cookies['qbid']) {
+    // if (req.cookies['qbid'] === undefined || req.cookies['qbid'] === null) {
     //     const t = req.headers['authorization'];
     //     token = t.split(' ')[1];
     // } else {
