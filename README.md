@@ -2,6 +2,10 @@
 DDU minieksamensprojekt
 
 Celia, Gustav, Oliver C & Valdemar | 3.i HCØL
+
+https://quiz-buddy.vercel.app/
+
+Husk at se [Issues](https://github.com/orc13a/QuizBuddy/issues).
 ___
 
 ## Kommentarer
